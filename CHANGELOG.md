@@ -1,9 +1,11 @@
 # Changelog
 
-All notable builds of Matewawe are tracked here. Versions are numbered sequentially in chronological build order where known; `v1.0.33`-`v1.0.35` have no recoverable build timestamp (reproducible builds normalize internal timestamps), so they are appended as the latest.
+All notable builds of Matewawe are tracked here. Versions are numbered sequentially in chronological build order where known; `v1.0.33`-`v1.0.37` have no recoverable build timestamp (reproducible builds normalize internal timestamps), so they are appended as the latest.
 
 | Version | Build date (UTC) | APK | Size | SHA-256 |
 |---|---|---|---|---|
+| v1.0.37 | unknown | `Matewawe-v1.0.37.apk` | 12.93 MB | `78915408540e257ab7867f4314a44042c8f8a18775c4f60bc0b7368c1410f987` |
+| v1.0.36 | unknown | `Matewawe-v1.0.36.apk` | 13.70 MB | `6bf23265107666816833b7a1cf6aabf5212068b1af315d64f9631798c84790c6` |
 | v1.0.35 | unknown | `Matewawe-v1.0.35.apk` | 13.70 MB | `22fe9d93da9e6db4899b7c1238d2934ce9ce4de292a0bc5e97ce11df4ac52091` |
 | v1.0.34 | unknown | `Matewawe-v1.0.34.apk` | 13.70 MB | `be579a82b2257181ff308b0ad3912af51fc1ce32f4aec036a7685da360594e38` |
 | v1.0.33 | unknown | `Matewawe-v1.0.33.apk` | 13.70 MB | `7100c6d6e2a158c802a720393479b3b0d40186352e0d54dc951846dbe812d929` |
