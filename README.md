@@ -8,20 +8,20 @@
   <a href="releases/Matewawe-v1.0.37.apk"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
 </p>
 
-Android APK builds for **Matewawe**, organized as sequential, incrementally versioned releases (`v1.0.0` → `v1.0.37`), in true chronological build order where known.
+Android APK builds for **Matewawe**, organized as sequential, incrementally versioned releases (`v1.0.0` → `v1.0.37`).
 
-> **Note:** `v1.0.33`–`v1.0.37` have no recoverable build timestamp (reproducible Android builds normalize internal file dates), so they are appended as the latest builds by upload order.
+> **Note:** `v1.0.32`–`v1.0.36` have no recoverable build timestamp (reproducible Android builds normalize internal file dates); they are ordered right before `v1.0.37`, the file explicitly named `Matewawe.apk` — the current, official latest build.
 
 ## Releases
 
 | Version | Build date (UTC) | APK |
 |---|---|---|
-| **v1.0.37** (latest) | unknown | [`releases/Matewawe-v1.0.37.apk`](releases/Matewawe-v1.0.37.apk) |
+| **v1.0.37** (latest — Matewawe.apk) | 2026-09-26 | [`releases/Matewawe-v1.0.37.apk`](releases/Matewawe-v1.0.37.apk) |
 | v1.0.36 | unknown | [`releases/Matewawe-v1.0.36.apk`](releases/Matewawe-v1.0.36.apk) |
 | v1.0.35 | unknown | [`releases/Matewawe-v1.0.35.apk`](releases/Matewawe-v1.0.35.apk) |
 | v1.0.34 | unknown | [`releases/Matewawe-v1.0.34.apk`](releases/Matewawe-v1.0.34.apk) |
 | v1.0.33 | unknown | [`releases/Matewawe-v1.0.33.apk`](releases/Matewawe-v1.0.33.apk) |
-| v1.0.32 | 2026-09-26 | [`releases/Matewawe-v1.0.32.apk`](releases/Matewawe-v1.0.32.apk) |
+| v1.0.32 | unknown | [`releases/Matewawe-v1.0.32.apk`](releases/Matewawe-v1.0.32.apk) |
 | v1.0.31 | 2026-09-26 | [`releases/Matewawe-v1.0.31.apk`](releases/Matewawe-v1.0.31.apk) |
 | v1.0.30 | 2026-09-26 | [`releases/Matewawe-v1.0.30.apk`](releases/Matewawe-v1.0.30.apk) |
 | v1.0.29 | 2026-09-26 | [`releases/Matewawe-v1.0.29.apk`](releases/Matewawe-v1.0.29.apk) |
@@ -89,4 +89,4 @@ sha256sum releases/Matewawe-v1.0.37.apk
 
 ## Versioning
 
-Builds are numbered sequentially by build date where known (`v1.0.0` is the oldest). Uploads with no recoverable build date are appended at the end.
+Builds are numbered sequentially by build date where known. `v1.0.37` (`Matewawe.apk`) is the latest official build.
