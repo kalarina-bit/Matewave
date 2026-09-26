@@ -14,6 +14,8 @@ Android APK builds for **Matewawe**, organized as sequential, incrementally vers
 
 ## Releases
 
+<img src="assets/icon-releases.png" width="36" align="left">
+
 | Version | Build date (UTC) | APK |
 |---|---|---|
 | **v1.0.37** (latest — Matewawe.apk) | 2026-09-26 | [`releases/Matewawe-v1.0.37.apk`](releases/Matewawe-v1.0.37.apk) |
@@ -59,6 +61,8 @@ Full history and checksums: see [CHANGELOG.md](CHANGELOG.md).
 
 ## Installation
 
+<img src="assets/icon-install.png" width="36" align="left">
+
 1. Download the APK for the version you want from [`releases/`](releases/).
 2. On your Android device, allow installs from unknown sources for the app you use to open the file (Settings → Apps → Special access → Install unknown apps).
 3. Open the downloaded `.apk` file and confirm the install.
@@ -71,6 +75,8 @@ adb install releases/Matewawe-v1.0.37.apk
 
 ## Verifying a download
 
+<img src="assets/icon-verify.png" width="36" align="left">
+
 Compare the SHA-256 checksum against the value listed in [CHANGELOG.md](CHANGELOG.md):
 
 ```sh
@@ -78,6 +84,8 @@ sha256sum releases/Matewawe-v1.0.37.apk
 ```
 
 ## Repository structure
+
+<img src="assets/icon-structure.png" width="36" align="left">
 
 ```
 .
