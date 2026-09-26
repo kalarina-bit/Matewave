@@ -14,8 +14,6 @@ Android APK builds for **Matewawe**, organized as sequential, incrementally vers
 
 ## Releases
 
-<img src="assets/icon-releases.png" width="36" align="left">
-
 | Version | Build date (UTC) | APK |
 |---|---|---|
 | **v1.0.37** (latest — Matewawe.apk) | 2026-09-26 | [`releases/Matewawe-v1.0.37.apk`](releases/Matewawe-v1.0.37.apk) |
@@ -59,6 +57,15 @@ Android APK builds for **Matewawe**, organized as sequential, incrementally vers
 
 Full history and checksums: see [CHANGELOG.md](CHANGELOG.md).
 
+## Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/home.jpg" width="200" alt="Home screen">
+  <img src="assets/screenshots/friends.png" width="200" alt="Friends screen">
+  <img src="assets/screenshots/settings.png" width="200" alt="Settings screen">
+  <img src="assets/screenshots/account.png" width="200" alt="Account screen">
+</p>
+
 ## Installation
 
 <img src="assets/icon-install.png" width="36" align="left">
@@ -91,6 +98,7 @@ sha256sum releases/Matewawe-v1.0.37.apk
 .
 ├── releases/           # Versioned APK builds (Matewawe-vX.Y.Z.apk)
 ├── assets/              # Icon and README images
+│   └── screenshots/     # App screenshots
 ├── CHANGELOG.md         # Per-version build dates, sizes and checksums
 └── README.md
 ```
