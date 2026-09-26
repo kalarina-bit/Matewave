@@ -1,0 +1,59 @@
+# Matewawe
+
+Android APK builds for **Matewawe**, organized as sequential, incrementally versioned releases (`v1.0.0` → `v1.0.15`), each tagged in git.
+
+## Releases
+
+| Version | Build date (UTC) | APK |
+|---|---|---|
+| **v1.0.15** (latest) | 2026-09-26 | [`releases/Matewawe-v1.0.15.apk`](releases/Matewawe-v1.0.15.apk) |
+| v1.0.14 | 2026-09-26 | [`releases/Matewawe-v1.0.14.apk`](releases/Matewawe-v1.0.14.apk) |
+| v1.0.13 | 2026-09-26 | [`releases/Matewawe-v1.0.13.apk`](releases/Matewawe-v1.0.13.apk) |
+| v1.0.12 | 2026-09-26 | [`releases/Matewawe-v1.0.12.apk`](releases/Matewawe-v1.0.12.apk) |
+| v1.0.11 | 2026-09-26 | [`releases/Matewawe-v1.0.11.apk`](releases/Matewawe-v1.0.11.apk) |
+| v1.0.10 | 2026-09-24 | [`releases/Matewawe-v1.0.10.apk`](releases/Matewawe-v1.0.10.apk) |
+| v1.0.9  | 2026-09-24 | [`releases/Matewawe-v1.0.9.apk`](releases/Matewawe-v1.0.9.apk) |
+| v1.0.8  | 2026-09-24 | [`releases/Matewawe-v1.0.8.apk`](releases/Matewawe-v1.0.8.apk) |
+| v1.0.7  | 2026-09-20 | [`releases/Matewawe-v1.0.7.apk`](releases/Matewawe-v1.0.7.apk) |
+| v1.0.6  | 2026-09-20 | [`releases/Matewawe-v1.0.6.apk`](releases/Matewawe-v1.0.6.apk) |
+| v1.0.5  | 2026-09-20 | [`releases/Matewawe-v1.0.5.apk`](releases/Matewawe-v1.0.5.apk) |
+| v1.0.4  | 2026-09-20 | [`releases/Matewawe-v1.0.4.apk`](releases/Matewawe-v1.0.4.apk) |
+| v1.0.3  | 2026-09-20 | [`releases/Matewawe-v1.0.3.apk`](releases/Matewawe-v1.0.3.apk) |
+| v1.0.2  | 2026-09-19 | [`releases/Matewawe-v1.0.2.apk`](releases/Matewawe-v1.0.2.apk) |
+| v1.0.1  | 2026-09-19 | [`releases/Matewawe-v1.0.1.apk`](releases/Matewawe-v1.0.1.apk) |
+| v1.0.0  | 2026-09-18 | [`releases/Matewawe-v1.0.0.apk`](releases/Matewawe-v1.0.0.apk) |
+
+Full history and checksums: see [CHANGELOG.md](CHANGELOG.md). Each version is also an annotated git tag (`v1.0.0` … `v1.0.15`).
+
+## Installation
+
+1. Download the APK for the version you want from [`releases/`](releases/).
+2. On your Android device, allow installs from unknown sources for the app you use to open the file (Settings → Apps → Special access → Install unknown apps).
+3. Open the downloaded `.apk` file and confirm the install.
+
+Or via `adb`:
+
+```sh
+adb install releases/Matewawe-v1.0.15.apk
+```
+
+## Verifying a download
+
+Compare the SHA-256 checksum against the value listed in [CHANGELOG.md](CHANGELOG.md):
+
+```sh
+sha256sum releases/Matewawe-v1.0.15.apk
+```
+
+## Repository structure
+
+```
+.
+├── releases/           # Versioned APK builds (Matewawe-vX.Y.Z.apk)
+├── CHANGELOG.md         # Per-version build dates, sizes and checksums
+└── README.md
+```
+
+## Versioning
+
+Builds are numbered sequentially in the order they were produced (`v1.0.0` is the oldest, `v1.0.15` is the latest/current build).
