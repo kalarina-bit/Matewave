@@ -5,16 +5,21 @@
 <h1 align="center">Matewawe</h1>
 
 <p align="center">
-  <a href="releases/Matewawe-v1.0.32.apk"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
+  <a href="releases/Matewawe-v1.0.35.apk"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
 </p>
 
-Android APK builds for **Matewawe**, organized as sequential, incrementally versioned releases (`v1.0.0` → `v1.0.32`), in true chronological build order.
+Android APK builds for **Matewawe**, organized as sequential, incrementally versioned releases (`v1.0.0` → `v1.0.35`), in true chronological build order where known.
+
+> **Note:** `v1.0.33`–`v1.0.35` have no recoverable build timestamp (reproducible Android builds normalize internal file dates), so they are appended as the latest builds by upload order.
 
 ## Releases
 
 | Version | Build date (UTC) | APK |
 |---|---|---|
-| **v1.0.32** (latest) | 2026-09-26 | [`releases/Matewawe-v1.0.32.apk`](releases/Matewawe-v1.0.32.apk) |
+| **v1.0.35** (latest) | unknown | [`releases/Matewawe-v1.0.35.apk`](releases/Matewawe-v1.0.35.apk) |
+| v1.0.34 | unknown | [`releases/Matewawe-v1.0.34.apk`](releases/Matewawe-v1.0.34.apk) |
+| v1.0.33 | unknown | [`releases/Matewawe-v1.0.33.apk`](releases/Matewawe-v1.0.33.apk) |
+| v1.0.32 | 2026-09-26 | [`releases/Matewawe-v1.0.32.apk`](releases/Matewawe-v1.0.32.apk) |
 | v1.0.31 | 2026-09-26 | [`releases/Matewawe-v1.0.31.apk`](releases/Matewawe-v1.0.31.apk) |
 | v1.0.30 | 2026-09-26 | [`releases/Matewawe-v1.0.30.apk`](releases/Matewawe-v1.0.30.apk) |
 | v1.0.29 | 2026-09-26 | [`releases/Matewawe-v1.0.29.apk`](releases/Matewawe-v1.0.29.apk) |
@@ -59,7 +64,7 @@ Full history and checksums: see [CHANGELOG.md](CHANGELOG.md).
 Or via `adb`:
 
 ```sh
-adb install releases/Matewawe-v1.0.32.apk
+adb install releases/Matewawe-v1.0.35.apk
 ```
 
 ## Verifying a download
@@ -67,7 +72,7 @@ adb install releases/Matewawe-v1.0.32.apk
 Compare the SHA-256 checksum against the value listed in [CHANGELOG.md](CHANGELOG.md):
 
 ```sh
-sha256sum releases/Matewawe-v1.0.32.apk
+sha256sum releases/Matewawe-v1.0.35.apk
 ```
 
 ## Repository structure
@@ -82,4 +87,4 @@ sha256sum releases/Matewawe-v1.0.32.apk
 
 ## Versioning
 
-Builds are numbered sequentially by build date (`v1.0.0` is the oldest, `v1.0.32` is the latest/current build).
+Builds are numbered sequentially by build date where known (`v1.0.0` is the oldest). Uploads with no recoverable build date are appended at the end.
