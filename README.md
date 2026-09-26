@@ -1,4 +1,12 @@
-# Matewawe
+<p align="center">
+  <img src="assets/icon.jpg" width="128" alt="Matewawe icon">
+</p>
+
+<h1 align="center">Matewawe</h1>
+
+<p align="center">
+  <a href="releases/Matewawe-v1.0.32.apk"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
+</p>
 
 Android APK builds for **Matewawe**, organized as sequential, incrementally versioned releases (`v1.0.0` → `v1.0.32`), in true chronological build order.
 
@@ -40,7 +48,7 @@ Android APK builds for **Matewawe**, organized as sequential, incrementally vers
 | v1.0.1 | 2026-09-10 | [`releases/Matewawe-v1.0.1.apk`](releases/Matewawe-v1.0.1.apk) |
 | v1.0.0 | 2026-09-08 | [`releases/Matewawe-v1.0.0.apk`](releases/Matewawe-v1.0.0.apk) |
 
-Full history and checksums: see [CHANGELOG.md](CHANGELOG.md). Each version is also an annotated git tag (`v1.0.0` … `v1.0.32`).
+Full history and checksums: see [CHANGELOG.md](CHANGELOG.md).
 
 ## Installation
 
@@ -67,6 +75,7 @@ sha256sum releases/Matewawe-v1.0.32.apk
 ```
 .
 ├── releases/           # Versioned APK builds (Matewawe-vX.Y.Z.apk)
+├── assets/              # Icon and README images
 ├── CHANGELOG.md         # Per-version build dates, sizes and checksums
 └── README.md
 ```
