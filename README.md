@@ -30,7 +30,7 @@ a friend nearby with no internet required.
   <img src="assets/screenshots/open-source-ui.png" width="200" alt="100% Open Source, Beautiful Dark & Light UI">
   <img src="assets/screenshots/multiplayer.png" width="200" alt="Bluetooth, Wi-Fi & LAN Multiplayer">
   <img src="assets/screenshots/find-friends.png" width="200" alt="Find Friends Nearby via Wi-Fi">
-  <img src="assets/screenshots/play-anywhere.png" width="200" alt="Play Chess Anytime, Anywhere">
+  <img src="assets/screenshots/1-play-anywhere.png" width="200" alt="Play Chess Anytime, Anywhere">
 </p>
 
 ## Installation
