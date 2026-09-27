@@ -36,10 +36,6 @@ Kotlin · Jetpack Compose
   <img src="assets/screenshots/play-anywhere.png" width="200" alt="Play Chess Anytime, Anywhere">
 </p>
 
-Android APK builds are tracked as sequential, incrementally versioned releases (`v1.0.0` → `v1.0.37`).
-
-> **Note:** `v1.0.32`–`v1.0.36` have no recoverable build timestamp (reproducible Android builds normalize internal file dates); they are ordered right before `v1.0.37`, the file explicitly named `Matewawe.apk` — the current, official latest build.
-
 ## Installation
 
 <img src="assets/icon-install.png" width="36" align="left">
@@ -77,10 +73,6 @@ sha256sum releases/Matewawe-v1.0.37.apk
 ├── LICENSE              # GNU GPLv3
 └── README.md
 ```
-
-## Versioning
-
-Builds are numbered sequentially by build date where known. `v1.0.37` (`Matewawe.apk`) is the latest official build.
 
 ## License
 
