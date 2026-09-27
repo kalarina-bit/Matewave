@@ -19,7 +19,7 @@ a friend nearby with no internet required.
 - 🧩 **Daily puzzles** to sharpen your tactics
 - 📶 **Offline multiplayer** — same device, Bluetooth, or local Wi-Fi/LAN
 - 👥 **Find players nearby** automatically over Wi-Fi — no accounts, no servers
-- 🎨 **Clean, elegant UI** that follows your system's light/dark theme
+- 🎨 **Clean, elegant UI** that follows dark theme
 - 🌍 Available in English, Russian, German, Japanese, Lithuanian, and Chinese
 - 🔓 **100% open source** — no ads, no tracking, no Google dependencies
 
