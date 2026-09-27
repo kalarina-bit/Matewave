@@ -8,9 +8,7 @@
   <a href="releases/Matewawe-v1.0.37.apk"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
 </p>
 
-Android APK builds for **Matewawe**, organized as sequential, incrementally versioned releases (`v1.0.0` → `v1.0.37`).
 
-> **Note:** `v1.0.32`–`v1.0.36` have no recoverable build timestamp (reproducible Android builds normalize internal file dates); they are ordered right before `v1.0.37`, the file explicitly named `Matewawe.apk` — the current, official latest build.
 
 ## Screenshots
 
@@ -58,6 +56,3 @@ sha256sum releases/Matewawe-v1.0.37.apk
 └── README.md
 ```
 
-## Versioning
-
-Builds are numbered sequentially by build date where known. `v1.0.37` (`Matewawe.apk`) is the latest official build.
