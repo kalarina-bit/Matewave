@@ -12,7 +12,6 @@ Android APK builds for **Matewawe**, organized as sequential, incrementally vers
 
 > **Note:** `v1.0.32`–`v1.0.36` have no recoverable build timestamp (reproducible Android builds normalize internal file dates); they are ordered right before `v1.0.37`, the file explicitly named `Matewawe.apk` — the current, official latest build.
 
-
 ## Screenshots
 
 <p align="center">
