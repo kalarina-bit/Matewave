@@ -2,7 +2,7 @@
   <img src="assets/icon.jpg" width="128" alt="Matewawe icon">
 </p>
 
-<h1 align="center">Matewawe ♞</h1>
+<h1 align="center">Matewawe </h1>
 
 <p align="center">
   <a href="releases/Matewawe-v1.0.37.apk"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
