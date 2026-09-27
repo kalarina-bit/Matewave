@@ -60,10 +60,10 @@ Full history and checksums: see [CHANGELOG.md](CHANGELOG.md).
 ## Screenshots
 
 <p align="center">
-  <img src="assets/screenshots/home.jpg" width="200" alt="Home screen">
-  <img src="assets/screenshots/friends.png" width="200" alt="Friends screen">
-  <img src="assets/screenshots/settings.png" width="200" alt="Settings screen">
-  <img src="assets/screenshots/account.png" width="200" alt="Account screen">
+  <img src="assets/screenshots/open-source-ui.png" width="200" alt="100% Open Source, Beautiful Dark & Light UI">
+  <img src="assets/screenshots/multiplayer.png" width="200" alt="Bluetooth, Wi-Fi & LAN Multiplayer">
+  <img src="assets/screenshots/find-friends.png" width="200" alt="Find Friends Nearby via Wi-Fi">
+  <img src="assets/screenshots/play-anywhere.png" width="200" alt="Play Chess Anytime, Anywhere">
 </p>
 
 ## Installation
