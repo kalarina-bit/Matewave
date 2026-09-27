@@ -23,9 +23,6 @@ a friend nearby with no internet required.
 - 🌍 Available in English, Russian, German, Japanese, Lithuanian, and Chinese
 - 🔓 **100% open source** — no ads, no tracking, no Google dependencies
 
-## Built with
-
-Kotlin · Jetpack Compose
 
 ## Screenshots
 
