@@ -2,15 +2,30 @@
   <img src="assets/icon.jpg" width="128" alt="Matewawe icon">
 </p>
 
-<h1 align="center">Matewawe</h1>
+<h1 align="center">Matewawe ♞</h1>
 
 <p align="center">
   <a href="releases/Matewawe-v1.0.37.apk"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
 </p>
 
-Android APK builds for **Matewawe**, organized as sequential, incrementally versioned releases (`v1.0.0` → `v1.0.37`).
+**A beautiful, open-source chess app for Android.**
 
-> **Note:** `v1.0.32`–`v1.0.36` have no recoverable build timestamp (reproducible Android builds normalize internal file dates); they are ordered right before `v1.0.37`, the file explicitly named `Matewawe.apk` — the current, official latest build.
+Play chess your way — against a smart AI, solve daily puzzles, or challenge
+a friend nearby with no internet required.
+
+## Features
+
+- 🤖 **AI opponent** with adjustable difficulty
+- 🧩 **Daily puzzles** to sharpen your tactics
+- 📶 **Offline multiplayer** — same device, Bluetooth, or local Wi-Fi/LAN
+- 👥 **Find players nearby** automatically over Wi-Fi — no accounts, no servers
+- 🎨 **Clean, elegant UI** that follows your system's light/dark theme
+- 🌍 Available in English, Russian, German, Japanese, Lithuanian, and Chinese
+- 🔓 **100% open source** — no ads, no tracking, no Google dependencies
+
+## Built with
+
+Kotlin · Jetpack Compose
 
 ## Screenshots
 
@@ -20,6 +35,10 @@ Android APK builds for **Matewawe**, organized as sequential, incrementally vers
   <img src="assets/screenshots/find-friends.png" width="200" alt="Find Friends Nearby via Wi-Fi">
   <img src="assets/screenshots/play-anywhere.png" width="200" alt="Play Chess Anytime, Anywhere">
 </p>
+
+Android APK builds are tracked as sequential, incrementally versioned releases (`v1.0.0` → `v1.0.37`).
+
+> **Note:** `v1.0.32`–`v1.0.36` have no recoverable build timestamp (reproducible Android builds normalize internal file dates); they are ordered right before `v1.0.37`, the file explicitly named `Matewawe.apk` — the current, official latest build.
 
 ## Installation
 
@@ -55,9 +74,14 @@ sha256sum releases/Matewawe-v1.0.37.apk
 ├── assets/              # Icon and README images
 │   └── screenshots/     # App screenshots
 ├── CHANGELOG.md         # Per-version build dates, sizes and checksums
+├── LICENSE              # GNU GPLv3
 └── README.md
 ```
 
 ## Versioning
 
 Builds are numbered sequentially by build date where known. `v1.0.37` (`Matewawe.apk`) is the latest official build.
+
+## License
+
+This project is licensed under the **GNU General Public License v3.0** — see the [LICENSE](LICENSE) file for details.
