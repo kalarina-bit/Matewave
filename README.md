@@ -8,9 +8,7 @@
   <a href="releases/Matewawe-v1.0.38.apk"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
 </p>
 
-<p align="center">
-  <img src="https://hits.sh/github.com/kalarina-bit/Matewawe.svg?label=downloads&color=2e7d32&labelColor=1b1b1b" alt="downloads counter">
-</p>
+
 
 **A beautiful, open-source chess app for Android.**
 
