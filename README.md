@@ -18,13 +18,16 @@ over Bluetooth and Wi-Fi/LAN.
 
 ## Features
 
-- 🤖 **AI opponent** with adjustable difficulty
-- 🧩 **Daily puzzles** to sharpen your tactics
-- 📶 **Offline multiplayer** — same device, Bluetooth, or local Wi-Fi/LAN
-- 👥 **Find players nearby** automatically over Wi-Fi — no accounts, no servers
-- 🌙 **Clean, elegant UI** that follows dark theme
-- 🌍 Available in English, Russian, German, Japanese, Lithuanian, and Chinese
-- 🔓 **100% open source** — no ads, no tracking, no Google dependencies
+- 🤖 AI opponent with adjustable difficulty
+- 🧩 Chess puzzles and tactical training
+- 📖 Chess openings — learn and practice opening lines
+- ♟️ Opening practice for different variations and move sequences
+- 📶 Local multiplayer over Wi-Fi/LAN
+- 🔵 Bluetooth multiplayer
+- 👥 Nearby player discovery over local Wi-Fi
+- 🌙 Dark theme
+- 🌍 English, Russian, German, Japanese, Lithuanian and Chinese
+- 🔓 100% open source
 
 
 ## Screenshots
