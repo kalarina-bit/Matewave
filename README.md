@@ -5,7 +5,7 @@
 <h1 align="center">Matewawe </h1>
 
 <p align="center">
-  <a href="releases/Matewawe-v1.0.38.apk"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
+  <a href="releases/Matewawe-v1.0.39.apk"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
 </p>
 
 
@@ -49,7 +49,7 @@ over Bluetooth and Wi-Fi/LAN.
 Or via `adb`:
 
 ```sh
-adb install releases/Matewawe-v1.0.38.apk
+adb install releases/Matewawe-v1.0.39.apk
 ```
 
 ## Verifying a download
@@ -59,7 +59,7 @@ adb install releases/Matewawe-v1.0.38.apk
 Compare the SHA-256 checksum against the value listed in [CHANGELOG.md](CHANGELOG.md):
 
 ```sh
-sha256sum releases/Matewawe-v1.0.38.apk
+sha256sum releases/Matewawe-v1.0.39.apk
 ```
 
 ## Repository structure
