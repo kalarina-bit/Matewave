@@ -12,8 +12,9 @@
 
 **A beautiful, open-source chess app for Android.**
 
-Play chess your way — against a smart AI, solve daily puzzles, or challenge
-a friend nearby with no internet required.
+Play chess against AI, solve chess puzzles, learn and practice
+chess openings, or play local multiplayer games with friends
+over Bluetooth and Wi-Fi/LAN.
 
 ## Features
 
