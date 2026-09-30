@@ -16,6 +16,10 @@ Play chess against AI, solve chess puzzles, learn and practice
 chess openings, or play local multiplayer games with friends
 over Bluetooth and Wi-Fi/LAN.
 
+<p align="center">
+  <img src="assets/banner.png" width="100%" alt="Matewawe — Play. Learn. Improve. AI games, puzzles, and openings in one app.">
+</p>
+
 ## Features
 
 - 🤖 AI opponent with adjustable difficulty
