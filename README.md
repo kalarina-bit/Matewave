@@ -26,7 +26,7 @@ over Bluetooth and Wi-Fi/LAN.
 - 🧩 Chess puzzles and tactical training
 - 📖 Chess openings — learn and practice opening lines
 - ♟️ Opening practice for different variations and move sequences
-- 📶 Local multiplayer over Wi-Fi/LAN
+- 📶 Local multiplayer over Bluetooth/LAN
 - 👥 Nearby player discovery over local Wi-Fi
 - 🌙 Dark theme
 - 🌍 English, Russian, German, Japanese, Lithuanian and Chinese
