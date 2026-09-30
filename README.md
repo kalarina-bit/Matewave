@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/icon.jpg" width="128" alt="Matewawe icon">
+  <img src="assets/icon-rounded.png" width="128" alt="Matewawe icon">
 </p>
 
 <h1 align="center">Matewawe </h1>
