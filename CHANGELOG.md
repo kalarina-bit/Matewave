@@ -1,9 +1,10 @@
 # Changelog
 
-All notable builds of Matewawe are tracked here. `v1.0.40` is the current, official latest build. `v1.0.32`-`v1.0.36` and `v1.0.38`-`v1.0.40` have no recoverable build timestamp (reproducible builds normalize internal timestamps).
+All notable builds of Matewawe are tracked here. `v1.0.41` is the current, official latest build. `v1.0.32`-`v1.0.36` and `v1.0.38`-`v1.0.41` have no recoverable build timestamp (reproducible builds normalize internal timestamps).
 
 | Version | Build date (UTC) | APK | Size | SHA-256 |
 |---|---|---|---|---|
+| v1.0.41 | unknown | `Matewawe-v1.0.41.apk` | 3.06 MB | `a42d4ba8fa394ae882c6de1378a9dcc862dba93b17498ddcf93ae59ca38dd2f5` |
 | v1.0.40 | unknown | `Matewawe-v1.0.40.apk` | 3.11 MB | `df012e092a58a78174696b680a5e97450cc83c505281ddc2f8fe2ac2bd2c38c2` |
 | v1.0.39 | unknown | `Matewawe-v1.0.39.apk` | 2.54 MB | `ba4a714f069b4948cf3ba7bdb1203543147f1e31ed9ecd9217d2caa12ada4052` |
 | v1.0.38 | unknown | `Matewawe-v1.0.38.apk` | 2.23 MB | `1e528a920de91863f5daf1dca6fbf26b20e56f5e7192ad6c3e2acb9a620f8b05` |
