@@ -5,7 +5,11 @@
 <h1 align="center">Matewawe </h1>
 
 <p align="center">
-  <a href="releases/Matewawe-v1.0.42.apk"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
+  <a href="https://github.com/kalarina-bit/Matewawe/releases"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/downloads/kalarina-bit/Matewawe/total?label=downloads&color=2e7d32&labelColor=1b1b1b" alt="downloads counter">
 </p>
 
 
@@ -43,14 +47,14 @@ over Bluetooth and Wi-Fi/LAN.
 
 <img src="assets/icon-install.png" width="36" align="left">
 
-1. Download the APK for the version you want from [`releases/`](releases/).
+1. Download the APK for the version you want from the [Releases page](https://github.com/kalarina-bit/Matewawe/releases).
 2. On your Android device, allow installs from unknown sources for the app you use to open the file (Settings → Apps → Special access → Install unknown apps).
 3. Open the downloaded `.apk` file and confirm the install.
 
-Or via `adb`:
+Or via `adb` (after downloading):
 
 ```sh
-adb install releases/Matewawe-v1.0.42.apk
+adb install Matewawe-v1.0.42.apk
 ```
 
 ## Verifying a download
@@ -60,7 +64,7 @@ adb install releases/Matewawe-v1.0.42.apk
 Compare the SHA-256 checksum against the value listed in [CHANGELOG.md](CHANGELOG.md):
 
 ```sh
-sha256sum releases/Matewawe-v1.0.42.apk
+sha256sum Matewawe-v1.0.42.apk
 ```
 
 ## Repository structure
@@ -69,13 +73,14 @@ sha256sum releases/Matewawe-v1.0.42.apk
 
 ```
 .
-├── releases/           # Versioned APK builds (Matewawe-vX.Y.Z.apk)
 ├── assets/              # Icon and README images
 │   └── screenshots/     # App screenshots
-├── CHANGELOG.md         # Per-version build dates, sizes and checksums
+├── CHANGELOG.md         # Per-version build dates, sizes and checksums (links to GitHub Releases)
 ├── LICENSE              # GNU GPLv3
 └── README.md
 ```
+
+APK builds themselves are published as assets on the [Releases page](https://github.com/kalarina-bit/Matewawe/releases), not stored in this repository.
 
 ## License
 
