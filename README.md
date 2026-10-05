@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/icon-rounded.png" width="128" alt="Matewawe icon">
+  <img src="assets/icon-rounded.png" width="128" alt="Matewave icon">
 </p>
 
-<h1 align="center">Matewave </h1>
+<h1 align="center">Matewave</h1>
 
 <p align="center">
   <a href="https://git.skysparkle.cc/kalarina/Matewave/releases"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
@@ -11,8 +11,6 @@
 <p align="center">
   <img src="https://img.shields.io/github/downloads/kalarina-bit/Matewave/total?label=downloads&color=2e7d32&labelColor=1b1b1b" alt="downloads counter">
 </p>
-
-
 
 **A beautiful, open-source chess app for Android.**
 
@@ -31,7 +29,6 @@ over Bluetooth and Wi-Fi/LAN.
 - 🌙 Dark theme
 - 🌍 English, Russian, German, Japanese, Lithuanian and Chinese
 - 🔓 100% open source
-
 
 ## Screenshots
 
