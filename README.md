@@ -39,8 +39,8 @@ over Bluetooth and Wi-Fi/LAN.
   <img src="assets/screenshots/5-move-count.png" width="200" alt="Make your next move count">
   <img src="assets/screenshots/4-home.png" width="200" alt="Home screen">
   <img src="assets/screenshots/1-friendly-matches.png" width="200" alt="From solo games to friendly matches">
-  <img src="assets/screenshots/2-keep-growing.png" width="200" alt="Keep growing">
   <img src="assets/screenshots/3-play-together.png" width="200" alt="Play together">
+  <img src="assets/screenshots/2-keep-growing.png" width="200" alt="Keep growing">
 </p>
 
 ## Installation
