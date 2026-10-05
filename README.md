@@ -5,7 +5,7 @@
 <h1 align="center">Matewawe </h1>
 
 <p align="center">
-  <a href="https://github.com/kalarina-bit/Matewawe/releases"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
+  <a href="https://git.skysparkle.cc/kalarina/Matewawe/releases"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
 </p>
 
 <p align="center">
