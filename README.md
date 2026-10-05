@@ -2,14 +2,14 @@
   <img src="assets/icon-rounded.png" width="128" alt="Matewawe icon">
 </p>
 
-<h1 align="center">Matewawe </h1>
+<h1 align="center">Matewave </h1>
 
 <p align="center">
-  <a href="https://git.skysparkle.cc/kalarina/Matewawe/releases"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
+  <a href="https://git.skysparkle.cc/kalarina/Matewave/releases"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/downloads/kalarina-bit/Matewawe/total?label=downloads&color=2e7d32&labelColor=1b1b1b" alt="downloads counter">
+  <img src="https://img.shields.io/github/downloads/kalarina-bit/Matewave/total?label=downloads&color=2e7d32&labelColor=1b1b1b" alt="downloads counter">
 </p>
 
 
@@ -47,7 +47,7 @@ over Bluetooth and Wi-Fi/LAN.
 
 <img src="assets/icon-install.png" width="36" align="left">
 
-1. Download the APK for the version you want from the [Releases page](https://github.com/kalarina-bit/Matewawe/releases).
+1. Download the APK for the version you want from the [Releases page](https://github.com/kalarina-bit/Matewave/releases).
 2. On your Android device, allow installs from unknown sources for the app you use to open the file (Settings → Apps → Special access → Install unknown apps).
 3. Open the downloaded `.apk` file and confirm the install.
 
@@ -80,7 +80,7 @@ sha256sum Matewawe-v1.0.42.apk
 └── README.md
 ```
 
-APK builds themselves are published as assets on the [Releases page](https://github.com/kalarina-bit/Matewawe/releases), not stored in this repository.
+APK builds themselves are published as assets on the [Releases page](https://github.com/kalarina-bit/Matewave/releases), not stored in this repository.
 
 ## License
 
