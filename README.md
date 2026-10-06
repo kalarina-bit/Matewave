@@ -64,14 +64,29 @@ Compare the SHA-256 checksum against the value listed in [CHANGELOG.md](CHANGELO
 sha256sum Matewawe-v1.0.42.apk
 ```
 
+## Building from source
+
+Open the project in Android Studio (a version that supports AGP 9.2) and run the `app` configuration, or:
+
+```sh
+./gradlew assembleDebug
+./gradlew testDebugUnitTest   # JVM unit tests
+```
+
+Nearby multiplayer needs two physical devices — the emulator has no real Bluetooth, and mDNS discovery is often blocked on emulator networks.
+
 ## Repository structure
 
 <img src="assets/icon-structure.png" width="36" align="left">
 
 ```
 .
+├── app/                 # Android app source (Kotlin, Jetpack Compose) and unit tests
 ├── assets/              # Icon and README images
 │   └── screenshots/     # App screenshots
+├── fastlane/            # F-Droid store listing, screenshots and changelogs
+├── gradle/              # Gradle wrapper
+├── tools/               # Helper scripts (sound effect generation)
 ├── CHANGELOG.md         # Per-version build dates, sizes and checksums (links to GitHub Releases)
 ├── LICENSE              # GNU GPLv3
 └── README.md

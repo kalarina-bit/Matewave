@@ -1,0 +1,38 @@
+<p>Matewave is an offline-first chess app. Play against the AI, solve puzzles, learn openings, or play a friend nearby over Bluetooth or Wi-Fi. No accounts, no servers, no ads and no tracking.</p>
+
+<p><b>Play against the AI</b></p>
+<ul>
+<li>Four difficulty levels, from beginner to strong club player.</li>
+<li>Time controls from bullet 1+0 to classical 30+20, or no time limit.</li>
+<li>An unfinished game is saved with its whole move list and clock and can be continued later.</li>
+</ul>
+
+<p><b>Puzzles</b></p>
+<ul>
+<li>1,207 puzzles from the Lichess puzzle database, picked to match your rating.</li>
+<li>Hints, the solution on request, and progress through multi-move puzzles.</li>
+</ul>
+
+<p><b>Learn openings with spaced repetition</b></p>
+<ul>
+<li>24 main lines for White and Black.</li>
+<li>New moves are learned with the piece highlighted; reviews ask only the moves that are due.</li>
+<li>Earn up to three stars per opening with flawless scheduled reviews.</li>
+</ul>
+
+<p><b>Play with friends nearby</b></p>
+<ul>
+<li>Over Bluetooth LE (no pairing) or the same Wi-Fi network, without internet.</li>
+<li>Chat with images, draw offers, resignation and rematch.</li>
+<li>Games are encrypted end to end, and each device has its own key, so a friend cannot be impersonated.</li>
+</ul>
+
+<p><b>Also</b></p>
+<ul>
+<li>The opening name and whether the game is still in theory, shown during games.</li>
+<li>Rating with a history graph, captured pieces and material balance.</li>
+<li>Four board color themes.</li>
+<li>Optional Radio Swiss Jazz background stream (the only feature that uses the internet).</li>
+<li>Share the app to another phone with a QR code over Wi-Fi.</li>
+<li>Available in English, Russian, German, Lithuanian, Japanese and Chinese.</li>
+</ul>

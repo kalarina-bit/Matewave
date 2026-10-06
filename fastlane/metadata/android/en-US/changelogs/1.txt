@@ -1,0 +1,1 @@
+First release: play against the AI, puzzles, opening training with spaced repetition and nearby play over Bluetooth or Wi-Fi.
