@@ -85,6 +85,7 @@ Nearby multiplayer needs two physical devices — the emulator has no real Bluet
 ├── assets/              # Icon and README images
 │   └── screenshots/     # App screenshots
 ├── fastlane/            # F-Droid store listing, screenshots and changelogs
+├── fdroid/              # Build recipe for fdroiddata
 ├── gradle/              # Gradle wrapper
 ├── tools/               # Helper scripts (sound effect generation)
 ├── CHANGELOG.md         # Per-version build dates, sizes and checksums (links to GitHub Releases)

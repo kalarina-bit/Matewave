@@ -1,0 +1,27 @@
+AntiFeatures:
+  NonFreeAssets:
+    en-US: The forest background photo is under the Pexels License.
+    ru: Фоновая фотография леса распространяется по лицензии Pexels.
+Categories:
+  - Games
+License: GPL-3.0-or-later
+SourceCode: https://git.skysparkle.cc/kalarina/Matewave
+IssueTracker: https://git.skysparkle.cc/kalarina/Matewave/issues
+
+AutoName: Matewave
+
+RepoType: git
+Repo: https://git.skysparkle.cc/kalarina/Matewave.git
+
+Builds:
+  - versionName: 1.0.43
+    versionCode: 1
+    commit: v1.0.43
+    subdir: app
+    gradle:
+      - yes
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 1.0.43
+CurrentVersionCode: 1
