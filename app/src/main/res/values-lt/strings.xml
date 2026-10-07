@@ -178,7 +178,6 @@
     <string name="licenses_note_swissjazz">Viešai prieinama SRG SSR interneto transliacija: be reklamos ir be vedėjų, finansuojama iš licencijos mokesčių. Muzikos teisės priklauso transliuotojui ir teisių turėtojams; programa srautą tik groja ir nieko neišsaugo.</string>
     <string name="licenses_radio_hint">Nustatymuose esantis džiazo radijas groja tik „Radio Swiss Jazz“; jei viena oficiali nuoroda nepasiekiama, programa naudoja kitą.</string>
     <string name="licenses_group_assets">Medžiaga</string>
-    <string name="licenses_note_photo">Miško nuotrauka fonui. „Pexels“ licencija leidžia laisvai naudoti be autoriaus nurodymo — fotografui vis tiek dėkojame.</string>
     <string name="licenses_note_icons">Sąsajos piktogramos iš rinkinio „Material Symbols“, gautos per „IconBuddy“. Apache 2.0 tekstas — skyriuje „Bibliotekos“.</string>
     <string name="licenses_note_pieces">Šachmatų figūrų paveikslėliai. CC0 licencija nereikalauja nurodyti autorystės, tačiau autorius prašo nuorodos į jo puslapį.</string>
     <string name="share_row_title">Dalytis programa</string>

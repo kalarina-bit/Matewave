@@ -103,11 +103,6 @@ private val DATA = listOf(
 
 private val ASSETS = listOf(
     LicenseEntry(
-        "Misty forest scene with pine trees in haze", "Jean-Daniel Francoeur", null, "Pexels License",
-        "https://www.pexels.com/photo/misty-forest-scene-with-pine-trees-in-haze-31737036/",
-        R.string.licenses_note_photo
-    ),
-    LicenseEntry(
         "Material Symbols", "Google", null, APACHE,
         "https://iconbuddy.com/material-symbols", R.string.licenses_note_icons
     ),

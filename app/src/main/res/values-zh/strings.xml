@@ -178,7 +178,6 @@
     <string name="licenses_note_swissjazz">SRG SSR 公开提供的网络电台流：无广告、无主持人，由收视费资助。音乐版权归电台和权利人所有，应用只播放，不保存任何内容。</string>
     <string name="licenses_radio_hint">设置中的爵士电台只播放 Radio Swiss Jazz；其中一个官方地址不可用时，应用会改用另一个。</string>
     <string name="licenses_group_assets">素材</string>
-    <string name="licenses_note_photo">背景森林照片。Pexels 许可证允许免费使用且无需署名，我们仍感谢摄影师。</string>
     <string name="licenses_note_icons">界面图标来自 Material Symbols 图标集，通过 IconBuddy 获取。Apache 2.0 全文见“库”部分。</string>
     <string name="licenses_note_pieces">国际象棋棋子图片。CC0 许可证无需署名，但作者希望附上其主页链接。</string>
     <string name="share_row_title">分享应用</string>

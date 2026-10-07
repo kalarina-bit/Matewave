@@ -87,9 +87,7 @@ fun SettingsScreen(
     }
 
     val feedback = remember { cc.skysparkle.matewave.settings.FeedbackSettings(context) }
-    val appearance = remember { cc.skysparkle.matewave.settings.BoardAppearance(context) }
     var vibrationOn by remember { mutableStateOf(feedback.vibrationEnabled) }
-    var openingBarOn by remember { mutableStateOf(appearance.showOpening) }
     val radioState by SoundManager.radioState.collectAsState()
 
     GlassScaffold(
@@ -144,12 +142,6 @@ fun SettingsScreen(
                 icon = R.drawable.ic_board_view,
                 chevron = true,
                 onClick = onOpenAppearance
-            )
-            ListDivider()
-            ListRow(
-                title = stringResource(R.string.appearance_opening_in_game),
-                icon = R.drawable.ic_book,
-                trailing = { SettingSwitch(openingBarOn) { openingBarOn = it; appearance.showOpening = it } }
             )
         }
 
@@ -239,12 +231,6 @@ fun SettingsScreen(
                 title = stringResource(R.string.settings_repo_title),
                 subtitle = cc.skysparkle.matewave.settings.AppLinks.REPOSITORY_LABEL,
                 onClick = { cc.skysparkle.matewave.settings.AppLinks.open(context, cc.skysparkle.matewave.settings.AppLinks.REPOSITORY) }
-            )
-            AboutRow(
-                iconRes = R.drawable.ic_policy,
-                title = stringResource(R.string.privacy_policy),
-                subtitle = "skysparkle.cc/privacy",
-                onClick = { cc.skysparkle.matewave.settings.AppLinks.open(context, cc.skysparkle.matewave.settings.AppLinks.PRIVACY_POLICY) }
             )
         }
     }

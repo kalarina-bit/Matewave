@@ -178,7 +178,6 @@
     <string name="licenses_note_swissjazz">Publicly available internet stream from SRG SSR: no advertising and no presenters, funded by license fees. The music belongs to the broadcaster and rights holders; the app only plays the stream and stores nothing.</string>
     <string name="licenses_radio_hint">The jazz radio in Settings plays only Radio Swiss Jazz; if one of its official stream links is unavailable, the app uses another.</string>
     <string name="licenses_group_assets">Assets</string>
-    <string name="licenses_note_photo">Background forest photo. The Pexels License allows free use without attribution — we thank the photographer anyway.</string>
     <string name="licenses_note_icons">Interface icons from the Material Symbols set, obtained via IconBuddy. The Apache 2.0 text is under Libraries.</string>
     <string name="licenses_note_pieces">Chess piece images. The CC0 license does not require attribution, but the author asks for a link to their page.</string>
     <string name="share_row_title">Share the app</string>

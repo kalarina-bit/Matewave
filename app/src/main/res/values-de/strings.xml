@@ -178,7 +178,6 @@
     <string name="licenses_note_swissjazz">Öffentlich zugänglicher Internet-Stream der SRG SSR: ohne Werbung und ohne Moderation, durch Gebühren finanziert. Die Musik gehört dem Sender und den Rechteinhabern; die App spielt den Stream nur ab und speichert nichts.</string>
     <string name="licenses_radio_hint">Das Jazzradio in den Einstellungen spielt nur Radio Swiss Jazz; ist einer der offiziellen Stream-Links nicht erreichbar, nutzt die App einen anderen.</string>
     <string name="licenses_group_assets">Materialien</string>
-    <string name="licenses_note_photo">Hintergrundfoto eines Waldes. Die Pexels-Lizenz erlaubt die freie Nutzung ohne Namensnennung – wir danken dem Fotografen trotzdem.</string>
     <string name="licenses_note_icons">Oberflächen-Symbole aus dem Set Material Symbols, bezogen über IconBuddy. Der Text der Apache-2.0-Lizenz steht unter „Bibliotheken“.</string>
     <string name="licenses_note_pieces">Bilder der Schachfiguren. Die CC0-Lizenz verlangt keine Namensnennung, der Autor bittet aber um einen Link zu seiner Seite.</string>
     <string name="share_row_title">App teilen</string>
