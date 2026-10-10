@@ -22,10 +22,10 @@ over Bluetooth and Wi-Fi/LAN.
 
 - 🤖 AI opponent with adjustable difficulty
 - 🧩 Chess puzzles and tactical training
-- 📖 Chess openings — learn and practice opening lines
-- ♟️ Opening practice for different variations and move sequences
-- 📶 Local multiplayer over Bluetooth/LAN
-- 👥 Nearby player discovery over local Wi-Fi
+- 📖 Opening trainer — learn and practice opening lines and their variations
+- 📶 Local multiplayer over Bluetooth or Wi-Fi/LAN, with nearby player discovery
+- 📲 Share the app with a nearby friend via QR code over the local network
+- 🎷 Optional built-in jazz radio
 - 🌙 Dark theme
 - 🌍 English, Russian, German, Japanese, Lithuanian and Chinese
 - 🔓 100% open source
@@ -51,18 +51,26 @@ over Bluetooth and Wi-Fi/LAN.
 Or via `adb` (after downloading):
 
 ```sh
-adb install Matewawe-v1.0.42.apk
+adb install Matewave-v1.0.43.apk
 ```
 
 ## Verifying a download
 
 <img src="assets/icon-verify.png" width="36" align="left">
 
-Compare the SHA-256 checksum against the value listed in [CHANGELOG.md](CHANGELOG.md):
+Every official APK is signed with the same key. Check the signing certificate before installing:
 
 ```sh
-sha256sum Matewawe-v1.0.42.apk
+apksigner verify --print-certs Matewave-v1.0.43.apk
 ```
+
+The `Signer #1 certificate SHA-256 digest` must be:
+
+```
+1c3e54549d099a9d3d5bbeedc563f57f6012563c888599b188b4fb17e34646a9
+```
+
+On Android you can check it with [AppVerifier](https://github.com/soupslurpr/AppVerifier) (app ID `cc.skysparkle.matewave`).
 
 ## Building from source
 
@@ -87,7 +95,6 @@ Nearby multiplayer needs two physical devices — the emulator has no real Bluet
 ├── fastlane/            # F-Droid store listing, screenshots and changelogs
 ├── fdroid/              # Build recipe for fdroiddata
 ├── gradle/              # Gradle wrapper
-├── CHANGELOG.md         # Per-version build dates, sizes and checksums (links to GitHub Releases)
 ├── LICENSE              # GNU GPLv3
 └── README.md
 ```
