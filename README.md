@@ -64,11 +64,13 @@ Every official APK is signed with the same key. Check the signing certificate be
 apksigner verify --print-certs Matewave-v1.0.43.apk
 ```
 
-The `Signer #1 certificate SHA-256 digest` must be:
+The SHA-256 fingerprint of the signing certificate must be:
 
 ```
-1c3e54549d099a9d3d5bbeedc563f57f6012563c888599b188b4fb17e34646a9
+1C:3E:54:54:9D:09:9A:9D:3D:5B:BE:ED:C5:63:F5:7F:60:12:56:3C:88:85:99:B1:88:B4:FB:17:E3:46:46:A9
 ```
+
+(`apksigner` prints the same value in lowercase without colons.)
 
 On Android you can check it with [AppVerifier](https://github.com/soupslurpr/AppVerifier) (app ID `cc.skysparkle.matewave`).
 
@@ -93,7 +95,6 @@ Nearby multiplayer needs two physical devices — the emulator has no real Bluet
 ├── assets/              # Icon and README images
 │   └── screenshots/     # App screenshots
 ├── fastlane/            # F-Droid store listing, screenshots and changelogs
-├── fdroid/              # Build recipe for fdroiddata
 ├── gradle/              # Gradle wrapper
 ├── LICENSE              # GNU GPLv3
 └── README.md
@@ -103,4 +104,4 @@ APK builds themselves are published as assets on the [Releases page](https://git
 
 ## License
 
-This project is licensed under the **GNU General Public License v3.0** — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GNU General Public License v3.0 or later** (GPL-3.0-or-later) — see the [LICENSE](LICENSE) file for details.
