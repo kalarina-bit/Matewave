@@ -25,6 +25,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Keeps release builds reproducible (F-Droid).
+            vcsInfo.include = false
         }
     }
 
