@@ -11,7 +11,6 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/downloads/kalarina-bit/Matewave/latest/total?label=downloads&color=2e7d32&labelColor=1b1b1b" alt="downloads counter">
   <img src="https://img.shields.io/badge/Android-8.0%2B-2e7d32?logo=android&logoColor=white&labelColor=1b1b1b" alt="Android 8.0+">
   <img src="https://img.shields.io/badge/License-GPL--3.0--or--later-2e7d32?labelColor=1b1b1b" alt="GPL-3.0-or-later">
 </p>
@@ -80,7 +79,7 @@ Nearby multiplayer needs two physical devices — the emulator has no real Bluet
 
 ## Contributing
 
-Bug reports, puzzle and opening fixes, translation fixes and pull requests are welcome on [Gitea](https://git.skysparkle.cc/kalarina/Matewave/issues) and [GitHub](https://github.com/kalarina-bit/Matewave/issues). Please read [CONTRIBUTING.md](CONTRIBUTING.md) first — it explains what fits the project and how to send changes.
+Bug reports, puzzle and opening fixes, translation fixes and pull requests are welcome in the [issue tracker](https://git.skysparkle.cc/kalarina/Matewave/issues). Please read [CONTRIBUTING.md](CONTRIBUTING.md) first — it explains what fits the project and how to send changes.
 
 ## License
 
