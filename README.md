@@ -10,6 +10,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/github/downloads/kalarina-bit/Matewave/latest/total?label=downloads&color=2e7d32&labelColor=1b1b1b" alt="downloads counter">
+  <img src="https://img.shields.io/badge/Android-8.0%2B-2e7d32?logo=android&logoColor=white&labelColor=1b1b1b" alt="Android 8.0+">
 </p>
 
 **A beautiful, open-source chess app for Android.**
@@ -43,6 +44,8 @@ over Bluetooth and Wi-Fi/LAN.
 ## Installation
 
 <img src="assets/icon-install.png" width="36" align="left">
+
+Requires **Android 8.0 (API 26) or newer**.
 
 1. Download the APK for the version you want from the [Releases page](https://github.com/kalarina-bit/Matewave/releases).
 2. On your Android device, allow installs from unknown sources for the app you use to open the file (Settings → Apps → Special access → Install unknown apps).
