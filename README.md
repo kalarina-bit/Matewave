@@ -78,6 +78,10 @@ Requires JDK 17+ and Android Studio with AGP 9.2 support.
 
 Nearby multiplayer needs two physical devices — the emulator has no real Bluetooth, and mDNS discovery is often blocked on emulator networks.
 
+## Contributing
+
+Bug reports, puzzle and opening fixes, translation fixes and pull requests are welcome on [Gitea](https://git.skysparkle.cc/kalarina/Matewave/issues) and [GitHub](https://github.com/kalarina-bit/Matewave/issues). Please read [CONTRIBUTING.md](CONTRIBUTING.md) first — it explains what fits the project and how to send changes.
+
 ## License
 
 [GNU General Public License v3.0 or later](LICENSE) (GPL-3.0-or-later).
