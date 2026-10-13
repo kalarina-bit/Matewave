@@ -1,0 +1,13 @@
+<p>Mach jede Schachpartie wertvoll. Spiel in deinem eigenen Tempo, schärfe deine Taktik und gewinne Sicherheit in der Eröffnung – ob du allein trainierst oder dich mit einem Freund ans Brett setzt.</p>
+
+<ul>
+<li>Fordere eine KI heraus und wähle die Schwierigkeit, die zu dir passt.</li>
+<li>Löse Schachaufgaben und setze deine Taktik in die Praxis um.</li>
+<li>Lerne und übe Eröffnungen, Varianten und Zugfolgen.</li>
+<li>Spiele lokal mit Freunden über WLAN, LAN oder Bluetooth.</li>
+<li>Genieße eine aufgeräumte Open-Source-Schach-App mit dunklem Design und sechs Sprachen.</li>
+</ul>
+
+<p>Wähle einen Modus und leg los: Trainiere gegen die KI, löse Aufgaben, studiere Eröffnungslinien oder verbinde dich über dein lokales Netzwerk mit einem Spieler in der Nähe. Matewave ist für Einsteiger gemacht, die das Spiel lernen, und für erfahrene Spieler, die konzentriert üben wollen – ganz ohne Online-Matchmaking.</p>
+
+<p>Lade Matewave herunter und mach deinen nächsten Zug.</p>
