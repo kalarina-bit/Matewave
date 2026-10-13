@@ -1,0 +1,5 @@
+• Calm music on the main screen, can be turned off in Settings
+• Jazz radio is off by default and streams over HTTPS only
+• Starting the app no longer stops music in other apps
+• Screen readers name the pieces in the promotion dialog
+• Cleaner opening card artwork

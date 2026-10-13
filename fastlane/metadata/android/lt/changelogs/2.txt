@@ -1,0 +1,5 @@
+• Rami muzika pagrindiniame ekrane, išjungiama nustatymuose
+• Džiazo radijas pagal numatymą išjungtas ir veikia tik per HTTPS
+• Paleidus programėlę, kitų programėlių muzika nebesustoja
+• Ekrano skaitytuvai įvardija figuras virstant pėstininkui
+• Tvarkingesni žirgų paveikslėliai debiutų kortelėse

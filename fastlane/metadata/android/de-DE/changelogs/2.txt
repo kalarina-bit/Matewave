@@ -1,0 +1,5 @@
+• Ruhige Musik auf dem Startbildschirm, in den Einstellungen abschaltbar
+• Jazzradio ist standardmäßig aus und streamt nur über HTTPS
+• Der App-Start stoppt keine Musik in anderen Apps mehr
+• Screenreader nennen die Figuren bei der Bauernumwandlung
+• Sauberere Springer-Bilder auf den Eröffnungskarten
