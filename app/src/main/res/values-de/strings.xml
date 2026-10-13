@@ -354,4 +354,10 @@
     <string name="nearby_bt_off_hint">Schalte es ein, um Spieler per Bluetooth zu finden</string>
     <string name="nearby_wifi_hint">Spieler im selben WLAN werden erst gefunden, wenn du verbunden bist</string>
     <string name="permission_open_settings">Einstellungen öffnen</string>
+    <string name="settings_menu_music">Menümusik</string>
+    <string name="settings_menu_music_subtitle">Ruhige Musik auf dem Startbildschirm, solange das Radio aus ist</string>
+    <string name="piece_queen">Dame</string>
+    <string name="piece_rook">Turm</string>
+    <string name="piece_bishop">Läufer</string>
+    <string name="piece_knight">Springer</string>
 </resources>

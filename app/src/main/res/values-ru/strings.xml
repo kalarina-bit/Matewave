@@ -362,4 +362,10 @@
     <string name="nearby_bt_off_hint">Включите, чтобы находить игроков по Bluetooth</string>
     <string name="nearby_wifi_hint">Игроков в той же сети Wi-Fi не найти, пока вы не подключитесь</string>
     <string name="permission_open_settings">Открыть настройки</string>
+    <string name="settings_menu_music">Музыка в меню</string>
+    <string name="settings_menu_music_subtitle">Спокойная музыка на главном экране, пока радио выключено</string>
+    <string name="piece_queen">Ферзь</string>
+    <string name="piece_rook">Ладья</string>
+    <string name="piece_bishop">Слон</string>
+    <string name="piece_knight">Конь</string>
 </resources>

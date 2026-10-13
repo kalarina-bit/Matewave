@@ -60,6 +60,7 @@ fun SettingsScreen(
     onOpenShare: () -> Unit
 ) {
     var musicOn by remember { mutableStateOf(SoundManager.musicEnabled) }
+    var menuMusicOn by remember { mutableStateOf(SoundManager.menuMusicEnabled) }
     var sfxOn by remember { mutableStateOf(SoundManager.sfxEnabled) }
     val context = LocalContext.current
 
@@ -106,6 +107,13 @@ fun SettingsScreen(
     ) {
         SectionCaption(stringResource(R.string.settings_section_sound))
         ListGroup {
+            ListRow(
+                title = stringResource(R.string.settings_menu_music),
+                subtitle = stringResource(R.string.settings_menu_music_subtitle),
+                icon = R.drawable.ic_music,
+                trailing = { SettingSwitch(menuMusicOn) { menuMusicOn = it; SoundManager.setMenuMusicEnabled(it) } }
+            )
+            ListDivider()
             ListRow(
                 title = stringResource(R.string.settings_radio),
                 subtitle = stringResource(R.string.settings_radio_subtitle),

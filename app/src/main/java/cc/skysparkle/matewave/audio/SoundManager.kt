@@ -20,14 +20,16 @@ enum class RadioState { IDLE, CONNECTING, PLAYING, ERROR }
 
 object SoundManager {
     private val RADIO_SOURCES = listOf(
-        "http://stream.srg-ssr.ch/srgssr/rsj/aac/192",
         "https://stream.srg-ssr.ch/srgssr/rsj/mp3/128",
-        "http://stream.srg-ssr.ch/srgssr/rsj/aac/96"
+        "https://stream.srg-ssr.ch/srgssr/rsj/aac/192",
+        "https://stream.srg-ssr.ch/srgssr/rsj/aac/96"
     )
 
     private const val PREFS = "chess_sound_prefs"
     private const val KEY_MUSIC = "music_enabled"
     private const val KEY_SFX = "sfx_enabled"
+    private const val KEY_MENU_MUSIC = "menu_music_enabled"
+    private const val MENU_MUSIC_DIR = "music"
     private const val TAG = "SoundManager"
 
     private const val RADIO_START_DELAY_MS = 1_500L
@@ -49,7 +51,11 @@ object SoundManager {
     private var noisyReceiverRegistered = false
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    var musicEnabled: Boolean = true
+    /** Jazz radio. Off until the user turns it on, so nothing connects on start. */
+    var musicEnabled: Boolean = false
+        private set
+    /** Bundled tracks on the main screen, used while the radio is off. */
+    var menuMusicEnabled: Boolean = true
         private set
     var sfxEnabled: Boolean = true
         private set
@@ -57,28 +63,57 @@ object SoundManager {
     private val _radioState = MutableStateFlow(RadioState.IDLE)
     val radioState: StateFlow<RadioState> = _radioState
 
+    private var menuPlayer: MediaPlayer? = null
+    private var menuPrepared = false
+    private var menuTracks: List<String> = emptyList()
+    private var menuTrackIndex = 0
+    private var menuVisible = false
+    private var appInForeground = false
+
     private fun pauseRadio() {
         val player = musicPlayer ?: return
         if (playerPrepared) runCatching { if (player.isPlaying) player.pause() }
     }
 
+    private fun pauseMenuMusic() {
+        val player = menuPlayer ?: return
+        if (menuPrepared) runCatching { if (player.isPlaying) player.pause() }
+    }
+
     private val noisyReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) pauseRadio()
+            if (intent.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
+                pauseRadio()
+                pauseMenuMusic()
+            }
         }
     }
 
     private val focusChangeListener = AudioManager.OnAudioFocusChangeListener { change ->
         when (change) {
-            AudioManager.AUDIOFOCUS_LOSS -> stopRadioInternal()
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> pauseRadio()
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK ->
+            AudioManager.AUDIOFOCUS_LOSS -> {
+                stopRadioInternal()
+                releaseMenuPlayer()
+                abandonAudioFocus()
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                pauseRadio()
+                pauseMenuMusic()
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                 runCatching { musicPlayer?.setVolume(BASE_VOLUME * 0.3f, BASE_VOLUME * 0.3f) }
+                runCatching { menuPlayer?.setVolume(BASE_VOLUME * 0.3f, BASE_VOLUME * 0.3f) }
+            }
             AudioManager.AUDIOFOCUS_GAIN -> {
                 val player = musicPlayer
                 if (player != null && playerPrepared) runCatching {
                     player.setVolume(BASE_VOLUME, BASE_VOLUME)
                     if (!player.isPlaying) player.start()
+                }
+                val menu = menuPlayer
+                if (menu != null && menuPrepared && menuVisible) runCatching {
+                    menu.setVolume(BASE_VOLUME, BASE_VOLUME)
+                    if (!menu.isPlaying) menu.start()
                 }
             }
         }
@@ -92,8 +127,12 @@ object SoundManager {
         audioManager = ctx.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
 
         val prefs = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        musicEnabled = prefs.getBoolean(KEY_MUSIC, true)
+        musicEnabled = prefs.getBoolean(KEY_MUSIC, false)
         sfxEnabled = prefs.getBoolean(KEY_SFX, true)
+        menuMusicEnabled = prefs.getBoolean(KEY_MENU_MUSIC, true)
+        menuTracks = runCatching {
+            ctx.assets.list(MENU_MUSIC_DIR)?.filter { it.endsWith(".ogg") || it.endsWith(".mp3") }?.sorted()
+        }.getOrNull().orEmpty()
 
         ensureSoundPool(ctx)
 
@@ -104,6 +143,7 @@ object SoundManager {
 
     private fun requestAudioFocus(): Boolean {
         val am = audioManager ?: return false
+        if (focusRequest != null) return true
         val attrs = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_MEDIA)
             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
@@ -145,6 +185,7 @@ object SoundManager {
     private fun startRadio() {
         val ctx = appContext ?: return
         if (musicPlayer != null) return
+        releaseMenuPlayer()
         if (!requestAudioFocus()) {
             Log.w(TAG, "Audio focus denied, radio not started")
             _radioState.value = RadioState.ERROR
@@ -260,18 +301,116 @@ object SoundManager {
     }
 
     fun onAppResumed() {
+        appInForeground = true
         if (musicEnabled && musicPlayer == null) startRadio()
+        updateMenuMusic()
     }
 
     fun onAppPaused() {
+        appInForeground = false
         stopRadioInternal()
+        releaseMenuPlayer()
+        abandonAudioFocus()
     }
 
     fun setMusicEnabled(enabled: Boolean) {
         musicEnabled = enabled
         appContext?.getSharedPreferences(PREFS, Context.MODE_PRIVATE)?.edit()
             ?.putBoolean(KEY_MUSIC, enabled)?.apply()
-        if (enabled) startRadio() else stopRadioInternal()
+        if (enabled) {
+            startRadio()
+        } else {
+            stopRadioInternal()
+            updateMenuMusic()
+        }
+    }
+
+    fun setMenuMusicEnabled(enabled: Boolean) {
+        menuMusicEnabled = enabled
+        appContext?.getSharedPreferences(PREFS, Context.MODE_PRIVATE)?.edit()
+            ?.putBoolean(KEY_MENU_MUSIC, enabled)?.apply()
+        updateMenuMusic()
+    }
+
+    /** Called by the main screen when it appears and disappears. */
+    fun setMenuVisible(visible: Boolean) {
+        menuVisible = visible
+        updateMenuMusic()
+    }
+
+    private fun updateMenuMusic() {
+        val shouldPlay = menuMusicEnabled && !musicEnabled && menuVisible && appInForeground
+        if (shouldPlay) startMenuMusic() else pauseMenuMusicAndFocus()
+    }
+
+    private fun pauseMenuMusicAndFocus() {
+        pauseMenuMusic()
+        if (!musicEnabled) abandonAudioFocus()
+    }
+
+    private fun startMenuMusic() {
+        if (menuTracks.isEmpty()) return
+        val player = menuPlayer
+        if (player != null) {
+            if (menuPrepared && !player.isPlaying && requestAudioFocus()) {
+                registerNoisyReceiver()
+                runCatching { player.setVolume(BASE_VOLUME, BASE_VOLUME); player.start() }
+            }
+            return
+        }
+        // Never cut off music another app is already playing.
+        if (audioManager?.isMusicActive == true) return
+        if (!requestAudioFocus()) return
+        registerNoisyReceiver()
+        playMenuTrack(menuTrackIndex)
+    }
+
+    private fun playMenuTrack(index: Int) {
+        val ctx = appContext ?: return
+        if (menuTracks.isEmpty()) return
+        val name = menuTracks[index % menuTracks.size]
+        try {
+            val player = MediaPlayer()
+            menuPlayer = player
+            menuPrepared = false
+            player.setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            ctx.assets.openFd("$MENU_MUSIC_DIR/$name").use { fd ->
+                player.setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
+            }
+            player.setVolume(BASE_VOLUME, BASE_VOLUME)
+            player.setOnPreparedListener {
+                menuPrepared = true
+                if (menuVisible && appInForeground && menuMusicEnabled && !musicEnabled) it.start()
+            }
+            player.setOnCompletionListener { mp ->
+                if (menuPlayer === mp) {
+                    releaseMenuPlayer()
+                    menuTrackIndex = (menuTrackIndex + 1) % menuTracks.size
+                    if (menuVisible && appInForeground && menuMusicEnabled && !musicEnabled) {
+                        playMenuTrack(menuTrackIndex)
+                    }
+                }
+            }
+            player.setOnErrorListener { mp, _, _ ->
+                if (menuPlayer === mp) releaseMenuPlayer()
+                true
+            }
+            player.prepareAsync()
+        } catch (e: Exception) {
+            Log.w(TAG, "Menu music error ($name): ${e.message}")
+            releaseMenuPlayer()
+        }
+    }
+
+    private fun releaseMenuPlayer() {
+        try { menuPlayer?.release() } catch (_: Exception) {}
+        menuPlayer = null
+        menuPrepared = false
     }
 
     fun setSfxEnabled(enabled: Boolean) {

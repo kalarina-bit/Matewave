@@ -353,4 +353,10 @@
     <string name="nearby_bt_off_hint">开启后即可通过蓝牙查找玩家</string>
     <string name="nearby_wifi_hint">连接 Wi-Fi 后才能找到同一网络中的玩家</string>
     <string name="permission_open_settings">打开设置</string>
+    <string name="settings_menu_music">菜单音乐</string>
+    <string name="settings_menu_music_subtitle">电台关闭时，在主屏幕播放舒缓的音乐</string>
+    <string name="piece_queen">后</string>
+    <string name="piece_rook">车</string>
+    <string name="piece_bishop">象</string>
+    <string name="piece_knight">马</string>
 </resources>

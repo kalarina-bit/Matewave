@@ -17,6 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import cc.skysparkle.matewave.R
 import cc.skysparkle.matewave.engine.Piece
@@ -39,6 +42,14 @@ fun PromotionDialog(color: PieceColor, onChoose: (PieceType) -> Unit, onDismiss:
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             listOf(PieceType.QUEEN, PieceType.ROOK, PieceType.BISHOP, PieceType.KNIGHT).forEach { type ->
                 val optionShape = RoundedCornerShape(UiCornerRadius)
+                val label = stringResource(
+                    when (type) {
+                        PieceType.QUEEN -> R.string.piece_queen
+                        PieceType.ROOK -> R.string.piece_rook
+                        PieceType.BISHOP -> R.string.piece_bishop
+                        else -> R.string.piece_knight
+                    }
+                )
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -46,7 +57,8 @@ fun PromotionDialog(color: PieceColor, onChoose: (PieceType) -> Unit, onDismiss:
                         .clip(optionShape)
                         .background(ink.copy(alpha = 0.10f))
                         .border(1.dp, PanelBorder, optionShape)
-                        .clickable { onChoose(type) }
+                        .clickable(onClickLabel = label, role = Role.Button) { onChoose(type) }
+                        .semantics { contentDescription = label }
                         .padding(8.dp),
                     contentAlignment = Alignment.Center
                 ) {

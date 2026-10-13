@@ -354,4 +354,10 @@
     <string name="nearby_bt_off_hint">Turn it on to find players over Bluetooth</string>
     <string name="nearby_wifi_hint">Players on the same Wi-Fi network can\'t be found until you connect</string>
     <string name="permission_open_settings">Open settings</string>
+    <string name="settings_menu_music">Menu music</string>
+    <string name="settings_menu_music_subtitle">Calm music on the main screen while the radio is off</string>
+    <string name="piece_queen">Queen</string>
+    <string name="piece_rook">Rook</string>
+    <string name="piece_bishop">Bishop</string>
+    <string name="piece_knight">Knight</string>
 </resources>

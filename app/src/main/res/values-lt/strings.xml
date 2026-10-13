@@ -356,4 +356,10 @@
     <string name="nearby_bt_off_hint">Įjunkite, kad rastumėte žaidėjus per „Bluetooth“</string>
     <string name="nearby_wifi_hint">Žaidėjų tame pačiame „Wi-Fi“ tinkle nerasite, kol neprisijungsite</string>
     <string name="permission_open_settings">Atidaryti nustatymus</string>
+    <string name="settings_menu_music">Meniu muzika</string>
+    <string name="settings_menu_music_subtitle">Rami muzika pagrindiniame ekrane, kol radijas išjungtas</string>
+    <string name="piece_queen">Valdovė</string>
+    <string name="piece_rook">Bokštas</string>
+    <string name="piece_bishop">Rikis</string>
+    <string name="piece_knight">Žirgas</string>
 </resources>
