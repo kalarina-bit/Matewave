@@ -260,6 +260,7 @@ private fun AppNavHost() {
         }
 
         composable("game") {
+            PlayScreenMusic()
             GameScreen(
                 viewModel = viewModel,
                 onExit = { navController.popBackStack("menu", inclusive = false) }
@@ -267,6 +268,7 @@ private fun AppNavHost() {
         }
 
         composable("openingStudy") {
+            PlayScreenMusic()
             cc.skysparkle.matewave.ui.screens.OpeningStudyScreen(
                 viewModel = studyViewModel,
                 onBack = { navController.popBackStack() },
@@ -275,6 +277,7 @@ private fun AppNavHost() {
         }
 
         composable("openingTrainer") {
+            PlayScreenMusic()
             cc.skysparkle.matewave.ui.screens.OpeningTrainerScreen(
                 viewModel = studyViewModel,
                 onBack = { navController.popBackStack() }
@@ -282,6 +285,7 @@ private fun AppNavHost() {
         }
 
         composable("puzzleSolve") {
+            PlayScreenMusic()
             PuzzleSolveScreen(
                 viewModel = viewModel,
                 onBack = { navController.popBackStack("menu", inclusive = false) },
@@ -355,3 +359,12 @@ private fun sharedAxisOut(forward: Boolean): androidx.compose.animation.ExitTran
         androidx.compose.animation.fadeOut(
             androidx.compose.animation.core.tween(durationMillis = 120, easing = androidx.compose.animation.core.LinearEasing)
         )
+
+// Offline music switches to the game track while a game, puzzle or opening study is open
+@Composable
+private fun PlayScreenMusic() {
+    androidx.compose.runtime.DisposableEffect(Unit) {
+        SoundManager.enterPlayScreen()
+        onDispose { SoundManager.leavePlayScreen() }
+    }
+}

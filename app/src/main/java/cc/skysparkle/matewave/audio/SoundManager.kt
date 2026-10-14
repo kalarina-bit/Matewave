@@ -9,6 +9,9 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.SoundPool
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -25,11 +28,13 @@ object SoundManager {
         "https://stream.srg-ssr.ch/srgssr/rsj/aac/96"
     )
 
+    // Played instead of the radio when it can't be reached
+    private const val MENU_TRACK = "music/midnight_grove_conversations.ogg"
+    private const val PLAY_TRACK = "music/raindrops_and_pawns.ogg"
+
     private const val PREFS = "chess_sound_prefs"
     private const val KEY_MUSIC = "music_enabled"
     private const val KEY_SFX = "sfx_enabled"
-    private const val KEY_MENU_MUSIC = "menu_music_enabled"
-    private const val MENU_MUSIC_DIR = "music"
     private const val TAG = "SoundManager"
 
     private const val RADIO_START_DELAY_MS = 1_500L
@@ -47,16 +52,21 @@ object SoundManager {
     private var sourceIndex = 0
     private var connectTimeoutRunnable: Runnable? = null
     private var audioManager: AudioManager? = null
+    private var connectivity: ConnectivityManager? = null
+    private var networkCallbackRegistered = false
     private var focusRequest: AudioFocusRequest? = null
     private var focusGranted = false
     private var noisyReceiverRegistered = false
     private val mainHandler = Handler(Looper.getMainLooper())
 
+    private var offlinePlayer: MediaPlayer? = null
+    private var offlinePrepared = false
+    private var offlineTrack: String? = null
+    private var playScreens = 0
+    private var appInForeground = false
+
     /** Jazz radio. Off until the user turns it on, so nothing connects on start. */
     var musicEnabled: Boolean = false
-        private set
-    /** Bundled tracks on the main screen, used while the radio is off. */
-    var menuMusicEnabled: Boolean = true
         private set
     var sfxEnabled: Boolean = true
         private set
@@ -64,29 +74,24 @@ object SoundManager {
     private val _radioState = MutableStateFlow(RadioState.IDLE)
     val radioState: StateFlow<RadioState> = _radioState
 
-    private var menuPlayer: MediaPlayer? = null
-    private var menuPrepared = false
-    private var menuTracks: List<String> = emptyList()
-    private var menuTrackIndex = 0
-    private var menuVisible = false
-    private var appInForeground = false
-
-    private fun pauseRadio() {
-        val player = musicPlayer ?: return
-        if (playerPrepared) runCatching { if (player.isPlaying) player.pause() }
+    private fun setRadioState(state: RadioState) {
+        _radioState.value = state
+        updateOfflineMusic()
     }
 
-    private fun pauseMenuMusic() {
-        val player = menuPlayer ?: return
-        if (menuPrepared) runCatching { if (player.isPlaying) player.pause() }
+    private fun pauseAll() {
+        musicPlayer?.let { player -> if (playerPrepared) runCatching { if (player.isPlaying) player.pause() } }
+        offlinePlayer?.let { player -> if (offlinePrepared) runCatching { if (player.isPlaying) player.pause() } }
+    }
+
+    private fun setVolumeAll(volume: Float) {
+        runCatching { musicPlayer?.setVolume(volume, volume) }
+        runCatching { offlinePlayer?.setVolume(volume, volume) }
     }
 
     private val noisyReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
-                pauseRadio()
-                pauseMenuMusic()
-            }
+            if (intent.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) pauseAll()
         }
     }
 
@@ -94,29 +99,33 @@ object SoundManager {
         when (change) {
             AudioManager.AUDIOFOCUS_LOSS -> {
                 stopRadioInternal()
-                releaseMenuPlayer()
+                releaseOfflinePlayer()
                 abandonAudioFocus()
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
                 focusGranted = false
-                pauseRadio()
-                pauseMenuMusic()
+                pauseAll()
             }
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
-                runCatching { musicPlayer?.setVolume(BASE_VOLUME * 0.3f, BASE_VOLUME * 0.3f) }
-                runCatching { menuPlayer?.setVolume(BASE_VOLUME * 0.3f, BASE_VOLUME * 0.3f) }
-            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> setVolumeAll(BASE_VOLUME * 0.3f)
             AudioManager.AUDIOFOCUS_GAIN -> {
                 focusGranted = true
+                setVolumeAll(BASE_VOLUME)
                 val player = musicPlayer
-                if (player != null && playerPrepared) runCatching {
-                    player.setVolume(BASE_VOLUME, BASE_VOLUME)
-                    if (!player.isPlaying) player.start()
+                if (player != null && playerPrepared) runCatching { if (!player.isPlaying) player.start() }
+                val offline = offlinePlayer
+                if (offline != null && offlinePrepared && shouldPlayOffline()) {
+                    runCatching { if (!offline.isPlaying) offline.start() }
                 }
-                val menu = menuPlayer
-                if (menu != null && menuPrepared && shouldPlayMenuMusic()) runCatching {
-                    menu.setVolume(BASE_VOLUME, BASE_VOLUME)
-                    if (!menu.isPlaying) menu.start()
+            }
+        }
+    }
+
+    // Brings the radio back once the device is online again
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            mainHandler.post {
+                if (musicEnabled && appInForeground && musicPlayer == null && _radioState.value == RadioState.ERROR) {
+                    startRadio()
                 }
             }
         }
@@ -128,14 +137,11 @@ object SoundManager {
         val ctx = context.applicationContext
         appContext = ctx
         audioManager = ctx.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+        connectivity = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
 
         val prefs = ctx.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         musicEnabled = prefs.getBoolean(KEY_MUSIC, false)
         sfxEnabled = prefs.getBoolean(KEY_SFX, true)
-        menuMusicEnabled = prefs.getBoolean(KEY_MENU_MUSIC, true)
-        menuTracks = runCatching {
-            ctx.assets.list(MENU_MUSIC_DIR)?.filter { it.endsWith(".ogg") || it.endsWith(".mp3") }?.sorted()
-        }.getOrNull().orEmpty()
 
         ensureSoundPool(ctx)
 
@@ -189,22 +195,47 @@ object SoundManager {
         noisyReceiverRegistered = false
     }
 
+    private fun registerNetworkCallback() {
+        val cm = connectivity ?: return
+        if (networkCallbackRegistered) return
+        runCatching { cm.registerDefaultNetworkCallback(networkCallback) }
+            .onSuccess { networkCallbackRegistered = true }
+    }
+
+    private fun unregisterNetworkCallback() {
+        val cm = connectivity ?: return
+        if (!networkCallbackRegistered) return
+        runCatching { cm.unregisterNetworkCallback(networkCallback) }
+        networkCallbackRegistered = false
+    }
+
+    private fun isOnline(): Boolean {
+        val cm = connectivity ?: return true
+        val caps = cm.getNetworkCapabilities(cm.activeNetwork) ?: return false
+        return caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+    }
+
     private fun startRadio() {
         val ctx = appContext ?: return
         if (musicPlayer != null) return
-        releaseMenuPlayer()
         if (!requestAudioFocus()) {
             Log.w(TAG, "Audio focus denied, radio not started")
-            _radioState.value = RadioState.ERROR
+            setRadioState(RadioState.ERROR)
             return
         }
         registerNoisyReceiver()
+        registerNetworkCallback()
         retryCount = 0
+        if (!isOnline()) {
+            // No point waiting for timeouts: play offline music until the network is back
+            setRadioState(RadioState.ERROR)
+            return
+        }
         connect(ctx)
     }
 
     private fun connect(ctx: Context) {
-        _radioState.value = RadioState.CONNECTING
+        setRadioState(RadioState.CONNECTING)
         val url = RADIO_SOURCES[sourceIndex % RADIO_SOURCES.size]
         try {
             val player = MediaPlayer()
@@ -221,9 +252,9 @@ object SoundManager {
             player.setOnPreparedListener {
                 cancelConnectTimeout()
                 playerPrepared = true
-                it.start()
                 retryCount = 0
-                _radioState.value = RadioState.PLAYING
+                if (appInForeground) it.start()
+                setRadioState(RadioState.PLAYING)
             }
             player.setOnErrorListener { mp, _, _ ->
                 cancelConnectTimeout()
@@ -279,18 +310,18 @@ object SoundManager {
     private fun scheduleRetry(ctx: Context) {
         cancelConnectTimeout()
         if (!musicEnabled) {
-            _radioState.value = RadioState.IDLE
+            setRadioState(RadioState.IDLE)
             return
         }
-        if (retryCount >= MAX_RETRIES) {
-            _radioState.value = RadioState.ERROR
-            Log.w(TAG, "Could not connect to the radio after $MAX_RETRIES attempts")
+        if (retryCount >= MAX_RETRIES || !isOnline()) {
+            if (retryCount >= MAX_RETRIES) Log.w(TAG, "Could not connect to the radio after $MAX_RETRIES attempts")
+            setRadioState(RadioState.ERROR)
             return
         }
         sourceIndex++
         val delay = RETRY_DELAYS_MS.getOrElse(retryCount) { RETRY_DELAYS_MS.last() }
         retryCount++
-        _radioState.value = RadioState.CONNECTING
+        setRadioState(RadioState.CONNECTING)
         mainHandler.postDelayed({
             if (musicEnabled && musicPlayer == null) connect(ctx)
         }, delay)
@@ -302,22 +333,22 @@ object SoundManager {
         musicPlayer = null
         playerPrepared = false
         unregisterNoisyReceiver()
+        unregisterNetworkCallback()
         abandonAudioFocus()
         mainHandler.removeCallbacksAndMessages(null)
-        _radioState.value = RadioState.IDLE
+        setRadioState(RadioState.IDLE)
     }
 
     fun onAppResumed() {
         appInForeground = true
         if (musicEnabled && musicPlayer == null) startRadio()
-        updateMenuMusic()
+        updateOfflineMusic()
     }
 
     fun onAppPaused() {
         appInForeground = false
+        releaseOfflinePlayer()
         stopRadioInternal()
-        releaseMenuPlayer()
-        abandonAudioFocus()
     }
 
     fun setMusicEnabled(enabled: Boolean) {
@@ -327,96 +358,86 @@ object SoundManager {
         if (enabled) {
             startRadio()
         } else {
+            releaseOfflinePlayer()
             stopRadioInternal()
-            updateMenuMusic()
         }
     }
 
-    fun setMenuMusicEnabled(enabled: Boolean) {
-        menuMusicEnabled = enabled
-        appContext?.getSharedPreferences(PREFS, Context.MODE_PRIVATE)?.edit()
-            ?.putBoolean(KEY_MENU_MUSIC, enabled)?.apply()
-        updateMenuMusic()
+    /** Games, puzzles and opening study call this while they are on screen. */
+    fun enterPlayScreen() {
+        playScreens++
+        updateOfflineMusic()
     }
 
-    /** Called by the main screen when it appears and disappears. */
-    fun setMenuVisible(visible: Boolean) {
-        menuVisible = visible
-        updateMenuMusic()
+    fun leavePlayScreen() {
+        playScreens = maxOf(0, playScreens - 1)
+        updateOfflineMusic()
     }
 
-    private fun updateMenuMusic() {
-        if (shouldPlayMenuMusic()) startMenuMusic() else pauseMenuMusicAndFocus()
+    // The radio is on but can't be reached: no network, or the first attempt already failed
+    private fun radioUnavailable(): Boolean = when (_radioState.value) {
+        RadioState.ERROR -> true
+        RadioState.CONNECTING -> retryCount > 0
+        else -> false
     }
 
-    private fun shouldPlayMenuMusic() = menuMusicEnabled && !musicEnabled && menuVisible && appInForeground
+    private fun shouldPlayOffline() = musicEnabled && appInForeground && radioUnavailable()
 
-    private fun pauseMenuMusicAndFocus() {
-        pauseMenuMusic()
-        if (!musicEnabled) abandonAudioFocus()
-    }
-
-    private fun startMenuMusic() {
-        if (menuTracks.isEmpty()) return
-        val player = menuPlayer
-        if (player != null) {
-            if (menuPrepared && !player.isPlaying && requestAudioFocus()) {
-                registerNoisyReceiver()
-                runCatching { player.setVolume(BASE_VOLUME, BASE_VOLUME); player.start() }
-            }
+    private fun updateOfflineMusic() {
+        if (!shouldPlayOffline()) {
+            releaseOfflinePlayer()
             return
         }
-        // Never cut off music another app is already playing.
-        if (audioManager?.isMusicActive == true) return
+        val track = if (playScreens > 0) PLAY_TRACK else MENU_TRACK
+        val player = offlinePlayer
+        if (player != null && offlineTrack == track) {
+            if (offlinePrepared && !player.isPlaying && requestAudioFocus()) runCatching { player.start() }
+            return
+        }
+        releaseOfflinePlayer()
         if (!requestAudioFocus()) return
         registerNoisyReceiver()
-        playMenuTrack(menuTrackIndex)
+        playOfflineTrack(track)
     }
 
-    private fun playMenuTrack(index: Int) {
+    private fun playOfflineTrack(track: String) {
         val ctx = appContext ?: return
-        if (menuTracks.isEmpty()) return
-        val name = menuTracks[index % menuTracks.size]
         try {
             val player = MediaPlayer()
-            menuPlayer = player
-            menuPrepared = false
+            offlinePlayer = player
+            offlineTrack = track
+            offlinePrepared = false
             player.setAudioAttributes(
                 AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build()
             )
-            ctx.assets.openFd("$MENU_MUSIC_DIR/$name").use { fd ->
+            ctx.assets.openFd(track).use { fd ->
                 player.setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
             }
+            player.isLooping = true
             player.setVolume(BASE_VOLUME, BASE_VOLUME)
             player.setOnPreparedListener {
-                menuPrepared = true
-                if (shouldPlayMenuMusic()) it.start()
-            }
-            player.setOnCompletionListener { mp ->
-                if (menuPlayer === mp) {
-                    releaseMenuPlayer()
-                    menuTrackIndex = (menuTrackIndex + 1) % menuTracks.size
-                    if (shouldPlayMenuMusic()) playMenuTrack(menuTrackIndex)
-                }
+                offlinePrepared = true
+                if (shouldPlayOffline() && focusGranted) it.start()
             }
             player.setOnErrorListener { mp, _, _ ->
-                if (menuPlayer === mp) releaseMenuPlayer()
+                if (offlinePlayer === mp) releaseOfflinePlayer()
                 true
             }
             player.prepareAsync()
         } catch (e: Exception) {
-            Log.w(TAG, "Menu music error ($name): ${e.message}")
-            releaseMenuPlayer()
+            Log.w(TAG, "Offline music error ($track): ${e.message}")
+            releaseOfflinePlayer()
         }
     }
 
-    private fun releaseMenuPlayer() {
-        try { menuPlayer?.release() } catch (_: Exception) {}
-        menuPlayer = null
-        menuPrepared = false
+    private fun releaseOfflinePlayer() {
+        try { offlinePlayer?.release() } catch (_: Exception) {}
+        offlinePlayer = null
+        offlineTrack = null
+        offlinePrepared = false
     }
 
     fun setSfxEnabled(enabled: Boolean) {

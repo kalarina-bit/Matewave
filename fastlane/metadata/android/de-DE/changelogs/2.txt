@@ -1,4 +1,4 @@
-• Ruhige Musik auf dem Startbildschirm, in den Einstellungen abschaltbar
+• Eingebaute Musik, wenn das Jazzradio keine Verbindung hat, mit eigenem Stück für Partien und Aufgaben
 • Jazzradio ist standardmäßig aus und streamt nur über HTTPS
 • Der App-Start stoppt keine Musik in anderen Apps mehr
 • Screenreader nennen die Figuren bei der Bauernumwandlung

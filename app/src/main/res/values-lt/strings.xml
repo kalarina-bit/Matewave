@@ -25,9 +25,9 @@
     <string name="settings_version">Versija %1$s</string>
     <string name="settings_repo_title">Šaltinio kodas</string>
     <string name="settings_radio">Džiazo radijas</string>
-    <string name="settings_radio_subtitle">Interneto radijas fone vietoj tylos</string>
+    <string name="settings_radio_subtitle">Radio Swiss Jazz. Be ryšio groja įdiegta muzika</string>
     <string name="settings_radio_connecting">Jungiamasi...</string>
-    <string name="settings_radio_error">Nepavyko prisijungti</string>
+    <string name="settings_radio_error">Nėra ryšio, įdiegta muzika</string>
     <string name="settings_sfx">Garso efektai</string>
     <string name="settings_sfx_subtitle">Figūros pasirinkimas, ėjimas, paėmimas</string>
     <string name="back">Atgal</string>
@@ -356,8 +356,6 @@
     <string name="nearby_bt_off_hint">Įjunkite, kad rastumėte žaidėjus per „Bluetooth“</string>
     <string name="nearby_wifi_hint">Žaidėjų tame pačiame „Wi-Fi“ tinkle nerasite, kol neprisijungsite</string>
     <string name="permission_open_settings">Atidaryti nustatymus</string>
-    <string name="settings_menu_music">Meniu muzika</string>
-    <string name="settings_menu_music_subtitle">Rami muzika pagrindiniame ekrane, kol radijas išjungtas</string>
     <string name="piece_queen">Valdovė</string>
     <string name="piece_rook">Bokštas</string>
     <string name="piece_bishop">Rikis</string>

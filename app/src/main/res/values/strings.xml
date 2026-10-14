@@ -25,9 +25,9 @@
     <string name="settings_version">Version %1$s</string>
     <string name="settings_repo_title">Source code</string>
     <string name="settings_radio">Jazz radio</string>
-    <string name="settings_radio_subtitle">Background internet radio instead of silence</string>
+    <string name="settings_radio_subtitle">Radio Swiss Jazz. Without a connection, built-in music plays</string>
     <string name="settings_radio_connecting">Connecting...</string>
-    <string name="settings_radio_error">Couldn\'t connect</string>
+    <string name="settings_radio_error">No connection, built-in music</string>
     <string name="settings_sfx">Sound effects</string>
     <string name="settings_sfx_subtitle">Selecting a piece, moving, capturing</string>
     <string name="back">Back</string>
@@ -354,8 +354,6 @@
     <string name="nearby_bt_off_hint">Turn it on to find players over Bluetooth</string>
     <string name="nearby_wifi_hint">Players on the same Wi-Fi network can\'t be found until you connect</string>
     <string name="permission_open_settings">Open settings</string>
-    <string name="settings_menu_music">Menu music</string>
-    <string name="settings_menu_music_subtitle">Calm music on the main screen while the radio is off</string>
     <string name="piece_queen">Queen</string>
     <string name="piece_rook">Rook</string>
     <string name="piece_bishop">Bishop</string>

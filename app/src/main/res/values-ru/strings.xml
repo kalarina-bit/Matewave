@@ -30,9 +30,9 @@
     <string name="settings_version">Версия %1$s</string>
     <string name="settings_repo_title">Исходный код</string>
     <string name="settings_radio">Джаз-радио</string>
-    <string name="settings_radio_subtitle">Фоновый интернет-эфир вместо тишины</string>
+    <string name="settings_radio_subtitle">Radio Swiss Jazz. Без связи играет встроенная музыка</string>
     <string name="settings_radio_connecting">Подключение...</string>
-    <string name="settings_radio_error">Не удалось подключиться</string>
+    <string name="settings_radio_error">Нет связи, встроенная музыка</string>
     <string name="settings_sfx">Звуковые эффекты</string>
     <string name="settings_sfx_subtitle">Выбор фигуры, ход, взятие</string>
     <string name="back">Назад</string>
@@ -362,8 +362,6 @@
     <string name="nearby_bt_off_hint">Включите, чтобы находить игроков по Bluetooth</string>
     <string name="nearby_wifi_hint">Игроков в той же сети Wi-Fi не найти, пока вы не подключитесь</string>
     <string name="permission_open_settings">Открыть настройки</string>
-    <string name="settings_menu_music">Музыка в меню</string>
-    <string name="settings_menu_music_subtitle">Спокойная музыка на главном экране, пока радио выключено</string>
     <string name="piece_queen">Ферзь</string>
     <string name="piece_rook">Ладья</string>
     <string name="piece_bishop">Слон</string>

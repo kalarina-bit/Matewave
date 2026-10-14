@@ -25,9 +25,9 @@
     <string name="settings_version">バージョン %1$s</string>
     <string name="settings_repo_title">ソースコード</string>
     <string name="settings_radio">ジャズラジオ</string>
-    <string name="settings_radio_subtitle">無音のかわりにインターネットラジオをバックグラウンドで再生</string>
+    <string name="settings_radio_subtitle">Radio Swiss Jazz。接続がないときは内蔵の音楽を再生</string>
     <string name="settings_radio_connecting">接続中...</string>
-    <string name="settings_radio_error">接続できませんでした</string>
+    <string name="settings_radio_error">接続なし・内蔵の音楽</string>
     <string name="settings_sfx">効果音</string>
     <string name="settings_sfx_subtitle">駒の選択、移動、取る音</string>
     <string name="back">戻る</string>
@@ -353,8 +353,6 @@
     <string name="nearby_bt_off_hint">オンにすると、Bluetoothでプレイヤーを探せます</string>
     <string name="nearby_wifi_hint">接続するまで、同じWi-Fiのプレイヤーは見つかりません</string>
     <string name="permission_open_settings">設定を開く</string>
-    <string name="settings_menu_music">メニューの音楽</string>
-    <string name="settings_menu_music_subtitle">ラジオがオフのとき、ホーム画面で穏やかな音楽を流します</string>
     <string name="piece_queen">クイーン</string>
     <string name="piece_rook">ルーク</string>
     <string name="piece_bishop">ビショップ</string>

@@ -1,4 +1,4 @@
-• Calm music on the main screen, can be turned off in Settings
+• Built-in music when the jazz radio has no connection, with its own track for games and puzzles
 • Jazz radio is off by default and streams over HTTPS only
 • Starting the app no longer stops music in other apps
 • Screen readers name the pieces in the promotion dialog

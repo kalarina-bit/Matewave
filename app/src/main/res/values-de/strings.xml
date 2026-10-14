@@ -25,9 +25,9 @@
     <string name="settings_version">Version %1$s</string>
     <string name="settings_repo_title">Quellcode</string>
     <string name="settings_radio">Jazzradio</string>
-    <string name="settings_radio_subtitle">Internetradio im Hintergrund statt Stille</string>
+    <string name="settings_radio_subtitle">Radio Swiss Jazz. Ohne Verbindung läuft eingebaute Musik</string>
     <string name="settings_radio_connecting">Verbinde...</string>
-    <string name="settings_radio_error">Verbindung fehlgeschlagen</string>
+    <string name="settings_radio_error">Keine Verbindung, eingebaute Musik</string>
     <string name="settings_sfx">Soundeffekte</string>
     <string name="settings_sfx_subtitle">Figur wählen, ziehen, schlagen</string>
     <string name="back">Zurück</string>
@@ -354,8 +354,6 @@
     <string name="nearby_bt_off_hint">Schalte es ein, um Spieler per Bluetooth zu finden</string>
     <string name="nearby_wifi_hint">Spieler im selben WLAN werden erst gefunden, wenn du verbunden bist</string>
     <string name="permission_open_settings">Einstellungen öffnen</string>
-    <string name="settings_menu_music">Menümusik</string>
-    <string name="settings_menu_music_subtitle">Ruhige Musik auf dem Startbildschirm, solange das Radio aus ist</string>
     <string name="piece_queen">Dame</string>
     <string name="piece_rook">Turm</string>
     <string name="piece_bishop">Läufer</string>

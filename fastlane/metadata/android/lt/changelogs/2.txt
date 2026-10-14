@@ -1,4 +1,4 @@
-• Rami muzika pagrindiniame ekrane, išjungiama nustatymuose
+• Įdiegta muzika, kai džiazo radijas neturi ryšio, su atskiru kūriniu partijoms ir uždaviniams
 • Džiazo radijas pagal numatymą išjungtas ir veikia tik per HTTPS
 • Paleidus programėlę, kitų programėlių muzika nebesustoja
 • Ekrano skaitytuvai įvardija figuras virstant pėstininkui

@@ -84,10 +84,6 @@ fun MainMenuScreen(
     onFriendsClick: () -> Unit
 ) {
     val context = LocalContext.current
-    androidx.compose.runtime.DisposableEffect(Unit) {
-        cc.skysparkle.matewave.audio.SoundManager.setMenuVisible(true)
-        onDispose { cc.skysparkle.matewave.audio.SoundManager.setMenuVisible(false) }
-    }
     val resumable by viewModel.resumable.collectAsState()
     val ongoing = resumable
     val hasOngoingGame = ongoing != null
