@@ -82,6 +82,11 @@ fun SettingsScreen(
     val status = remember(statusTick) {
         cc.skysparkle.matewave.network.NetworkRequirements.check(context)
     }
+    // Wi-Fi alone used to count as "All set" even with the nearby permission denied
+    val permissionsMissing = remember(statusTick) {
+        !status.permissionsGranted ||
+            (cc.skysparkle.matewave.presence.PresenceSettings(context).backgroundEnabled && !status.notificationsGranted)
+    }
     LaunchedEffect(Unit) {
         while (true) { kotlinx.coroutines.delay(3_000); statusTick++ }
     }
@@ -149,10 +154,10 @@ fun SettingsScreen(
         ListGroup {
             ListRow(
                 title = stringResource(R.string.permissions_card_title),
-                icon = if (status.onlineBlocked) R.drawable.ic_permissions else R.drawable.ic_check_permission,
-                iconTint = if (status.onlineBlocked) Color(0xFFFF6B6B) else ChessGreen,
-                value = stringResource(if (status.onlineBlocked) R.string.permissions_card_blocked_short else R.string.permissions_card_ok_short),
-                valueColor = if (status.onlineBlocked) Color(0xFFFF6B6B) else ink.copy(alpha = 0.55f),
+                icon = if (permissionsMissing) R.drawable.ic_permissions else R.drawable.ic_check_permission,
+                iconTint = if (permissionsMissing) Color(0xFFFF6B6B) else ChessGreen,
+                value = stringResource(if (permissionsMissing) R.string.permissions_card_blocked_short else R.string.permissions_card_ok_short),
+                valueColor = if (permissionsMissing) Color(0xFFFF6B6B) else ink.copy(alpha = 0.55f),
                 chevron = true,
                 onClick = onOpenPermissions
             )
