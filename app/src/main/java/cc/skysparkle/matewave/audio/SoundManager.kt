@@ -48,6 +48,7 @@ object SoundManager {
     private var connectTimeoutRunnable: Runnable? = null
     private var audioManager: AudioManager? = null
     private var focusRequest: AudioFocusRequest? = null
+    private var focusGranted = false
     private var noisyReceiverRegistered = false
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -97,6 +98,7 @@ object SoundManager {
                 abandonAudioFocus()
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                focusGranted = false
                 pauseRadio()
                 pauseMenuMusic()
             }
@@ -105,13 +107,14 @@ object SoundManager {
                 runCatching { menuPlayer?.setVolume(BASE_VOLUME * 0.3f, BASE_VOLUME * 0.3f) }
             }
             AudioManager.AUDIOFOCUS_GAIN -> {
+                focusGranted = true
                 val player = musicPlayer
                 if (player != null && playerPrepared) runCatching {
                     player.setVolume(BASE_VOLUME, BASE_VOLUME)
                     if (!player.isPlaying) player.start()
                 }
                 val menu = menuPlayer
-                if (menu != null && menuPrepared && menuVisible) runCatching {
+                if (menu != null && menuPrepared && shouldPlayMenuMusic()) runCatching {
                     menu.setVolume(BASE_VOLUME, BASE_VOLUME)
                     if (!menu.isPlaying) menu.start()
                 }
@@ -143,23 +146,27 @@ object SoundManager {
 
     private fun requestAudioFocus(): Boolean {
         val am = audioManager ?: return false
-        if (focusRequest != null) return true
-        val attrs = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-            .build()
-        val request = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-            .setAudioAttributes(attrs)
+        if (focusGranted) return true
+        // Asked again after a denial or a transient loss, e.g. during a phone call
+        val request = focusRequest ?: AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
             .setOnAudioFocusChangeListener(focusChangeListener, mainHandler)
             .build()
-        focusRequest = request
-        return am.requestAudioFocus(request) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+            .also { focusRequest = it }
+        focusGranted = am.requestAudioFocus(request) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+        return focusGranted
     }
 
     private fun abandonAudioFocus() {
         val am = audioManager ?: return
         focusRequest?.let { am.abandonAudioFocusRequest(it) }
         focusRequest = null
+        focusGranted = false
     }
 
     private fun registerNoisyReceiver() {
@@ -339,9 +346,10 @@ object SoundManager {
     }
 
     private fun updateMenuMusic() {
-        val shouldPlay = menuMusicEnabled && !musicEnabled && menuVisible && appInForeground
-        if (shouldPlay) startMenuMusic() else pauseMenuMusicAndFocus()
+        if (shouldPlayMenuMusic()) startMenuMusic() else pauseMenuMusicAndFocus()
     }
+
+    private fun shouldPlayMenuMusic() = menuMusicEnabled && !musicEnabled && menuVisible && appInForeground
 
     private fun pauseMenuMusicAndFocus() {
         pauseMenuMusic()
@@ -385,15 +393,13 @@ object SoundManager {
             player.setVolume(BASE_VOLUME, BASE_VOLUME)
             player.setOnPreparedListener {
                 menuPrepared = true
-                if (menuVisible && appInForeground && menuMusicEnabled && !musicEnabled) it.start()
+                if (shouldPlayMenuMusic()) it.start()
             }
             player.setOnCompletionListener { mp ->
                 if (menuPlayer === mp) {
                     releaseMenuPlayer()
                     menuTrackIndex = (menuTrackIndex + 1) % menuTracks.size
-                    if (menuVisible && appInForeground && menuMusicEnabled && !musicEnabled) {
-                        playMenuTrack(menuTrackIndex)
-                    }
+                    if (shouldPlayMenuMusic()) playMenuTrack(menuTrackIndex)
                 }
             }
             player.setOnErrorListener { mp, _, _ ->
