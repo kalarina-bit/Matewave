@@ -1,23 +1,34 @@
 <p align="center">
-  <img src="assets/icon-rounded.png" width="128" alt="Matewave icon">
+  <img src="assets/icon-rounded.png" width="112" alt="Matewave icon">
 </p>
 
 <h1 align="center">Matewave</h1>
 
-<p align="center"><b>A beautiful, open-source chess app for Android.</b></p>
-
 <p align="center">
-  <a href="https://git.skysparkle.cc/kalarina/Matewave/releases"><img src="assets/get-it-on-gitea.png" height="60" alt="Get it on Gitea"></a>
+  <b>A beautiful, open-source chess app for Android.</b><br>
+  Play against the AI, solve puzzles, learn openings, or play friends nearby over Bluetooth and Wi-Fi/LAN.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Android-8.0%2B-2e7d32?logo=android&logoColor=white&labelColor=1b1b1b" alt="Android 8.0+">
-  <img src="https://img.shields.io/badge/License-GPL--3.0--or--later-2e7d32?labelColor=1b1b1b" alt="GPL-3.0-or-later">
+  <a href="https://github.com/kalarina-bit/Matewave/releases/latest"><img src="https://img.shields.io/github/v/release/kalarina-bit/Matewave?style=for-the-badge&label=release&labelColor=1b1b1b&color=2e7d32" alt="Latest release"></a>
 </p>
 
-Play against the AI, solve puzzles, learn openings, or play friends nearby over Bluetooth and Wi-Fi/LAN.
+<p align="center">
+  <a href="https://f-droid.org/packages/cc.skysparkle.matewave/"><img src="assets/get-it-on%20(1).png" height="56" alt="Get it on F-Droid"></a>
+  <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/kalarina-bit/Matewave"><img src="assets/badge_obtainium.png" height="56" alt="Get it on Obtainium"></a>
+  <a href="https://github.com/kalarina-bit/Matewave/releases/latest"><img src="assets/get-it-on-github.png" height="56" alt="Get it on GitHub"></a>
+  <a href="https://git.skysparkle.cc/kalarina/Matewave/releases"><img src="assets/get-it-on-gitea.png" height="56" alt="Get it on Gitea"></a>
+</p>
 
-## Features
+<p align="center">
+  <img src="assets/screenshots/5-move-count.png" width="160" alt="Make your next move count">
+  <img src="assets/screenshots/4-home.png" width="160" alt="Home screen">
+  <img src="assets/screenshots/1-friendly-matches.png" width="160" alt="From solo games to friendly matches">
+  <img src="assets/screenshots/3-play-together.png" width="160" alt="Play together">
+  <img src="assets/screenshots/2-keep-growing.png" width="160" alt="Keep growing">
+</p>
+
+## ✨ Features
 
 - 🤖 **AI opponent** with adjustable difficulty
 - 🧩 **Puzzles** and tactical training
@@ -28,27 +39,13 @@ Play against the AI, solve puzzles, learn openings, or play friends nearby over 
 - 🌙 **Dark theme**
 - 🌍 **Six languages** — English, Russian, German, Japanese, Lithuanian and Chinese
 
-## Screenshots
+## <img src="assets/icon-install.png" width="32" alt=""> Installation
 
-<p align="center">
-  <img src="assets/screenshots/5-move-count.png" width="200" alt="Make your next move count">
-  <img src="assets/screenshots/4-home.png" width="200" alt="Home screen">
-  <img src="assets/screenshots/1-friendly-matches.png" width="200" alt="From solo games to friendly matches">
-  <img src="assets/screenshots/3-play-together.png" width="200" alt="Play together">
-  <img src="assets/screenshots/2-keep-growing.png" width="200" alt="Keep growing">
-</p>
+- **[F-Droid](https://f-droid.org/packages/cc.skysparkle.matewave/)** — install and update through the F-Droid client.
+- **[Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/kalarina-bit/Matewave)** — installs the APK straight from GitHub releases and keeps it up to date.
+- **Manually** — download the latest APK from [GitHub](https://github.com/kalarina-bit/Matewave/releases/latest) or [Gitea](https://git.skysparkle.cc/kalarina/Matewave/releases), allow installs from unknown sources for the app you open it with (Settings → Apps → Special access → Install unknown apps), then open the `.apk` and confirm.
 
-## Installation
-
-<img src="assets/icon-install.png" width="36" align="left">
-
-1. Download the latest APK from the [Releases page](https://git.skysparkle.cc/kalarina/Matewave/releases).
-2. Allow installs from unknown sources for the app you open it with (Settings → Apps → Special access → Install unknown apps).
-3. Open the `.apk` file and confirm the install.
-
-## Verifying a download
-
-<img src="assets/icon-verify.png" width="36" align="left">
+## <img src="assets/icon-verify.png" width="32" alt=""> Verifying a download
 
 Every official APK is signed with the same key. Check it before installing:
 
@@ -64,7 +61,7 @@ The SHA-256 fingerprint of the signing certificate must be:
 
 `apksigner` prints the same value in lowercase without colons. On Android you can check it with [AppVerifier](https://github.com/soupslurpr/AppVerifier) (app ID `cc.skysparkle.matewave`).
 
-## Building from source
+## <img src="assets/icon-structure.png" width="32" alt=""> Building from source
 
 Requires JDK 17+ and Android Studio with AGP 9.2 support.
 
@@ -75,10 +72,10 @@ Requires JDK 17+ and Android Studio with AGP 9.2 support.
 
 Nearby multiplayer needs two physical devices — the emulator has no real Bluetooth, and mDNS discovery is often blocked on emulator networks.
 
-## Contributing
+## 🤝 Contributing
 
 Bug reports, puzzle and opening fixes, translation fixes and pull requests are welcome in the [issue tracker](https://git.skysparkle.cc/kalarina/Matewave/issues). Please read [CONTRIBUTING.md](CONTRIBUTING.md) first — it explains what fits the project and how to send changes. To open an issue or a pull request, [create an account](https://git.skysparkle.cc/user/sign_up) on this Gitea.
 
-## License
+## 📄 License
 
 [GNU General Public License v3.0 or later](LICENSE).
