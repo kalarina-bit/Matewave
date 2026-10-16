@@ -1,0 +1,3 @@
+• Eingebaute Musik, wenn das Jazzradio keine Verbindung hat, mit eigenem Stück für Partien und Aufgaben. Sie ersetzt die bisherige Menümusik
+• Musik spielt nicht mehr, während ein Anruf oder eine andere App den Ton nutzt
+• Die Einstellungen zeigen „Aktion nötig“, solange Berechtigungen fehlen

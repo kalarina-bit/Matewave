@@ -1,0 +1,3 @@
+• Įdiegta muzika, kai džiazo radijas neturi ryšio, su atskiru kūriniu partijoms ir uždaviniams. Ji pakeitė atskirą meniu muziką
+• Muzika nebegroja, kol garsą naudoja skambutis ar kita programėlė
+• Nustatymuose rodoma „Reikia veiksmo“, kol trūksta leidimų

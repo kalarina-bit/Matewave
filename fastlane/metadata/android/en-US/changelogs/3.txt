@@ -1,0 +1,3 @@
+• Built-in music when the jazz radio has no connection, with its own track for games and puzzles. It replaces the separate menu music
+• Music no longer plays while a call or another app is using the sound
+• Settings show "Action needed" while permissions are missing
