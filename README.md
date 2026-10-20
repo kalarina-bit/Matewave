@@ -28,6 +28,9 @@
   <img src="assets/screenshots/2-keep-growing.png" width="160" alt="Keep growing">
 </p>
 
+> [!TIP]
+> If you find Matewave useful, please consider giving it a ⭐ on [Gitea](https://git.skysparkle.cc/kalarina/Matewave) — it helps others discover the project.
+
 ## ✨ Features
 
 - 🤖 **AI opponent** with adjustable difficulty
