@@ -29,7 +29,7 @@
 </p>
 
 > [!TIP]
-> If you find Matewave useful, please consider giving it a ⭐ on [Gitea](https://git.skysparkle.cc/kalarina/Matewave) — it helps others discover the project.
+> If you find Matewave useful, please consider giving it a ⭐ — it helps others discover the project.
 
 ## ✨ Features
 
