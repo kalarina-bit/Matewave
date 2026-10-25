@@ -12,7 +12,9 @@ import androidx.activity.compose.setContent
 import cc.skysparkle.matewave.audio.SoundManager
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -110,6 +112,10 @@ private fun AppNavHost() {
 
     // Presence is shared with the background service, so the lists stay the same in both.
     val presence = remember { PresenceHub.get(context) }
+
+    var spectateTarget by androidx.compose.runtime.saveable.rememberSaveable(saver = SpectateTargetSaver) {
+        androidx.compose.runtime.mutableStateOf<cc.skysparkle.matewave.spectate.SpectateTarget?>(null)
+    }
     androidx.compose.runtime.DisposableEffect(Unit) {
         if (cc.skysparkle.matewave.presence.PresenceSettings(context).backgroundEnabled) {
             cc.skysparkle.matewave.presence.PresenceService.start(context)
@@ -231,6 +237,10 @@ private fun AppNavHost() {
             FriendsScreen(
                 presence = presence,
                 onPlay = { navController.navigate("connectionNearby") },
+                onWatch = { target ->
+                    spectateTarget = target
+                    navController.navigate("spectate")
+                },
                 onHomeClick = { navController.popBackStack("menu", inclusive = false) },
                 onSettingsClick = {
                     navController.popBackStack("menu", inclusive = false)
@@ -241,6 +251,19 @@ private fun AppNavHost() {
                     navController.navigate("account")
                 }
             )
+        }
+
+        composable("spectate") {
+            val target = spectateTarget
+            val backToFriends: () -> Unit = {
+                if (!navController.popBackStack("friends", inclusive = false)) navController.popBackStack()
+            }
+            if (target == null) {
+                LaunchedEffect(Unit) { backToFriends() }
+            } else {
+                PlayScreenMusic()
+                cc.skysparkle.matewave.ui.screens.SpectatorScreen(target = target, onBackToFriends = backToFriends)
+            }
         }
 
         composable("vsAiSetup") {
@@ -323,6 +346,18 @@ private fun AppNavHost() {
         }
     }
 }
+
+private val SpectateTargetSaver = androidx.compose.runtime.saveable.Saver<
+    androidx.compose.runtime.MutableState<cc.skysparkle.matewave.spectate.SpectateTarget?>, List<Any>
+>(
+    save = { state -> state.value?.let { arrayListOf<Any>(it.host, it.port, it.gameTag) } },
+    restore = { saved ->
+        val target = if (saved.size == 3) {
+            cc.skysparkle.matewave.spectate.SpectateTarget(saved[0] as String, saved[1] as Int, saved[2] as String)
+        } else null
+        androidx.compose.runtime.mutableStateOf(target)
+    }
+)
 
 private val TAB_ROUTES = setOf("menu", "friends", "settings", "account")
 

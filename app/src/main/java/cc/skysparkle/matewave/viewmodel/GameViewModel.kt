@@ -33,6 +33,15 @@ import cc.skysparkle.matewave.security.KnownPeers
 import cc.skysparkle.matewave.security.SessionAuth
 import cc.skysparkle.matewave.security.TrustResult
 import cc.skysparkle.matewave.settings.Haptics
+import cc.skysparkle.matewave.spectate.MAX_SPECTATORS
+import cc.skysparkle.matewave.spectate.SpectatorAdvert
+import cc.skysparkle.matewave.spectate.SpectatorBroadcaster
+import cc.skysparkle.matewave.spectate.SpectatorClock
+import cc.skysparkle.matewave.spectate.SpectatorHub
+import cc.skysparkle.matewave.spectate.SpectatorPlayer
+import cc.skysparkle.matewave.spectate.SpectatorResult
+import cc.skysparkle.matewave.spectate.SpectatorResults
+import cc.skysparkle.matewave.spectate.SpectatorSnapshot
 import cc.skysparkle.matewave.stats.Stats
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -95,7 +104,10 @@ data class GameUiState(
     val opponentLeftMidGame: Boolean = false,
     val rematchOfferFromOpponent: Boolean = false,
 
-    val activeTransport: TransportType? = null
+    val activeTransport: TransportType? = null,
+
+    /** Spectators watching this LAN game, shown to both players. */
+    val spectatorCount: Int = 0
 )
 
 data class PendingPromotion(val from: Int, val to: Int)
@@ -171,6 +183,16 @@ class GameViewModel : ViewModel() {
     private var pendingOpponentImages: Pair<String?, String?>? = null
     private var currentPly: Int = 0
     private var lastOpponentRemaining: Long = Long.MAX_VALUE
+
+    // Spectating: the host serves spectators, both players announce the game's tag.
+    private var spectators: SpectatorBroadcaster? = null
+    private var spectatorWatcher: Job? = null
+    private var spectatorCountJob: Job? = null
+    private var spectatingDecided = false
+    private var spectateTag: String = ""
+    private var spectatorPlayers: Pair<SpectatorPlayer, SpectatorPlayer>? = null
+    private var spectatorPlayersKey: String = ""
+    private var lastSentSpectatorCount = 0
 
     init {
         GameSaveStore.load()?.let { saved -> restoreSaved(saved) }
@@ -689,6 +711,7 @@ class GameViewModel : ViewModel() {
         pendingLeave = null
         handshakeTimeoutJob?.cancel()
         handshakeTimeoutJob = null
+        stopSpectating()
         cancelAi()
         // A paused game against the AI stays saved and can be continued later.
         persistIfResumable()
@@ -728,6 +751,8 @@ class GameViewModel : ViewModel() {
 
         heartbeat?.stop()
         heartbeat = cc.skysparkle.matewave.network.Heartbeat(viewModelScope, transport).also { it.start() }
+
+        spectatorWatcher = viewModelScope.launch { _uiState.collect { onStateForSpectators(it) } }
 
         var profileSent = false
         var connectedOnce = false
@@ -965,6 +990,10 @@ class GameViewModel : ViewModel() {
                 )
             }
             is GameMessage.PingMsg -> Unit
+            is GameMessage.SpectatorCountMsg -> {
+                if (isNetworkHost) return
+                _uiState.value = _uiState.value.copy(spectatorCount = msg.count.coerceIn(0, MAX_SPECTATORS))
+            }
             is GameMessage.TimeoutMsg -> {
                 if (!belongsToCurrentGame(msg.gameId)) return
                 val state = _uiState.value
@@ -1113,6 +1142,9 @@ class GameViewModel : ViewModel() {
     }
 
     private fun endNetworkSession() {
+        val state = _uiState.value
+        // The players lost each other: spectators see the game end as interrupted.
+        stopSpectating(if (state.status == GameStatus.ONGOING) SpectatorResults.interrupted else null)
         opponentFlagJob?.cancel()
         opponentFlagJob = null
         clock?.stop()
@@ -1137,7 +1169,9 @@ class GameViewModel : ViewModel() {
             return
         }
 
-        if (state.status == GameStatus.ONGOING && state.handshake == HandshakeState.PLAYING) {
+        val leftMidGame = state.status == GameStatus.ONGOING && state.handshake == HandshakeState.PLAYING
+        stopSpectating(if (leftMidGame) SpectatorResults.leftBy(state.myColor) else null)
+        if (leftMidGame) {
             applyNetworkResultElo(0.0)
         }
         opponentFlagJob?.cancel()
@@ -1218,7 +1252,8 @@ class GameViewModel : ViewModel() {
             handshake = state.handshake,
             activeTransport = state.activeTransport,
             opponentUnverified = state.opponentUnverified,
-            chatMessages = state.chatMessages
+            chatMessages = state.chatMessages,
+            spectatorCount = state.spectatorCount
         )
         setupClock(timeControl)
     }
@@ -1333,6 +1368,119 @@ class GameViewModel : ViewModel() {
 
     // endregion
 
+    // region Spectators
+
+    /**
+     * Once a LAN game is under way, the host opens its spectator socket and both players announce
+     * the game's tag; players who chose not to be visible on the network are not watchable.
+     */
+    private fun onStateForSpectators(state: GameUiState) {
+        if (state.mode != GameMode.VS_PLAYER_NETWORK) return
+        spectators?.update(spectatorSnapshot(state))
+        if (spectatingDecided) return
+        val live = state.handshake == HandshakeState.PLAYING &&
+            state.connectionState == ConnectionState.CONNECTED &&
+            state.activeTransport == TransportType.LAN
+        if (!live) return
+        val ctx = appContext ?: return
+        spectatingDecided = true
+        if (!cc.skysparkle.matewave.presence.PresenceSettings(ctx).announceEnabled) return
+        spectateTag = SpectatorAdvert.tagOf(networkGameId)
+        if (spectateTag.isEmpty()) return
+        if (isNetworkHost) startSpectatorHub(ctx) else advertiseGame(ctx, SpectatorAdvert.State(spectateTag, 0))
+    }
+
+    private fun startSpectatorHub(ctx: android.content.Context) {
+        val generation = sessionGeneration
+        val hub = SpectatorHub(log = { NetworkLog.log("SPECTATE", it) })
+        viewModelScope.launch {
+            var serving = false
+            try {
+                val port = withContext(Dispatchers.IO) { runCatching { hub.start() }.getOrNull() }
+                if (port == null) NetworkLog.log("SPECTATE", "Could not open the spectator port")
+                // The game may have ended while the port was opening.
+                if (port == null || generation != sessionGeneration || !spectatingDecided || spectateTag.isEmpty()) return@launch
+                val broadcaster = SpectatorBroadcaster(hub)
+                broadcaster.update(spectatorSnapshot(_uiState.value))
+                spectators = broadcaster
+                serving = true
+                spectatorCountJob = viewModelScope.launch { hub.count.collect { onSpectatorCount(it) } }
+                advertiseGame(ctx, SpectatorAdvert.State(spectateTag, port))
+                NetworkLog.log("SPECTATE", "Spectators can join on port $port")
+            } finally {
+                if (!serving) hub.close()
+            }
+        }
+    }
+
+    private fun onSpectatorCount(count: Int) {
+        if (_uiState.value.spectatorCount != count) {
+            _uiState.value = _uiState.value.copy(spectatorCount = count)
+        }
+        if (count != lastSentSpectatorCount && canSendGameMessages() &&
+            sendGameMessage(GameMessage.SpectatorCountMsg(count, networkGameId))
+        ) {
+            lastSentSpectatorCount = count
+        }
+    }
+
+    private fun advertiseGame(ctx: android.content.Context, state: SpectatorAdvert.State) {
+        if (SpectatorAdvert.update(state)) cc.skysparkle.matewave.network.Transports.lan(ctx).republishProfile()
+    }
+
+    /** Ends spectating for this session; [final] tells spectators how a game cut short ended. */
+    private fun stopSpectating(final: SpectatorResult? = null) {
+        spectatorWatcher?.cancel()
+        spectatorWatcher = null
+        spectatorCountJob?.cancel()
+        spectatorCountJob = null
+        spectators?.let { broadcaster ->
+            val last = final?.let { spectatorSnapshot(_uiState.value).copy(result = it) }
+            broadcaster.close(last)
+        }
+        spectators = null
+        spectatingDecided = false
+        spectateTag = ""
+        spectatorPlayers = null
+        spectatorPlayersKey = ""
+        lastSentSpectatorCount = 0
+        appContext?.let { ctx ->
+            if (SpectatorAdvert.clear()) cc.skysparkle.matewave.network.Transports.lan(ctx).republishProfile()
+        }
+        if (_uiState.value.spectatorCount != 0) {
+            _uiState.value = _uiState.value.copy(spectatorCount = 0)
+        }
+    }
+
+    private fun spectatorSnapshot(state: GameUiState): SpectatorSnapshot {
+        val opponent = state.opponentProfile
+        val key = networkGameId + "|" + (opponent?.userId ?: "")
+        val players = spectatorPlayers?.takeIf { spectatorPlayersKey == key } ?: run {
+            val me = ProfileStore.get()
+            val mine = SpectatorPlayer(me.userId, me.name, me.elo)
+            val theirs = SpectatorPlayer(opponent?.userId ?: "", opponent?.name ?: "", opponent?.elo ?: 0)
+            (if (state.myColor == PieceColor.WHITE) mine to theirs else theirs to mine).also {
+                spectatorPlayers = it
+                spectatorPlayersKey = key
+            }
+        }
+        val timeControl = lastNetworkTimeControl
+        return SpectatorSnapshot(
+            gameId = networkGameId,
+            white = players.first,
+            black = players.second,
+            movesUci = moveLog.toList(),
+            initialSeconds = timeControl?.initialSeconds ?: 0,
+            incrementSeconds = timeControl?.incrementSeconds ?: 0,
+            clock = clock?.state?.value?.let { SpectatorClock(it.whiteMillis, it.blackMillis, it.running) },
+            result = SpectatorResults.of(
+                state.status, state.board.sideToMove, state.timedOutSide, state.resignedSide, state.opponentLeftMidGame
+            )
+        )
+    }
+
+    // endregion
+
     // region Clock
 
     private fun disposeClock() {
@@ -1418,6 +1566,7 @@ class GameViewModel : ViewModel() {
         pendingLeave?.first?.cancel()
         pendingLeave?.second?.disconnect()
         pendingLeave = null
+        stopSpectating()
         persistIfResumable()
         clock?.stop()
 

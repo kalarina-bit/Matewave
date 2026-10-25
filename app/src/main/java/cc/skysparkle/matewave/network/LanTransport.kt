@@ -30,7 +30,11 @@ data class LanPeer(
 
     val signature: String = "",
     /** Raw NSD service name, used to remove the peer when the service is lost. */
-    val serviceName: String = ""
+    val serviceName: String = "",
+    /** Tag of the LAN game the peer plays, empty when not in one. */
+    val gameTag: String = "",
+    /** Spectator port when the peer hosts a watchable game, otherwise 0. */
+    val spectatePort: Int = 0
 ) {
     val id: String get() = "$host:$port"
 }
@@ -224,6 +228,7 @@ class LanTransport(
                 cc.skysparkle.matewave.security.DeviceKeys.sign(
                     context, presencePayload(profile.userId, shownName, profile.elo)
                 )?.let { setAttribute("sig", it) }
+                cc.skysparkle.matewave.spectate.SpectatorAdvert.attributes().forEach { (key, value) -> setAttribute(key, value) }
             }
         }
         val listener = object : NsdManager.RegistrationListener {
@@ -353,6 +358,7 @@ class LanTransport(
         fun attr(key: String): String = runCatching {
             info.attributes[key]?.toString(Charsets.UTF_8) ?: ""
         }.getOrDefault("")
+        val game = cc.skysparkle.matewave.spectate.SpectatorAdvert.parse(::attr)
         return LanPeer(
             name = displayNameOf(info.serviceName),
             host = host,
@@ -363,7 +369,9 @@ class LanTransport(
 
             fingerprint = attr("fp").ifEmpty { fingerprintFromServiceName(info.serviceName ?: "") ?: "" },
             signature = attr("sig"),
-            serviceName = info.serviceName ?: ""
+            serviceName = info.serviceName ?: "",
+            gameTag = game.gameTag,
+            spectatePort = game.spectatePort
         )
     }
 
@@ -517,7 +525,7 @@ class LanTransport(
             try {
                 val reader = BufferedReader(InputStreamReader(sock.getInputStream(), Charsets.UTF_8))
                 while (true) {
-                    val read = readBoundedLine(reader)
+                    val read = readBoundedLine(reader, MAX_MESSAGE_CHARS)
                     if (read is LineResult.EndOfStream) break
                     if (sock !== socket) break
                     if (read is LineResult.TooLong) {
@@ -574,27 +582,6 @@ class LanTransport(
                     releaseConnection(currentSocket)
                 }
             }
-        }
-    }
-
-    private sealed class LineResult {
-        data class Line(val text: String) : LineResult()
-        object TooLong : LineResult()
-        object EndOfStream : LineResult()
-    }
-
-    private fun readBoundedLine(reader: BufferedReader): LineResult {
-        val builder = StringBuilder()
-        while (true) {
-            val ch = reader.read()
-            if (ch == -1) {
-                return if (builder.isEmpty()) LineResult.EndOfStream
-                else LineResult.Line(builder.toString())
-            }
-            if (ch == '\n'.code) return LineResult.Line(builder.toString())
-            if (ch == '\r'.code) continue
-            if (builder.length >= MAX_MESSAGE_CHARS) return LineResult.TooLong
-            builder.append(ch.toChar())
         }
     }
 

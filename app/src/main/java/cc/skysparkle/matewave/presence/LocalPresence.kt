@@ -19,7 +19,10 @@ data class DiscoveredPeer(
     val elo: Int,
     val fingerprint: String,
 
-    val address: String
+    val address: String,
+    val host: String = "",
+    val gameTag: String = "",
+    val spectatePort: Int = 0
 )
 
 /**
@@ -159,7 +162,10 @@ class LocalPresence(
                 name = peer.displayName.ifEmpty { peer.name },
                 elo = peer.elo,
                 fingerprint = peer.fingerprint,
-                address = peer.id
+                address = peer.id,
+                host = peer.host,
+                gameTag = peer.gameTag,
+                spectatePort = peer.spectatePort
             )
         }
         _peers.value = result

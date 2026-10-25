@@ -357,4 +357,26 @@
     <string name="piece_rook">ルーク</string>
     <string name="piece_bishop">ビショップ</string>
     <string name="piece_knight">ナイト</string>
+
+    <!-- Spectators -->
+    <string name="friends_in_game">対局中</string>
+    <string name="friends_watch">観戦</string>
+    <string name="friends_watch_count">観戦 · %1$d/%2$d</string>
+    <string name="friends_watch_full">満員</string>
+    <string name="spectators_description">観戦者: %1$d人</string>
+    <string name="spectate_title">観戦</string>
+    <string name="spectate_joining">対局に接続中…</string>
+    <string name="spectate_flip">盤を反転</string>
+    <string name="spectate_back_to_friends">フレンドに戻る</string>
+    <string name="spectate_lost_text">対局をホストしている端末に接続できなくなりました。</string>
+    <string name="spectate_full_title">満員です</string>
+    <string name="spectate_full_text">この対局の観戦者はすでに上限の%1$d人です。しばらくしてからもう一度お試しください。</string>
+    <string name="spectate_update_title">アップデートが必要です</string>
+    <string name="spectate_update_this">この対局を観戦するには Matewave をアップデートしてください。</string>
+    <string name="spectate_update_host">この対局を観戦するには、対局をホストしているプレイヤーが Matewave をアップデートする必要があります。</string>
+    <string name="spectate_failed_title">観戦できません</string>
+    <string name="spectate_no_game">この対局はもう観戦できません。</string>
+    <string name="spectate_unreachable">対局をホストしている端末に接続できません。同じWi-Fiネットワークに接続しているか確認してください。</string>
+    <string name="spectate_left_win">%1$sが対局から退出しました。%2$sの勝ち</string>
+    <string name="spectate_interrupted">対局が中断されました。プレイヤー間の接続が切れました。</string>
 </resources>

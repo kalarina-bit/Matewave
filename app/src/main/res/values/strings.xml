@@ -358,4 +358,26 @@
     <string name="piece_rook">Rook</string>
     <string name="piece_bishop">Bishop</string>
     <string name="piece_knight">Knight</string>
+
+    <!-- Spectators -->
+    <string name="friends_in_game">In game</string>
+    <string name="friends_watch">Watch</string>
+    <string name="friends_watch_count">Watch · %1$d/%2$d</string>
+    <string name="friends_watch_full">Full</string>
+    <string name="spectators_description">Spectators: %1$d</string>
+    <string name="spectate_title">Watching</string>
+    <string name="spectate_joining">Joining the game…</string>
+    <string name="spectate_flip">Flip board</string>
+    <string name="spectate_back_to_friends">Back to Friends</string>
+    <string name="spectate_lost_text">The host\'s device can no longer be reached.</string>
+    <string name="spectate_full_title">Game is full</string>
+    <string name="spectate_full_text">This game already has the maximum of %1$d spectators. Try again later.</string>
+    <string name="spectate_update_title">Update required</string>
+    <string name="spectate_update_this">Update Matewave to watch this game.</string>
+    <string name="spectate_update_host">The player hosting this game needs to update Matewave before it can be watched.</string>
+    <string name="spectate_failed_title">Can\'t watch this game</string>
+    <string name="spectate_no_game">This game is no longer available.</string>
+    <string name="spectate_unreachable">The host\'s device can\'t be reached. Make sure you\'re on the same Wi-Fi network.</string>
+    <string name="spectate_left_win">%1$s left the game. %2$s wins.</string>
+    <string name="spectate_interrupted">Game interrupted: the players lost their connection.</string>
 </resources>

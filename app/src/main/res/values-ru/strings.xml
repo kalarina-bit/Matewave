@@ -366,4 +366,26 @@
     <string name="piece_rook">Ладья</string>
     <string name="piece_bishop">Слон</string>
     <string name="piece_knight">Конь</string>
+
+    <!-- Spectators -->
+    <string name="friends_in_game">В игре</string>
+    <string name="friends_watch">Смотреть</string>
+    <string name="friends_watch_count">Смотреть · %1$d/%2$d</string>
+    <string name="friends_watch_full">Мест нет</string>
+    <string name="spectators_description">Зрителей: %1$d</string>
+    <string name="spectate_title">Просмотр партии</string>
+    <string name="spectate_joining">Подключение к партии…</string>
+    <string name="spectate_flip">Перевернуть доску</string>
+    <string name="spectate_back_to_friends">Назад к друзьям</string>
+    <string name="spectate_lost_text">Устройство, на котором идёт партия, больше недоступно.</string>
+    <string name="spectate_full_title">Мест нет</string>
+    <string name="spectate_full_text">У этой партии уже максимум зрителей (%1$d). Попробуйте позже.</string>
+    <string name="spectate_update_title">Требуется обновление</string>
+    <string name="spectate_update_this">Обновите Matewave, чтобы смотреть эту партию.</string>
+    <string name="spectate_update_host">Игроку, который проводит эту партию, нужно обновить Matewave, чтобы её можно было смотреть.</string>
+    <string name="spectate_failed_title">Не удаётся посмотреть партию</string>
+    <string name="spectate_no_game">Эта партия больше недоступна.</string>
+    <string name="spectate_unreachable">Устройство, на котором идёт партия, недоступно. Убедитесь, что вы подключены к той же сети Wi-Fi.</string>
+    <string name="spectate_left_win">%1$s покинули партию. Победили %2$s.</string>
+    <string name="spectate_interrupted">Партия прервана: игроки потеряли связь.</string>
 </resources>

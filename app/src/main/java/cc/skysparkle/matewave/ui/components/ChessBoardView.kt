@@ -78,14 +78,16 @@ fun ChessBoardView(
     interactionEnabled: Boolean = true,
     /** A square briefly tinted to confirm or reject a move (puzzles). */
     flashSquare: Int? = null,
-    flashColor: Color = Color.Transparent
+    flashColor: Color = Color.Transparent,
+    /** Overrides the last-move setting; null follows it. */
+    highlightLastMove: Boolean? = null
 ) {
     val context = LocalContext.current
     val appearance = remember { BoardAppearance(context) }
     val theme = appearance.theme
     val showCoords = appearance.showCoordinates
     val imagePieces = appearance.useImagePieces
-    val showLastMove = appearance.showLastMove
+    val showLastMove = highlightLastMove ?: appearance.showLastMove
     val showCheck = appearance.showCheckHighlight
 
     val pieceImages = if (imagePieces) remember(context) { PieceImages.get(context) } else null

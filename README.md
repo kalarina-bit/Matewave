@@ -37,6 +37,7 @@
 - 🧩 **Puzzles** and tactical training
 - 📖 **Opening trainer** — learn and practice opening lines and their variations
 - 📶 **Local multiplayer** over Bluetooth or Wi-Fi/LAN, with nearby player discovery
+- 👀 **Watch friends play** — up to 20 spectators on the same Wi-Fi can follow a live LAN game
 - 📲 **Share the app** with a nearby friend via QR code over the local network
 - 🎷 **Optional jazz radio**
 - 🌙 **Dark theme**

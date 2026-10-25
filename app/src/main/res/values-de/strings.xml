@@ -358,4 +358,26 @@
     <string name="piece_rook">Turm</string>
     <string name="piece_bishop">Läufer</string>
     <string name="piece_knight">Springer</string>
+
+    <!-- Spectators -->
+    <string name="friends_in_game">Im Spiel</string>
+    <string name="friends_watch">Zuschauen</string>
+    <string name="friends_watch_count">Zuschauen · %1$d/%2$d</string>
+    <string name="friends_watch_full">Voll</string>
+    <string name="spectators_description">Zuschauer: %1$d</string>
+    <string name="spectate_title">Zuschauen</string>
+    <string name="spectate_joining">Verbinde mit der Partie…</string>
+    <string name="spectate_flip">Brett drehen</string>
+    <string name="spectate_back_to_friends">Zurück zu Freunden</string>
+    <string name="spectate_lost_text">Das Gerät, auf dem die Partie läuft, ist nicht mehr erreichbar.</string>
+    <string name="spectate_full_title">Partie ist voll</string>
+    <string name="spectate_full_text">Diese Partie hat bereits die maximale Zahl von %1$d Zuschauern. Versuch es später noch einmal.</string>
+    <string name="spectate_update_title">Update erforderlich</string>
+    <string name="spectate_update_this">Aktualisiere Matewave, um diese Partie anzusehen.</string>
+    <string name="spectate_update_host">Der Spieler, der diese Partie ausrichtet, muss Matewave aktualisieren, bevor man zuschauen kann.</string>
+    <string name="spectate_failed_title">Zuschauen nicht möglich</string>
+    <string name="spectate_no_game">Diese Partie ist nicht mehr verfügbar.</string>
+    <string name="spectate_unreachable">Das Gerät, auf dem die Partie läuft, ist nicht erreichbar. Achte darauf, dass du im selben WLAN bist.</string>
+    <string name="spectate_left_win">%1$s hat die Partie verlassen. %2$s gewinnt.</string>
+    <string name="spectate_interrupted">Partie unterbrochen: Die Spieler haben die Verbindung verloren.</string>
 </resources>

@@ -46,6 +46,15 @@ import cc.skysparkle.matewave.ui.components.AppIcon
 import cc.skysparkle.matewave.ui.components.BottomTab
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.theme.ChessGreen
+import cc.skysparkle.matewave.spectate.FriendGameStatus
+import cc.skysparkle.matewave.spectate.FriendStatusResolver
+import cc.skysparkle.matewave.spectate.NearbyPlayerGame
+import cc.skysparkle.matewave.spectate.PresenceStatus
+import cc.skysparkle.matewave.spectate.SpectateTarget
+import cc.skysparkle.matewave.spectate.SpectatorMessage
+import cc.skysparkle.matewave.spectate.SpectatorProbe
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 
 @Composable
 fun FriendsScreen(
@@ -53,7 +62,8 @@ fun FriendsScreen(
     onHomeClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAccountClick: () -> Unit,
-    onPlay: () -> Unit = {}
+    onPlay: () -> Unit = {},
+    onWatch: (SpectateTarget) -> Unit = {}
 ) {
     var onlineOnly by remember { mutableStateOf(false) }
     var version by remember { mutableStateOf(0) }
@@ -63,6 +73,28 @@ fun FriendsScreen(
 
     val peers by presence.peers.collectAsState()
     val friends = remember(peers, version) { FriendsStore.list() }
+
+    // Who plays a LAN game, and live spectator counts from each host while the list is open.
+    val nearbyGames = remember(peers) {
+        peers.values.associate { it.playerId to NearbyPlayerGame(it.playerId, it.host, it.gameTag, it.spectatePort) }
+    }
+    val hosts = remember(nearbyGames) { FriendStatusResolver.targets(nearbyGames.values) }
+    var probes by remember { mutableStateOf<Map<SpectateTarget, SpectatorMessage.Status>>(emptyMap()) }
+    androidx.compose.runtime.LaunchedEffect(hosts) {
+        if (hosts.isEmpty()) {
+            probes = emptyMap()
+            return@LaunchedEffect
+        }
+        while (true) {
+            probes = kotlinx.coroutines.coroutineScope {
+                hosts.map { host ->
+                    async(kotlinx.coroutines.Dispatchers.IO) { SpectatorProbe.query(host.host, host.port)?.let { host to it } }
+                }.awaitAll().filterNotNull().toMap()
+            }
+            kotlinx.coroutines.delay(PROBE_INTERVAL_MS)
+        }
+    }
+    val statusOf: (String) -> FriendGameStatus = { id -> FriendStatusResolver.resolve(id, nearbyGames, probes) }
 
     // Fresh search on opening, then refresh "5 min ago" labels while the screen is visible.
     androidx.compose.runtime.LaunchedEffect(Unit) {
@@ -115,18 +147,20 @@ fun FriendsScreen(
         FriendGroup(
             title = stringResource(R.string.friends_group_favorites),
             list = favorites,
-            isOnline = presence::isOnline,
+            statusOf = statusOf,
             onOpen = { opened = it },
             onToggleFavorite = { FriendsStore.toggleFavorite(it.userId); version++ },
-            onPlay = onPlay
+            onPlay = onPlay,
+            onWatch = onWatch
         )
         FriendGroup(
             title = if (favorites.isNotEmpty()) stringResource(R.string.friends_group_others) else null,
             list = others,
-            isOnline = presence::isOnline,
+            statusOf = statusOf,
             onOpen = { opened = it },
             onToggleFavorite = { FriendsStore.toggleFavorite(it.userId); version++ },
-            onPlay = onPlay
+            onPlay = onPlay,
+            onWatch = onWatch
         )
 
         if (strangers.isNotEmpty()) {
@@ -134,11 +168,13 @@ fun FriendsScreen(
             ListGroup {
                 strangers.sortedBy { it.name }.forEachIndexed { index, peer ->
                     if (index > 0) ListDivider(inset = 68)
+                    val status = statusOf(peer.playerId)
                     ListRow(
                         title = displayName(peer.name, peer.playerId),
-                        subtitle = stringResource(R.string.friends_rating, peer.elo),
+                        subtitle = stringResource(R.string.friends_rating, peer.elo) + " · " + statusText(status.status, 0),
+                        subtitleColor = statusColor(status.status),
                         leading = { AvatarCircle(base64 = null, size = 40.dp) },
-                        trailing = { PlayChip(onPlay) }
+                        trailing = { StatusAction(status, onPlay, onWatch) }
                     )
                 }
             }
@@ -149,7 +185,7 @@ fun FriendsScreen(
         }
 
         opened?.let { friend ->
-            FriendCard(friend = friend, online = presence.isOnline(friend.userId), onDismiss = { opened = null })
+            FriendCard(friend = friend, status = statusOf(friend.userId).status, onDismiss = { opened = null })
         }
     }
 }
@@ -158,10 +194,11 @@ fun FriendsScreen(
 private fun FriendGroup(
     title: String?,
     list: List<FriendEntry>,
-    isOnline: (String) -> Boolean,
+    statusOf: (String) -> FriendGameStatus,
     onOpen: (FriendEntry) -> Unit,
     onToggleFavorite: (FriendEntry) -> Unit,
-    onPlay: () -> Unit
+    onPlay: () -> Unit,
+    onWatch: (SpectateTarget) -> Unit
 ) {
     if (list.isEmpty()) return
     if (title != null) SectionCaption(title)
@@ -170,10 +207,11 @@ private fun FriendGroup(
             if (index > 0) ListDivider(inset = 68)
             FriendRow(
                 friend = friend,
-                online = isOnline(friend.userId),
+                status = statusOf(friend.userId),
                 onOpen = { onOpen(friend) },
                 onToggleFavorite = { onToggleFavorite(friend) },
-                onPlay = onPlay
+                onPlay = onPlay,
+                onWatch = onWatch
             )
         }
     }
@@ -205,7 +243,7 @@ private fun PlayChip(onClick: () -> Unit) {
 }
 
 @Composable
-private fun FriendCard(friend: FriendEntry, online: Boolean, onDismiss: () -> Unit) {
+private fun FriendCard(friend: FriendEntry, status: PresenceStatus, onDismiss: () -> Unit) {
     Dialog(onDismissRequest = onDismiss) {
         Column(
             modifier = Modifier
@@ -257,9 +295,12 @@ private fun FriendCard(friend: FriendEntry, online: Boolean, onDismiss: () -> Un
             }
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    if (online) stringResource(R.string.friends_online)
-                    else lastSeenText(maxOf(friend.lastPlayedMs, friend.lastSeenMs)),
-                    color = if (online) Color(0xFF7BE495) else ink.copy(alpha = 0.6f),
+                    statusText(status, maxOf(friend.lastPlayedMs, friend.lastSeenMs)),
+                    color = when (status) {
+                        PresenceStatus.ONLINE -> Color(0xFF7BE495)
+                        PresenceStatus.IN_GAME -> InGameColor
+                        PresenceStatus.OFFLINE -> ink.copy(alpha = 0.6f)
+                    },
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
@@ -276,32 +317,33 @@ private fun FriendCard(friend: FriendEntry, online: Boolean, onDismiss: () -> Un
 @Composable
 private fun FriendRow(
     friend: FriendEntry,
-    online: Boolean,
+    status: FriendGameStatus,
     onOpen: () -> Unit,
     onToggleFavorite: () -> Unit,
-    onPlay: () -> Unit
+    onPlay: () -> Unit,
+    onWatch: (SpectateTarget) -> Unit
 ) {
     ListRow(
         title = displayName(friend.name, friend.userId),
         subtitle = stringResource(R.string.friends_rating, friend.elo) + " · " +
-            (if (online) stringResource(R.string.friends_online) else lastSeenText(maxOf(friend.lastPlayedMs, friend.lastSeenMs))),
-        subtitleColor = if (online) ChessGreen else ink.copy(alpha = 0.55f),
+            statusText(status.status, maxOf(friend.lastPlayedMs, friend.lastSeenMs)),
+        subtitleColor = statusColor(status.status),
         leading = {
             Box {
                 AvatarCircle(base64 = friend.avatarBase64, size = 40.dp)
-                if (online) {
+                if (status.status != PresenceStatus.OFFLINE) {
                     Box(
                         Modifier
                             .align(Alignment.BottomEnd)
                             .size(11.dp)
                             .clip(CircleShape)
-                            .background(ChessGreen)
+                            .background(if (status.status == PresenceStatus.IN_GAME) InGameColor else ChessGreen)
                     )
                 }
             }
         },
         trailing = {
-            if (online) PlayChip(onPlay)
+            StatusAction(status, onPlay, onWatch)
             AppIcon(
                 R.drawable.ic_star,
                 size = 20.dp,
@@ -315,6 +357,58 @@ private fun FriendRow(
         },
         onClick = onOpen
     )
+}
+
+private val InGameColor = Color(0xFFFFB86B)
+
+private const val PROBE_INTERVAL_MS = 3_000L
+
+/** Play for someone who is free, Watch (with the live count) for someone in a LAN game. */
+@Composable
+private fun StatusAction(status: FriendGameStatus, onPlay: () -> Unit, onWatch: (SpectateTarget) -> Unit) {
+    when (status.status) {
+        PresenceStatus.ONLINE -> PlayChip(onPlay)
+        PresenceStatus.IN_GAME -> status.target?.let { target -> WatchChip(status) { onWatch(target) } }
+        PresenceStatus.OFFLINE -> Unit
+    }
+}
+
+@Composable
+private fun WatchChip(status: FriendGameStatus, onClick: () -> Unit) {
+    val enabled = !status.full
+    val spectators = status.spectators
+    val label = when {
+        status.full -> stringResource(R.string.friends_watch_full)
+        spectators != null -> stringResource(R.string.friends_watch_count, spectators, status.max)
+        else -> stringResource(R.string.friends_watch)
+    }
+    Text(
+        label,
+        color = if (enabled) Color.White else ink.copy(alpha = 0.5f),
+        style = MaterialTheme.typography.labelLarge,
+        maxLines = 1,
+        modifier = Modifier
+            .clip(RoundedCornerShape(50))
+            .background(if (enabled) ChessGreen else ink.copy(alpha = 0.12f))
+            .then(if (enabled) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(horizontal = 14.dp, vertical = 6.dp)
+    )
+}
+
+@Composable
+private fun statusText(status: PresenceStatus, lastSeenMs: Long): String = when (status) {
+    PresenceStatus.ONLINE -> stringResource(R.string.friends_online)
+    PresenceStatus.IN_GAME -> stringResource(R.string.friends_in_game)
+    PresenceStatus.OFFLINE ->
+        if (lastSeenMs <= 0) stringResource(R.string.friends_offline)
+        else stringResource(R.string.friends_offline) + " · " + lastSeenText(lastSeenMs)
+}
+
+@Composable
+private fun statusColor(status: PresenceStatus): Color = when (status) {
+    PresenceStatus.ONLINE -> ChessGreen
+    PresenceStatus.IN_GAME -> InGameColor
+    PresenceStatus.OFFLINE -> ink.copy(alpha = 0.55f)
 }
 
 @Composable

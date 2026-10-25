@@ -18,6 +18,7 @@ class GameMessageTest {
     @Test fun signed() = roundTrip(GameMessage.SignedMsg("abc", "tag", 7))
     @Test fun rematch() = roundTrip(GameMessage.RematchMsg("accept", "g1", "g2"))
     @Test fun images() = roundTrip(GameMessage.ProfileImagesMsg("a", null, "g1"))
+    @Test fun spectatorCount() = roundTrip(GameMessage.SpectatorCountMsg(7, "g1"))
 
     @Test
     fun profileCarriesGameIdAndVersion() {

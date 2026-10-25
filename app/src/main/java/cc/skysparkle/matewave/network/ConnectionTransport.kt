@@ -67,6 +67,9 @@ sealed class GameMessage {
         val newGameId: String = ""
     ) : GameMessage()
 
+    /** Host to guest: how many spectators watch. Older versions skip it as an unknown type. */
+    data class SpectatorCountMsg(val count: Int, val gameId: String = "") : GameMessage()
+
     fun toJson(): String {
         val o = JSONObject()
         when (this) {
@@ -99,6 +102,7 @@ sealed class GameMessage {
                 o.put("type", "rematch"); o.put("action", action); o.put("gameId", gameId)
                 if (newGameId.isNotEmpty()) o.put("newGameId", newGameId)
             }
+            is SpectatorCountMsg -> { o.put("type", "spectators"); o.put("n", count); o.put("gameId", gameId) }
             is ProfileMsg -> {
                 o.put("type", "profile")
                 o.put("userId", userId)
@@ -154,6 +158,7 @@ sealed class GameMessage {
                     o.optString("gameId", ""),
                     o.optString("newGameId", "")
                 )
+                "spectators" -> SpectatorCountMsg(o.getInt("n"), o.optString("gameId", ""))
                 "profile" -> ProfileMsg(
 
                     userId = o.optString("userId", "").ifBlank { o.getString("name") },

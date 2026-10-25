@@ -101,6 +101,11 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
     GlassScaffold(
         title = "",
         onBack = requestExit,
+        actions = {
+            if (state.mode == GameMode.VS_PLAYER_NETWORK && state.spectatorCount > 0) {
+                cc.skysparkle.matewave.ui.components.SpectatorBadge(state.spectatorCount)
+            }
+        },
         titleContent = if (showOpening && opening != null) {
             { OpeningTitle("${opening.eco} · ${opening.name}", bookStatus, inBook) }
         } else null
@@ -490,7 +495,7 @@ private fun PlayerRow(
 }
 
 @Composable
-private fun BigClock(millis: Long, active: Boolean) {
+internal fun BigClock(millis: Long, active: Boolean) {
     val totalSeconds = millis / 1000
     val low = active && totalSeconds < 20
     val color = when {
