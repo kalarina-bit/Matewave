@@ -107,7 +107,7 @@ fun ListRow(
         }
         if (chevron) {
             Spacer(Modifier.width(8.dp))
-            AppIcon(R.drawable.ic_arrow_forward, size = 16.dp, tint = ink.copy(alpha = 0.5f))
+            AppIcon(R.drawable.ic_arrow_forward, size = 20.dp, tint = ink.copy(alpha = 0.7f))
         }
     }
 }

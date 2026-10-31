@@ -103,7 +103,7 @@ fun MovesBar(
         }
         if (opening != null || bookStatus != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                AppIcon(R.drawable.ic_book, size = 14.dp, tint = if (inBook) BookTint else ink.copy(alpha = 0.5f))
+                AppIcon(R.drawable.ic_book, size = 16.dp, tint = if (inBook) BookTint else ink.copy(alpha = 0.7f))
                 Spacer(Modifier.width(6.dp))
                 Text(
                     opening?.let { "${it.eco} · ${it.name}" } ?: "",

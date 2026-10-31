@@ -36,6 +36,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import cc.skysparkle.matewave.ui.components.SetupSegmented
 import cc.skysparkle.matewave.ui.theme.ChessGreen
 import cc.skysparkle.matewave.ui.theme.PanelBorder
@@ -157,11 +158,19 @@ private fun ColorChip(iconRes: Int, text: String, selected: Boolean, onClick: ()
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         // The king from the board's own piece set; random is half white, half black
-        Image(
-            painter = painterResource(iconRes),
-            contentDescription = null,
-            modifier = Modifier.size(20.dp)
-        )
+        Box(
+            modifier = Modifier
+                .size(26.dp)
+                .clip(CircleShape)
+                .background(Color(0xFF9AA0A8)),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
+        }
         Text(text, color = ink, style = MaterialTheme.typography.bodySmall)
     }
 }

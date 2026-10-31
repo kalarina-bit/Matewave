@@ -179,7 +179,7 @@ private fun LicenseCard(entry: LicenseEntry, onClick: () -> Unit) {
                     )
                 }
             }
-            AppIcon(R.drawable.ic_arrow_forward, size = 16.dp, tint = ink.copy(alpha = 0.6f))
+            AppIcon(R.drawable.ic_arrow_forward, size = 20.dp, tint = ink.copy(alpha = 0.7f))
         }
     }
 }

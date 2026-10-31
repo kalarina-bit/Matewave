@@ -260,7 +260,7 @@ private fun AboutRow(iconRes: Int, title: String, subtitle: String, onClick: () 
             Text(subtitle, color = ink.copy(alpha = 0.65f), style = MaterialTheme.typography.bodySmall)
         }
         cc.skysparkle.matewave.ui.components.AppIcon(
-            R.drawable.ic_arrow_forward, size = 16.dp, tint = ink.copy(alpha = 0.6f)
+            R.drawable.ic_arrow_forward, size = 20.dp, tint = ink.copy(alpha = 0.7f)
         )
     }
 }

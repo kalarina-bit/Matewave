@@ -1,5 +1,6 @@
 package cc.skysparkle.matewave.ui.theme
 
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.darkColorScheme
@@ -25,7 +26,12 @@ private val DarkScheme = darkColorScheme(
 @Composable
 fun MatewaveTheme(content: @Composable () -> Unit) {
     MaterialTheme(colorScheme = DarkScheme) {
-        CompositionLocalProvider(LocalInk provides Color.White, content = content)
+        // Text and icons without their own colour are light, so nothing turns black on the dark background
+        CompositionLocalProvider(
+            LocalInk provides Color.White,
+            LocalContentColor provides Color.White,
+            content = content
+        )
     }
 }
 

@@ -149,7 +149,7 @@ private fun NextAction(overview: StudyOverview, viewModel: OpeningStudyViewModel
             button = stringResource(R.string.study_start_button)
         ) { if (viewModel.open(firstNew.course)) onOpenTrainer() }
         nextDueAt != null -> Row(verticalAlignment = Alignment.CenterVertically) {
-            AppIcon(R.drawable.ic_review, size = 16.dp, tint = ink.copy(alpha = 0.55f))
+            AppIcon(R.drawable.ic_review, size = 16.dp, tint = ink.copy(alpha = 0.7f))
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.study_next_review, formatDueIn(nextDueAt)), color = ink.copy(alpha = 0.65f), style = MaterialTheme.typography.bodyMedium)
         }
@@ -234,7 +234,7 @@ private fun CourseCard(info: CourseInfo, modifier: Modifier, onClick: () -> Unit
         )
         Spacer(Modifier.height(4.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
-            AppIcon(R.drawable.ic_timer, size = 12.dp, tint = ink.copy(alpha = 0.55f))
+            AppIcon(R.drawable.ic_timer, size = 14.dp, tint = ink.copy(alpha = 0.7f))
             Spacer(Modifier.width(4.dp))
             Text(
                 LocalContext.current.resources.getQuantityString(R.plurals.study_moves_count, info.total, info.total),
@@ -270,7 +270,7 @@ private fun CourseCard(info: CourseInfo, modifier: Modifier, onClick: () -> Unit
 fun Stars(count: Int, size: androidx.compose.ui.unit.Dp = 16.dp) {
     Row {
         repeat(3) { i ->
-            AppIcon(R.drawable.ic_star, size = size, tint = if (i < count) StarGold else ink.copy(alpha = 0.2f))
+            AppIcon(R.drawable.ic_star, size = size, tint = if (i < count) StarGold else ink.copy(alpha = 0.3f))
         }
     }
 }
