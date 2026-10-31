@@ -68,7 +68,7 @@ fun OpeningTrainerScreen(viewModel: OpeningStudyViewModel, onBack: () -> Unit) {
         }
         ProgressBar(state.answered.toFloat() / state.asked.size.coerceAtLeast(1))
 
-        MovesBar(sans = sans, startBoard = startBoard, currentIndex = sans.size, opening = opening)
+        MovesBar(sans = sans, startBoard = startBoard, opening = opening)
 
         ChessBoardView(
             board = state.board,

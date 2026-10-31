@@ -95,9 +95,7 @@ fun PuzzleSolveScreen(viewModel: GameViewModel, onBack: () -> Unit, onNextPuzzle
             board = state.board,
             selectedSquare = state.selectedSquare,
             legalTargets = state.legalTargetsFromSelected,
-            kingInCheckSquare = if (ChessEngine.isInCheck(state.board, state.board.sideToMove)) {
-                state.board.kingSquare(state.board.sideToMove)
-            } else null,
+            kingInCheckSquare = remember(state.board) { ChessEngine.checkedKingSquare(state.board) },
             flipped = state.myColor == PieceColor.BLACK,
             onSquareClick = viewModel::onSquareClicked,
             modifier = Modifier.align(Alignment.CenterHorizontally).widthIn(max = 560.dp),

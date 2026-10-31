@@ -108,7 +108,7 @@ object DeviceKeys {
     fun fingerprintOf(publicKey: String): String =
         MessageDigest.getInstance("SHA-256")
             .digest(publicKey.toByteArray(Charsets.UTF_8))
-            .take(16).joinToString("") { "%02x".format(it) }
+            .toHex(16)
 
     fun sign(context: Context, data: String): String? {
         val privateKey: PrivateKey = keyPair(context)?.private ?: return null

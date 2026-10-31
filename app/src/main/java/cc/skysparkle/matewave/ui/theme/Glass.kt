@@ -17,11 +17,9 @@ val GlassShape: Shape = RoundedCornerShape(UiCornerRadius)
 
 val TabletMaxContentWidth = 600.dp
 
-fun Modifier.glass(shape: Shape = GlassShape): Modifier = this
-    .clip(shape)
+fun Modifier.glass(): Modifier = this
+    .clip(GlassShape)
     .background(PanelFill)
-
-val GlassBorder = PanelBorder
 
 val PhotoScrim = Brush.verticalGradient(
     0.00f to Color.Black.copy(alpha = 0.84f),

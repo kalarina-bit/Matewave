@@ -12,7 +12,6 @@ import cc.skysparkle.matewave.ui.components.SectionCaption
 
 import cc.skysparkle.matewave.ui.theme.ink
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -42,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -63,7 +63,7 @@ import cc.skysparkle.matewave.ui.components.AppBottomBar
 import cc.skysparkle.matewave.ui.components.BottomTab
 import cc.skysparkle.matewave.ui.theme.ChessGreen
 import cc.skysparkle.matewave.ui.theme.TabletMaxContentWidth
-import cc.skysparkle.matewave.ui.theme.UiCornerRadius
+import cc.skysparkle.matewave.ui.theme.GlassShape
 import cc.skysparkle.matewave.ui.theme.glass
 import cc.skysparkle.matewave.viewmodel.GameViewModel
 import cc.skysparkle.matewave.viewmodel.ResumeInfo
@@ -248,8 +248,8 @@ private fun ContinueCard(info: ResumeInfo, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .glass(RoundedCornerShape(UiCornerRadius))
-            .border(1.dp, ChessGreen.copy(alpha = 0.6f), RoundedCornerShape(UiCornerRadius))
+            .glass()
+            .border(1.dp, ChessGreen.copy(alpha = 0.6f), GlassShape)
             .clickable(onClick = onClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -272,7 +272,7 @@ private fun ContinueCard(info: ResumeInfo, onClick: () -> Unit) {
 private fun ModeTile(iconRes: Int, title: String, subtitle: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
     Column(
         modifier = modifier
-            .glass(RoundedCornerShape(UiCornerRadius))
+            .glass()
             .clickable(onClick = onClick)
             .padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -328,44 +328,49 @@ internal fun StatsDialog(onDismiss: () -> Unit) {
 @Composable
 internal fun MiniRatingGraph(points: List<Int>, modifier: Modifier = Modifier) {
     val lineInk = ink
-    Canvas(modifier = modifier) {
-        if (points.size < 2) return@Canvas
-        val minV = points.min().toFloat()
-        val maxV = points.max().toFloat()
-        val range = (maxV - minV).coerceAtLeast(1f)
-        val stepX = size.width / (points.size - 1)
+    // Paths, gradient and stroke are built once per size and reused by every redraw.
+    Spacer(
+        modifier = modifier.drawWithCache {
+            if (points.size < 2) return@drawWithCache onDrawBehind {}
+            val minV = points.min().toFloat()
+            val maxV = points.max().toFloat()
+            val range = (maxV - minV).coerceAtLeast(1f)
+            val stepX = size.width / (points.size - 1)
 
-        fun yOf(v: Int) = size.height - ((v - minV) / range) * size.height
+            fun yOf(v: Int) = size.height - ((v - minV) / range) * size.height
 
-        val gridLines = 4
-        for (i in 0..gridLines) {
-            val y = size.height / gridLines * i
-            drawLine(lineInk.copy(alpha = 0.08f), Offset(0f, y), Offset(size.width, y), strokeWidth = 1f)
-        }
-        // Reference line: the rating at the start of the shown history.
-        val zeroY = yOf(points.first())
-        drawLine(lineInk.copy(alpha = 0.3f), Offset(0f, zeroY), Offset(size.width, zeroY), strokeWidth = 1.5f)
+            // Reference line: the rating at the start of the shown history.
+            val zeroY = yOf(points.first())
+            val line = Path().apply {
+                moveTo(0f, yOf(points[0]))
+                points.forEachIndexed { i, v -> if (i > 0) lineTo(i * stepX, yOf(v)) }
+            }
+            val fill = Path().apply {
+                addPath(line)
+                lineTo(size.width, size.height)
+                lineTo(0f, size.height)
+                close()
+            }
+            val fillBrush = Brush.verticalGradient(listOf(ChessGreen.copy(alpha = 0.35f), ChessGreen.copy(alpha = 0f)))
+            val lineStroke = Stroke(width = 4f, cap = StrokeCap.Round)
 
-        val line = Path().apply {
-            moveTo(0f, yOf(points[0]))
-            points.forEachIndexed { i, v -> if (i > 0) lineTo(i * stepX, yOf(v)) }
-        }
-        val fill = Path().apply {
-            addPath(line)
-            lineTo(size.width, size.height)
-            lineTo(0f, size.height)
-            close()
-        }
-        drawPath(
-            fill,
-            brush = Brush.verticalGradient(listOf(ChessGreen.copy(alpha = 0.35f), ChessGreen.copy(alpha = 0f)))
-        )
-        drawPath(line, color = ChessGreen, style = Stroke(width = 4f, cap = StrokeCap.Round))
+            onDrawBehind {
+                val gridLines = 4
+                for (i in 0..gridLines) {
+                    val y = size.height / gridLines * i
+                    drawLine(lineInk.copy(alpha = 0.08f), Offset(0f, y), Offset(size.width, y), strokeWidth = 1f)
+                }
+                drawLine(lineInk.copy(alpha = 0.3f), Offset(0f, zeroY), Offset(size.width, zeroY), strokeWidth = 1.5f)
 
-        points.forEachIndexed { i, v ->
-            val center = Offset(i * stepX, yOf(v))
-            drawCircle(color = lineInk, radius = 5f, center = center)
-            drawCircle(color = ChessGreen, radius = 3f, center = center)
+                drawPath(fill, brush = fillBrush)
+                drawPath(line, color = ChessGreen, style = lineStroke)
+
+                points.forEachIndexed { i, v ->
+                    val center = Offset(i * stepX, yOf(v))
+                    drawCircle(color = lineInk, radius = 5f, center = center)
+                    drawCircle(color = ChessGreen, radius = 3f, center = center)
+                }
+            }
         }
-    }
+    )
 }

@@ -252,7 +252,6 @@ private fun FriendCard(friend: FriendEntry, status: PresenceStatus, onDismiss: (
                 .clip(cc.skysparkle.matewave.ui.components.DialogShape)
                 .background(cc.skysparkle.matewave.ui.components.DialogSurface)
         ) {
-            androidx.compose.runtime.CompositionLocalProvider(cc.skysparkle.matewave.ui.theme.LocalInk provides Color.White) {
             Box(modifier = Modifier.fillMaxWidth().height(150.dp)) {
                 val bg = cc.skysparkle.matewave.ui.components.rememberChatImage(friend.backgroundBase64)
                 if (bg != null) {
@@ -293,7 +292,6 @@ private fun FriendCard(friend: FriendEntry, status: PresenceStatus, onDismiss: (
                         )
                     }
                 }
-            }
             }
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(

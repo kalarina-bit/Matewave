@@ -27,11 +27,7 @@ private val DarkScheme = darkColorScheme(
 fun MatewaveTheme(content: @Composable () -> Unit) {
     MaterialTheme(colorScheme = DarkScheme) {
         // Text and icons without their own colour are light, so nothing turns black on the dark background
-        CompositionLocalProvider(
-            LocalInk provides Color.White,
-            LocalContentColor provides Color.White,
-            content = content
-        )
+        CompositionLocalProvider(LocalContentColor provides Color.White, content = content)
     }
 }
 

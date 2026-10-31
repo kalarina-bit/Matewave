@@ -19,5 +19,18 @@ class MatewaveApp : Application() {
         Stats.init(this)
         GameSaveStore.init(this)
         Haptics.init(this)
+
+        // Settings files load on a background thread from first use; start them now, so the
+        // first screen finds them in memory instead of waiting for the disk.
+        for (name in EARLY_PREFS) getSharedPreferences(name, MODE_PRIVATE)
+        GameSaveStore.preload()
+    }
+
+    private companion object {
+        /** Settings the home screen and its view models read while starting. */
+        val EARLY_PREFS = arrayOf(
+            "chess_profile_prefs", "chess_friends_prefs", "chess_stats_prefs", "chess_sound_prefs",
+            "last_game_setup", "presence_settings", "opening_srs"
+        )
     }
 }

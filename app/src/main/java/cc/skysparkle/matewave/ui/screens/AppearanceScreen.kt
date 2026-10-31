@@ -36,7 +36,7 @@ import cc.skysparkle.matewave.settings.BoardAppearance
 import cc.skysparkle.matewave.settings.BoardTheme
 import cc.skysparkle.matewave.ui.components.GlassCard
 import cc.skysparkle.matewave.ui.components.GlassScaffold
-import cc.skysparkle.matewave.ui.theme.GlassBorder
+import cc.skysparkle.matewave.ui.theme.PanelBorder
 
 @Composable
 fun AppearanceScreen(onBack: () -> Unit) {
@@ -125,7 +125,7 @@ fun AppearanceScreen(onBack: () -> Unit) {
 @Composable
 private fun ThemePreview(theme: BoardTheme, showPieces: Boolean) {
     val shape = RoundedCornerShape(6.dp)
-    Column(modifier = Modifier.size(56.dp).clip(shape).border(1.dp, GlassBorder, shape)) {
+    Column(modifier = Modifier.size(56.dp).clip(shape).border(1.dp, PanelBorder, shape)) {
         repeat(2) { row ->
             Row(modifier = Modifier.weight(1f)) {
                 repeat(2) { col ->

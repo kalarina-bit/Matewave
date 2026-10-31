@@ -137,7 +137,6 @@ fun AccountScreen(
             )
         }
     ) {
-        androidx.compose.runtime.CompositionLocalProvider(cc.skysparkle.matewave.ui.theme.LocalInk provides Color.White) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -240,7 +239,6 @@ fun AccountScreen(
                 }
             }
         }
-        }
 
         if (profile.avatarBase64 != null || profile.backgroundBase64 != null) {
             Text(
@@ -248,7 +246,7 @@ fun AccountScreen(
                 color = ink.copy(alpha = 0.55f),
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.clickable {
-                    ProfileStore.resetAvatarToDefault()
+                    ProfileStore.setAvatar(null)
                     ProfileStore.setBackground(null)
                     profile = ProfileStore.get()
                 }

@@ -48,6 +48,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -69,7 +70,6 @@ data class GameUiState(
 
     val gameStarted: Boolean = false,
     val aiDifficulty: AiDifficulty = AiDifficulty.MEDIUM,
-    val aiThinking: Boolean = false,
     val puzzle: Puzzle? = null,
     val puzzleMoveIndex: Int = 0,
     val puzzleSolved: Boolean = false,
@@ -78,7 +78,6 @@ data class GameUiState(
     val puzzleAutoMoving: Boolean = false,
     val puzzleHintFrom: Int? = null,
     val puzzleSolutionRevealed: Boolean = false,
-    val clockState: ClockState? = null,
     val timedOutSide: PieceColor? = null,
     val resignedSide: PieceColor? = null,
     val connectionState: ConnectionState = ConnectionState.DISCONNECTED,
@@ -115,8 +114,7 @@ data class PendingPromotion(val from: Int, val to: Int)
 data class ChatEntry(
     val text: String?,
     val imageBase64: String?,
-    val fromMe: Boolean,
-    val timestampMs: Long
+    val fromMe: Boolean
 )
 
 enum class OpponentNotice { DRAW_DECLINED, REMATCH_DECLINED }
@@ -147,6 +145,13 @@ class GameViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState
+
+    /**
+     * The game's clock, kept out of [uiState] so its ticks redraw only the clocks. Cleared with
+     * every new game state; a new clock shows itself once set up.
+     */
+    private val _clockState = MutableStateFlow<ClockState?>(null)
+    val clockState: StateFlow<ClockState?> = _clockState
 
     private val _resumable = MutableStateFlow<ResumeInfo?>(null)
 
@@ -195,7 +200,16 @@ class GameViewModel : ViewModel() {
     private var lastSentSpectatorCount = 0
 
     init {
-        GameSaveStore.load()?.let { saved -> restoreSaved(saved) }
+        if (GameSaveStore.isLoaded()) {
+            GameSaveStore.load()?.let { saved -> restoreSaved(saved) }
+        } else {
+            // Not read yet: read it in the background instead of making the first screen wait.
+            val untouched = _uiState.value
+            viewModelScope.launch {
+                val saved = withContext(Dispatchers.IO) { GameSaveStore.load() } ?: return@launch
+                if (_uiState.value === untouched) restoreSaved(saved)
+            }
+        }
     }
 
     // region History
@@ -225,7 +239,7 @@ class GameViewModel : ViewModel() {
         var replayed = saved.movesUci.isNotBlank()
         if (replayed) {
             for (uci in saved.movesUci.trim().split(' ')) {
-                val move = resolveUciAgainstLegalMoves(board, uci)
+                val move = Notation.fromUci(board, uci)
                 if (move == null) { replayed = false; break }
                 sans.add(Notation.toSan(board, move))
                 board = ChessEngine.applyMove(board, move)
@@ -248,6 +262,7 @@ class GameViewModel : ViewModel() {
         fenHistory.clear(); fenHistory.addAll(keys)
         moveLog.clear(); moveLog.addAll(ucis)
         lastVsAiSettings = Triple(difficulty, myColor, timeControl)
+        _clockState.value = null
         _uiState.value = GameUiState(
             board = board,
             startBoard = start,
@@ -264,14 +279,14 @@ class GameViewModel : ViewModel() {
             restoreWhiteMillis = saved.whiteMillis,
             restoreBlackMillis = saved.blackMillis
         )
-        clock?.pause()
+        clock?.stop()
         _resumable.value = resumeInfoOf(_uiState.value)
         return true
     }
 
     private fun resumeInfoOf(state: GameUiState): ResumeInfo {
         val unlimited = lastVsAiSettings?.third?.initialSeconds == Int.MAX_VALUE
-        val millis = if (unlimited) null else (clock?.state?.value ?: state.clockState)?.let {
+        val millis = if (unlimited) null else (clock?.state?.value ?: _clockState.value)?.let {
             if (state.myColor == PieceColor.WHITE) it.whiteMillis else it.blackMillis
         }
         return ResumeInfo(state.board.fullmoveNumber, state.board.sideToMove == state.myColor, millis)
@@ -279,7 +294,8 @@ class GameViewModel : ViewModel() {
 
     private fun persistIfResumable() {
         val state = _uiState.value
-        if (state.mode != GameMode.VS_AI || state.status != GameStatus.ONGOING) return
+        // The untouched initial state is no game: saving it would offer a game nobody started.
+        if (state.mode != GameMode.VS_AI || state.status != GameStatus.ONGOING || !state.gameStarted) return
         val clockState = clock?.state?.value
         GameSaveStore.save(
             SavedGame(
@@ -434,12 +450,6 @@ class GameViewModel : ViewModel() {
         ProfileStore.applyEloDelta(ProfileStore.aiNominalElo(difficulty), result)
     }
 
-    private fun resolveUciAgainstLegalMoves(board: Board, uci: String): Move? {
-        val candidate = runCatching { Move.fromUci(uci) }.getOrNull() ?: return null
-        val matches = ChessEngine.legalMoves(board).filter { it.from == candidate.from && it.to == candidate.to }
-        return matches.firstOrNull { it.promotion == candidate.promotion } ?: matches.firstOrNull()
-    }
-
     // endregion
 
     // region Against the AI
@@ -456,6 +466,7 @@ class GameViewModel : ViewModel() {
         val start = Board.startPosition()
         resetHistory(start)
         lastVsAiSettings = Triple(difficulty, myColor, timeControl)
+        _clockState.value = null
         _uiState.value = GameUiState(
             board = start,
             startBoard = start,
@@ -493,7 +504,6 @@ class GameViewModel : ViewModel() {
     private fun cancelAi() {
         aiJob?.cancel()
         aiJob = null
-        if (_uiState.value.aiThinking) _uiState.value = _uiState.value.copy(aiThinking = false)
     }
 
     private fun triggerAiMoveIfNeeded() {
@@ -501,7 +511,6 @@ class GameViewModel : ViewModel() {
         if (state.mode != GameMode.VS_AI || state.status != GameStatus.ONGOING) return
         if (state.board.sideToMove == state.myColor) return
         if (aiJob?.isActive == true) return
-        _uiState.value = state.copy(aiThinking = true)
         val boardAtStart = state.board
         val history = fenHistory.toSet()
         val aiColor = boardAtStart.sideToMove
@@ -511,14 +520,14 @@ class GameViewModel : ViewModel() {
         val incrementMillis = (lastVsAiSettings?.third?.incrementSeconds ?: 0) * 1000L
         aiJob = viewModelScope.launch {
             val move = withContext(Dispatchers.Default) {
-                ChessAI.bestMove(boardAtStart, state.aiDifficulty, history, clockMillis, incrementMillis)
+                // Stops thinking as soon as the game is left or the move is no longer wanted.
+                ChessAI.bestMove(
+                    boardAtStart, state.aiDifficulty, history, clockMillis, incrementMillis,
+                    isCancelled = { !isActive }
+                )
             }
             val now = _uiState.value
-            if (now.board !== boardAtStart || now.mode != GameMode.VS_AI || now.status != GameStatus.ONGOING) {
-                if (now.aiThinking) _uiState.value = now.copy(aiThinking = false)
-                return@launch
-            }
-            _uiState.value = now.copy(aiThinking = false)
+            if (now.board !== boardAtStart || now.mode != GameMode.VS_AI || now.status != GameStatus.ONGOING) return@launch
             if (move != null) makeMove(move)
         }
     }
@@ -532,6 +541,7 @@ class GameViewModel : ViewModel() {
         disposeClock()
         val board = runCatching { Board.fromFen(puzzle.fen) }.getOrNull() ?: return
         resetHistory(board)
+        _clockState.value = null
         _uiState.value = GameUiState(
             board = board,
             startBoard = board,
@@ -587,7 +597,7 @@ class GameViewModel : ViewModel() {
             return
         }
 
-        val replyMove = resolveUciAgainstLegalMoves(_uiState.value.board, puzzle.solutionUci[nextIndex])
+        val replyMove = Notation.fromUci(_uiState.value.board, puzzle.solutionUci[nextIndex])
         _uiState.value = _uiState.value.copy(
             puzzleMoveIndex = nextIndex + 1,
             puzzleFailedAttempt = false,
@@ -732,6 +742,7 @@ class GameViewModel : ViewModel() {
         currentPly = 0
         lastOpponentRemaining = Long.MAX_VALUE
 
+        _clockState.value = null
         _uiState.value = GameUiState(
             board = start,
             startBoard = start,
@@ -893,7 +904,7 @@ class GameViewModel : ViewModel() {
                 }
                 val state = _uiState.value
                 _uiState.value = state.copy(
-                    chatMessages = state.chatMessages + ChatEntry(msg.text, msg.imageBase64, fromMe = false, System.currentTimeMillis()),
+                    chatMessages = state.chatMessages + ChatEntry(msg.text, msg.imageBase64, fromMe = false),
                     unreadChatCount = state.unreadChatCount + 1
                 )
             }
@@ -1036,7 +1047,7 @@ class GameViewModel : ViewModel() {
         val opponentColor = state.myColor.opposite()
         if (state.board.sideToMove != opponentColor) return
 
-        val move = resolveUciAgainstLegalMoves(state.board, msg.uci) ?: return
+        val move = Notation.fromUci(state.board, msg.uci) ?: return
         currentPly = if (msg.ply > 0) msg.ply else currentPly + 1
 
         val limit = lastNetworkTimeControl?.let { it.initialSeconds * 1000L + 60_000L }
@@ -1164,7 +1175,7 @@ class GameViewModel : ViewModel() {
 
         if (state.mode != GameMode.VS_PLAYER_NETWORK) {
             cancelAi()
-            clock?.pause()
+            clock?.stop()
             persistIfResumable()
             return
         }
@@ -1241,6 +1252,7 @@ class GameViewModel : ViewModel() {
         val start = Board.startPosition()
         resetHistory(start)
 
+        _clockState.value = null
         _uiState.value = GameUiState(
             board = start,
             startBoard = start,
@@ -1345,7 +1357,7 @@ class GameViewModel : ViewModel() {
         val trimmed = text.trim().take(MAX_CHAT_TEXT_CHARS)
         if (!sendGameMessage(GameMessage.ChatMsg(text = trimmed, gameId = networkGameId))) return
         _uiState.value = _uiState.value.copy(
-            chatMessages = _uiState.value.chatMessages + ChatEntry(trimmed, null, fromMe = true, System.currentTimeMillis())
+            chatMessages = _uiState.value.chatMessages + ChatEntry(trimmed, null, fromMe = true)
         )
     }
 
@@ -1358,7 +1370,7 @@ class GameViewModel : ViewModel() {
         }
         if (!sendGameMessage(GameMessage.ChatMsg(imageBase64 = base64, gameId = networkGameId))) return
         _uiState.value = _uiState.value.copy(
-            chatMessages = _uiState.value.chatMessages + ChatEntry(null, base64, fromMe = true, System.currentTimeMillis())
+            chatMessages = _uiState.value.chatMessages + ChatEntry(null, base64, fromMe = true)
         )
     }
 
@@ -1511,15 +1523,14 @@ class GameViewModel : ViewModel() {
     }
 
     private fun onClockTick(cs: ClockState) {
+        _clockState.value = cs
         val current = _uiState.value
+        // Spectators get the clock as before, when it was part of the game state.
+        if (spectatorWatcher?.isActive == true) onStateForSpectators(current)
         val flag = cs.flagged
-        if (flag == null || current.status != GameStatus.ONGOING) {
-            _uiState.value = current.copy(clockState = cs)
-            return
-        }
+        if (flag == null || current.status != GameStatus.ONGOING) return
         when (current.mode) {
             GameMode.VS_PLAYER_NETWORK -> {
-                _uiState.value = current.copy(clockState = cs)
                 if (flag == current.myColor) {
                     declareNetworkTimeout(flag, sendClaim = true)
                 } else if (opponentFlagJob?.isActive != true) {
@@ -1548,12 +1559,11 @@ class GameViewModel : ViewModel() {
                 recordAiResult(current.aiDifficulty, result)
                 clearSavedGame()
                 _uiState.value = current.copy(
-                    clockState = cs,
                     status = if (draw) GameStatus.TIMEOUT_DRAW else GameStatus.TIMEOUT,
                     timedOutSide = flag
                 )
             }
-            GameMode.PUZZLE -> _uiState.value = current.copy(clockState = cs)
+            GameMode.PUZZLE -> Unit
         }
     }
 

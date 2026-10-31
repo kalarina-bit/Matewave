@@ -143,7 +143,8 @@ object SoundManager {
         musicEnabled = prefs.getBoolean(KEY_MUSIC, false)
         sfxEnabled = prefs.getBoolean(KEY_SFX, true)
 
-        ensureSoundPool(ctx)
+        // Building the pool and opening the sounds takes a while: do it off the main thread.
+        kotlin.concurrent.thread(name = "sound-pool", isDaemon = true) { soundPool = createSoundPool(ctx) }
 
         if (musicEnabled) {
             mainHandler.postDelayed({ if (musicEnabled) startRadio() }, RADIO_START_DELAY_MS)
@@ -446,12 +447,12 @@ object SoundManager {
             ?.putBoolean(KEY_SFX, enabled)?.apply()
     }
 
-    private var soundPool: SoundPool? = null
+    /** Set once, after [sfxSoundIds] is filled. */
+    @Volatile private var soundPool: SoundPool? = null
     private val sfxSoundIds = HashMap<Int, Int>()
     private val sfxLoaded = HashSet<Int>()
 
-    private fun ensureSoundPool(ctx: Context): SoundPool {
-        soundPool?.let { return it }
+    private fun createSoundPool(ctx: Context): SoundPool {
         val attributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_GAME)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -467,14 +468,13 @@ object SoundManager {
         )) {
             sfxSoundIds[resId] = pool.load(ctx, resId, 1)
         }
-        soundPool = pool
         return pool
     }
 
     private fun playSfx(resId: Int) {
         if (!sfxEnabled) return
-        val ctx = appContext ?: return
-        val pool = ensureSoundPool(ctx)
+        // Like a sound still decoding, one asked for before the pool exists is skipped.
+        val pool = soundPool ?: return
         val soundId = sfxSoundIds[resId] ?: return
         val ready = synchronized(sfxLoaded) { soundId in sfxLoaded }
         if (ready) pool.play(soundId, 1f, 1f, 1, 0, 1f)

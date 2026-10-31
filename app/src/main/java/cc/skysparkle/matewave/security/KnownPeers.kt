@@ -79,7 +79,7 @@ class KnownPeers(context: Context) {
         if (value.isNullOrEmpty()) return ""
         return java.security.MessageDigest.getInstance("SHA-256")
             .digest(value.toByteArray(Charsets.UTF_8))
-            .take(8).joinToString("") { "%02x".format(it) }
+            .toHex(8)
     }
 
     /** Forgets every pinned key, e.g. after opponents reinstalled the app. */

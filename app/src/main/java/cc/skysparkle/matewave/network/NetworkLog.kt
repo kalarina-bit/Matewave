@@ -8,7 +8,6 @@ enum class DisconnectReason(val userText: String, val textRes: Int) {
     NONE("—", cc.skysparkle.matewave.R.string.reason_unknown),
     PERMISSION_DENIED("No nearby devices permission", cc.skysparkle.matewave.R.string.reason_permission_denied),
     BLUETOOTH_OFF("Bluetooth is off", cc.skysparkle.matewave.R.string.reason_bluetooth_off),
-    WIFI_UNAVAILABLE("Phone is not connected to Wi-Fi", cc.skysparkle.matewave.R.string.reason_wifi_unavailable),
     PEER_NOT_FOUND("Opponent not found", cc.skysparkle.matewave.R.string.reason_peer_not_found),
     CONNECT_TIMEOUT("Opponent did not respond in time", cc.skysparkle.matewave.R.string.reason_connect_timeout),
     SERVICE_NOT_FOUND("The other device does not have this app", cc.skysparkle.matewave.R.string.reason_service_not_found),
@@ -16,8 +15,7 @@ enum class DisconnectReason(val userText: String, val textRes: Int) {
     WRITE_FAILED("Could not send data", cc.skysparkle.matewave.R.string.reason_write_failed),
     MESSAGE_TOO_LARGE("Received message is too large", cc.skysparkle.matewave.R.string.reason_message_too_large),
     REMOTE_DISCONNECTED("Opponent disconnected", cc.skysparkle.matewave.R.string.reason_remote_disconnected),
-    PORT_BUSY("Could not open port", cc.skysparkle.matewave.R.string.reason_port_busy),
-    UNKNOWN("Unknown connection error", cc.skysparkle.matewave.R.string.reason_unknown)
+    PORT_BUSY("Could not open port", cc.skysparkle.matewave.R.string.reason_port_busy)
 }
 
 data class NetworkEvent(
@@ -45,9 +43,10 @@ object NetworkLog {
         log(transport, reason.userText + (detail?.let { ": $it" } ?: ""))
     }
 
-    fun asText(): String = _events.value.joinToString("\n") { e ->
-        val time = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
-            .format(java.util.Date(e.at))
-        "$time [${e.transport}] ${e.text}"
+    fun asText(): String {
+        val format = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
+        return _events.value.joinToString("\n") { e ->
+            "${format.format(java.util.Date(e.at))} [${e.transport}] ${e.text}"
+        }
     }
 }

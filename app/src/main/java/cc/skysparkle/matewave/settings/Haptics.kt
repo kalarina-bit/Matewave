@@ -25,21 +25,21 @@ object Haptics {
         }
     }
 
-    fun select() = play(Build.VERSION_CODES.Q, predefined = VibrationEffect.EFFECT_TICK, fallbackMs = 8)
+    fun select() = play(VibrationEffect.EFFECT_TICK, fallbackMs = 8)
 
-    fun move() = play(Build.VERSION_CODES.Q, predefined = VibrationEffect.EFFECT_CLICK, fallbackMs = 15)
+    fun move() = play(VibrationEffect.EFFECT_CLICK, fallbackMs = 15)
 
-    fun capture() = play(Build.VERSION_CODES.Q, predefined = VibrationEffect.EFFECT_HEAVY_CLICK, fallbackMs = 25)
+    fun capture() = play(VibrationEffect.EFFECT_HEAVY_CLICK, fallbackMs = 25)
 
-    fun alert() = play(Build.VERSION_CODES.Q, predefined = VibrationEffect.EFFECT_DOUBLE_CLICK, fallbackMs = 40)
+    fun alert() = play(VibrationEffect.EFFECT_DOUBLE_CLICK, fallbackMs = 40)
 
-    private fun play(minApiForPredefined: Int, predefined: Int, fallbackMs: Long) {
+    private fun play(predefined: Int, fallbackMs: Long) {
         val context = appContext ?: return
         val v = vibrator ?: return
         if (!v.hasVibrator()) return
         if (!FeedbackSettings(context).vibrationEnabled) return
         runCatching {
-            val effect = if (Build.VERSION.SDK_INT >= minApiForPredefined) {
+            val effect = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 VibrationEffect.createPredefined(predefined)
             } else {
                 VibrationEffect.createOneShot(fallbackMs, VibrationEffect.DEFAULT_AMPLITUDE)

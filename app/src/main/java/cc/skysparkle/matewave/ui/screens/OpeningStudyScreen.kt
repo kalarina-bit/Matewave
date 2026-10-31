@@ -161,7 +161,7 @@ private fun ActionCard(icon: Int, title: String, subtitle: String?, button: Stri
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .glass(RoundedCornerShape(UiCornerRadius))
+            .glass()
             .padding(horizontal = 14.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

@@ -156,12 +156,11 @@ fun AppDialog(
 }
 
 @Composable
-fun DialogText(text: String, modifier: Modifier = Modifier) {
+fun DialogText(text: String) {
     Text(
         text,
         color = ink.copy(alpha = 0.78f),
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = modifier
+        style = MaterialTheme.typography.bodyLarge
     )
 }
 

@@ -3,6 +3,7 @@ package cc.skysparkle.matewave.network
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /** Periodic ping that detects a silently dropped connection. */
@@ -35,38 +36,31 @@ class Heartbeat(
             }
         }
 
+        // Sleeps while disconnected; every new connection starts with fresh timestamps.
         job = scope.launch {
-            var wasConnected = false
-            while (true) {
-                delay(INTERVAL_MS)
-                val connected = transport.connectionState.value == ConnectionState.CONNECTED
-                if (!connected) {
-                    wasConnected = false
-                    continue
-                }
-                if (!wasConnected) {
+            transport.connectionState.collectLatest { state ->
+                if (state != ConnectionState.CONNECTED) return@collectLatest
+                lastReplyAt = System.currentTimeMillis()
+                lastTrafficAt = lastReplyAt
+                while (true) {
                     val now = System.currentTimeMillis()
-                    lastReplyAt = now
-                    lastTrafficAt = now
-                    wasConnected = true
-                }
-                val now = System.currentTimeMillis()
-                val silence = now - lastReplyAt
+                    val silence = now - lastReplyAt
 
-                if (silence > TIMEOUT_MS && now - lastTrafficAt > TIMEOUT_MS) {
-                    NetworkLog.reason(
-                        transport.type.name,
-                        DisconnectReason.REMOTE_DISCONNECTED,
-                        "no reply for ${silence / 1000} s"
-                    )
-                    transport.disconnect()
-                    continue
+                    if (silence > TIMEOUT_MS && now - lastTrafficAt > TIMEOUT_MS) {
+                        NetworkLog.reason(
+                            transport.type.name,
+                            DisconnectReason.REMOTE_DISCONNECTED,
+                            "no reply for ${silence / 1000} s"
+                        )
+                        transport.disconnect()
+                    } else {
+                        if (silence > TIMEOUT_MS) {
+                            NetworkLog.log(transport.type.name, "No heartbeat reply for ${silence / 1000} s, but data is flowing")
+                        }
+                        transport.send(GameMessage.PingMsg(reply = false, sessionId = sessionId))
+                    }
+                    delay(INTERVAL_MS)
                 }
-
-                if (silence > TIMEOUT_MS) {
-                    NetworkLog.log(transport.type.name, "No heartbeat reply for ${silence / 1000} s, but data is flowing")
-                }
-                transport.send(GameMessage.PingMsg(reply = false, sessionId = sessionId))
             }
         }
     }

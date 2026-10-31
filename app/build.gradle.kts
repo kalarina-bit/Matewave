@@ -34,6 +34,15 @@ android {
         compose = true
     }
 
+    androidResources {
+        // The app's languages, plus the regional variants libraries ship for them.
+        localeFilters += listOf(
+            "en", "en-rAU", "en-rCA", "en-rGB", "en-rIN",
+            "ru", "de", "ja", "lt",
+            "zh", "zh-rCN", "zh-rHK", "zh-rTW"
+        )
+    }
+
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
@@ -59,6 +68,20 @@ android {
         compilerOptions {
             freeCompilerArgs.add("-opt-in=androidx.compose.material3.ExperimentalMaterial3Api")
         }
+    }
+}
+
+androidComponents {
+    // Release APKs leave out files only build and debug tools read: library version markers,
+    // Kotlin reflection metadata and the coroutines debug agent.
+    onVariants(selector().withBuildType("release")) { variant ->
+        variant.packaging.resources.excludes.addAll(
+            "/META-INF/*.version",
+            "/META-INF/*.kotlin_module",
+            "/kotlin/**",
+            "/kotlin-tooling-metadata.json",
+            "/DebugProbesKt.bin"
+        )
     }
 }
 

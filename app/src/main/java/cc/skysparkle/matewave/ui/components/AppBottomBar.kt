@@ -2,10 +2,7 @@ package cc.skysparkle.matewave.ui.components
 
 import cc.skysparkle.matewave.ui.theme.ink
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.runtime.getValue
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,48 +51,51 @@ fun AppBottomBar(
             .padding(vertical = 6.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        NavItem(iconRes = R.drawable.ic_home, label = stringResource(R.string.nav_home), active = current == BottomTab.HOME, onClick = onHomeClick)
-
-        NavItem(iconRes = R.drawable.ic_friends, label = stringResource(R.string.nav_friends), active = current == BottomTab.FRIENDS, onClick = onFriendsClick)
-        NavItem(iconRes = R.drawable.ic_settings, label = stringResource(R.string.nav_settings), active = current == BottomTab.SETTINGS, onClick = onSettingsClick)
-
-        AccountNavItem(
-            avatarBase64 = accountAvatarBase64,
-            active = current == BottomTab.ACCOUNT,
-            onClick = onAccountClick
-        )
+        NavItem(stringResource(R.string.nav_home), current == BottomTab.HOME, onHomeClick) { tint ->
+            NavIcon(R.drawable.ic_home, tint)
+        }
+        NavItem(stringResource(R.string.nav_friends), current == BottomTab.FRIENDS, onFriendsClick) { tint ->
+            NavIcon(R.drawable.ic_friends, tint)
+        }
+        NavItem(stringResource(R.string.nav_settings), current == BottomTab.SETTINGS, onSettingsClick) { tint ->
+            NavIcon(R.drawable.ic_settings, tint)
+        }
+        NavItem(stringResource(R.string.account_title), current == BottomTab.ACCOUNT, onAccountClick) { tint ->
+            val bitmap = rememberChatImage(accountAvatarBase64, AVATAR_MAX_DIMENSION_PX)
+            if (bitmap != null) {
+                Image(
+                    bitmap = bitmap,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(24.dp).clip(CircleShape)
+                )
+            } else {
+                NavIcon(R.drawable.ic_default_avatar, tint)
+            }
+        }
     }
 }
 
+/** Every screen has its own bar, so a tab never changes between active and inactive while shown. */
 @Composable
-private fun RowScope.NavItem(iconRes: Int, label: String, active: Boolean, onClick: () -> Unit) {
+private fun RowScope.NavItem(
+    label: String,
+    active: Boolean,
+    onClick: () -> Unit,
+    icon: @Composable (tint: Color) -> Unit
+) {
     val shape = RoundedCornerShape(UiCornerRadius)
-
-    val highlight by animateColorAsState(
-        if (active) ink.copy(alpha = 0.14f) else ink.copy(alpha = 0f),
-        animationSpec = tween(220),
-        label = "navHighlight"
-    )
-    val itemColor by animateColorAsState(
-        if (active) ink else ink.copy(alpha = 0.7f),
-        animationSpec = tween(220),
-        label = "navColor"
-    )
+    val itemColor = if (active) ink else ink.copy(alpha = 0.7f)
     Column(
         modifier = Modifier
             .weight(1f)
             .clip(shape)
-            .background(highlight, shape)
+            .background(if (active) ink.copy(alpha = 0.14f) else ink.copy(alpha = 0f), shape)
             .clickable(onClick = onClick)
             .padding(vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(iconRes),
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(itemColor),
-            modifier = Modifier.size(24.dp)
-        )
+        icon(itemColor)
         Spacer(Modifier.height(4.dp))
         Text(
             label,
@@ -106,48 +106,11 @@ private fun RowScope.NavItem(iconRes: Int, label: String, active: Boolean, onCli
 }
 
 @Composable
-private fun RowScope.AccountNavItem(avatarBase64: String?, active: Boolean, onClick: () -> Unit) {
-    val shape = RoundedCornerShape(UiCornerRadius)
-    val bitmap = rememberChatImage(avatarBase64, AVATAR_MAX_DIMENSION_PX)
-    val highlight by animateColorAsState(
-        if (active) ink.copy(alpha = 0.14f) else ink.copy(alpha = 0f),
-        animationSpec = tween(220),
-        label = "navHighlight"
+private fun NavIcon(iconRes: Int, tint: Color) {
+    Image(
+        painter = painterResource(iconRes),
+        contentDescription = null,
+        colorFilter = ColorFilter.tint(tint),
+        modifier = Modifier.size(24.dp)
     )
-    val itemColor by animateColorAsState(
-        if (active) ink else ink.copy(alpha = 0.7f),
-        animationSpec = tween(220),
-        label = "navColor"
-    )
-    Column(
-        modifier = Modifier
-            .weight(1f)
-            .clip(shape)
-            .background(highlight, shape)
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (bitmap != null) {
-            Image(
-                bitmap = bitmap,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.size(24.dp).clip(CircleShape)
-            )
-        } else {
-            Image(
-                painter = painterResource(R.drawable.ic_default_avatar),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(itemColor),
-                modifier = Modifier.size(24.dp)
-            )
-        }
-        Spacer(Modifier.height(4.dp))
-        Text(
-            stringResource(R.string.account_title),
-            color = if (active) itemColor else Color.Transparent,
-            style = MaterialTheme.typography.labelMedium
-        )
-    }
 }

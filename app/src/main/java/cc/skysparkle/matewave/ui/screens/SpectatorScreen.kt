@@ -101,9 +101,7 @@ fun SpectatorScreen(target: SpectateTarget, onBackToFriends: () -> Unit) {
 
         val bottom = if (state.flipped) PieceColor.BLACK else PieceColor.WHITE
         val material = remember(view.board) { Material.balance(view.board) }
-        val checkSquare = if (ChessEngine.isInCheck(view.board, view.board.sideToMove)) {
-            view.board.kingSquare(view.board.sideToMove)
-        } else null
+        val checkSquare = remember(view.board) { ChessEngine.checkedKingSquare(view.board) }
 
         SpectatorPlayerRow(view, bottom.opposite(), state, material)
         ChessBoardView(
@@ -123,7 +121,6 @@ fun SpectatorScreen(target: SpectateTarget, onBackToFriends: () -> Unit) {
         MovesBar(
             sans = view.moveSans,
             startBoard = view.startBoard,
-            currentIndex = view.moveSans.size,
             opening = null,
             bookPlies = bookPlies
         )

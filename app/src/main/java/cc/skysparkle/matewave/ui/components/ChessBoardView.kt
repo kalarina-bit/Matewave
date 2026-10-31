@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Paint
 import android.graphics.Typeface
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -43,7 +44,8 @@ import cc.skysparkle.matewave.ui.theme.HighlightMove
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
-private object PieceImages {
+/** The twelve piece pictures, decoded once and shared by the board and the other piece views. */
+internal object PieceImages {
     @Volatile private var cache: Array<ImageBitmap>? = null
 
     fun get(context: Context): Array<ImageBitmap> {
@@ -51,9 +53,9 @@ private object PieceImages {
         synchronized(this) {
             cache?.let { return it }
             val options = BitmapFactory.Options().apply { inScaled = false }
-            val types = PieceType.values()
-            val loaded = Array(PieceColor.values().size * types.size) { i ->
-                val piece = Piece(types[i % types.size], PieceColor.values()[i / types.size])
+            val types = PieceType.entries
+            val loaded = Array(PieceColor.entries.size * types.size) { i ->
+                val piece = Piece(types[i % types.size], PieceColor.entries[i / types.size])
                 BitmapFactory.decodeResource(context.resources, piece.drawableRes(), options).asImageBitmap()
             }
             cache = loaded
@@ -61,7 +63,9 @@ private object PieceImages {
         }
     }
 
-    fun indexOf(piece: Piece): Int = piece.color.ordinal * PieceType.values().size + piece.type.ordinal
+    fun of(context: Context, type: PieceType, color: PieceColor): ImageBitmap = get(context)[indexOf(type, color)]
+
+    fun indexOf(type: PieceType, color: PieceColor): Int = color.ordinal * PieceType.entries.size + type.ordinal
 }
 
 @Composable
@@ -83,12 +87,14 @@ fun ChessBoardView(
     highlightLastMove: Boolean? = null
 ) {
     val context = LocalContext.current
+    // Read once: the appearance changes only in settings, while no board is on screen.
     val appearance = remember { BoardAppearance(context) }
-    val theme = appearance.theme
-    val showCoords = appearance.showCoordinates
-    val imagePieces = appearance.useImagePieces
-    val showLastMove = highlightLastMove ?: appearance.showLastMove
-    val showCheck = appearance.showCheckHighlight
+    val theme = remember { appearance.theme }
+    val showCoords = remember { appearance.showCoordinates }
+    val imagePieces = remember { appearance.useImagePieces }
+    val lastMoveSetting = remember { appearance.showLastMove }
+    val showLastMove = highlightLastMove ?: lastMoveSetting
+    val showCheck = remember { appearance.showCheckHighlight }
 
     val pieceImages = if (imagePieces) remember(context) { PieceImages.get(context) } else null
 
@@ -113,7 +119,7 @@ fun ChessBoardView(
     var dragSquare by remember { mutableStateOf<Int?>(null) }
     var dragPos by remember { mutableStateOf<Offset?>(null) }
 
-    Canvas(
+    Spacer(
         modifier = modifier
             .fillMaxWidth()
             .aspectRatio(1f)
@@ -169,151 +175,161 @@ fun ChessBoardView(
                     )
                 }
             }
-    ) {
-        val cell = size.width / 8f
-        val lastFrom = if (showLastMove) (lastMove?.from ?: -1) else -1
-        val lastTo = if (showLastMove) (lastMove?.to ?: -1) else -1
-        val selected = selectedSquare ?: -1
-        val checkSquare = if (showCheck) (kingInCheckSquare ?: -1) else -1
-        val hint = hintSquare ?: -1
-        val flash = flashSquare ?: -1
-
-        val dSq = dragSquare
-        val dPos = dragPos
-        val liftedSq = if (dSq != null && dPos != null && selected == dSq) dSq else -1
-        val liftedAt: Offset? = if (liftedSq >= 0) dPos else null
-
-        for (row in 0 until 8) {
-            for (col in 0 until 8) {
-                val displayRank = if (flipped) row else 7 - row
-                val displayFile = if (flipped) 7 - col else col
-                val sqIndex = displayRank * 8 + displayFile
-                val isLight = (displayRank + displayFile) % 2 == 1
-                var color = if (isLight) theme.light else theme.dark
-                if (sqIndex == lastFrom || sqIndex == lastTo) color = HighlightLastMove
-                if (sqIndex == hint) color = HighlightHint
-                if (sqIndex == selected) color = HighlightMove
-                if (sqIndex == checkSquare) color = HighlightCheck
-                drawRect(
-                    color = color,
-                    topLeft = Offset(col * cell, row * cell),
-                    size = Size(cell, cell)
-                )
-                if (sqIndex == flash) {
-                    drawRect(color = flashColor, topLeft = Offset(col * cell, row * cell), size = Size(cell, cell))
-                }
-
-                if (showCoords) {
-                    val labelColor = if (isLight) theme.dark else theme.light
-                    if (row == 7) {
-                        drawCoordinate(
-                            ('a' + displayFile).toString(),
-                            Offset(col * cell + cell * 0.78f, row * cell + cell * 0.80f),
-                            cell, labelColor, coordPaint
-                        )
-                    }
-                    if (col == 0) {
-                        drawCoordinate(
-                            (displayRank + 1).toString(),
-                            Offset(col * cell + cell * 0.10f, row * cell + cell * 0.22f),
-                            cell, labelColor, coordPaint
-                        )
-                    }
-                }
-                if ((targetMask shr sqIndex) and 1L != 0L) {
-                    drawCircle(
-                        color = HighlightMove,
-                        radius = cell * 0.14f,
-                        center = Offset(col * cell + cell / 2, row * cell + cell / 2)
-                    )
-                }
-            }
-        }
-
-        val pieceSize = cell * 0.86f
-        val inset = (cell - pieceSize) / 2f
-        val pieceDst = IntSize(pieceSize.roundToInt(), pieceSize.roundToInt())
-        if (pieceImages == null) {
-            glyphPaint.textSize = cell * 0.62f
-            glyphPaint.color = GLYPH_COLOR
-        }
-        for (row in 0 until 8) {
-            for (col in 0 until 8) {
-                val displayRank = if (flipped) row else 7 - row
-                val displayFile = if (flipped) 7 - col else col
-                val pieceSq = displayRank * 8 + displayFile
-                if (pieceSq == liftedSq) continue
-                val piece = board.pieceAt(pieceSq) ?: continue
-                if (pieceImages != null) {
-                    drawImage(
-                        image = pieceImages[PieceImages.indexOf(piece)],
-                        dstOffset = IntOffset(
-                            (col * cell + inset).roundToInt(),
-                            (row * cell + inset).roundToInt()
-                        ),
-                        dstSize = pieceDst,
-                        filterQuality = FilterQuality.Medium
-                    )
-                } else {
-                    val metrics = glyphPaint.fontMetrics
-                    drawContext.canvas.nativeCanvas.drawText(
-                        piece.unicode(),
-                        col * cell + cell / 2f,
-                        row * cell + cell / 2f - (metrics.ascent + metrics.descent) / 2f,
-                        glyphPaint
-                    )
-                }
-            }
-        }
-
-        if (liftedAt != null) {
-            val liftedPiece = board.pieceAt(liftedSq)
-            if (liftedPiece != null) {
-                val hover = squareAt(liftedAt.x, liftedAt.y, size.width, flipped)
-                if (hover >= 0 && ((targetMask shr hover) and 1L) != 0L) {
-                    val hRank = hover / 8
-                    val hFile = hover % 8
-                    val hRow = if (flipped) hRank else 7 - hRank
-                    val hCol = if (flipped) 7 - hFile else hFile
-                    drawRect(
-                        color = Color.White.copy(alpha = 0.75f),
-                        topLeft = Offset(hCol * cell, hRow * cell),
-                        size = Size(cell, cell),
-                        style = Stroke(width = cell * 0.07f)
-                    )
-                }
+            .drawWithCache {
+                // Sizes and text metrics change only with the board size.
+                val cell = size.width / 8f
+                val pieceSize = cell * 0.86f
+                val inset = (cell - pieceSize) / 2f
+                val pieceDst = IntSize(pieceSize.roundToInt(), pieceSize.roundToInt())
                 val liftedSize = pieceSize * LIFT_SCALE
-                val cx = liftedAt.x
-                val cy = liftedAt.y - cell * 0.55f
-                drawOval(
-                    color = Color.Black.copy(alpha = 0.30f),
-                    topLeft = Offset(liftedAt.x - liftedSize * 0.36f, liftedAt.y + cell * 0.05f),
-                    size = Size(liftedSize * 0.72f, liftedSize * 0.28f)
-                )
-                if (pieceImages != null) {
-                    val liftedDst = IntSize(liftedSize.roundToInt(), liftedSize.roundToInt())
-                    drawImage(
-                        image = pieceImages[PieceImages.indexOf(liftedPiece)],
-                        dstOffset = IntOffset(
-                            (cx - liftedSize / 2f).roundToInt(),
-                            (cy - liftedSize / 2f).roundToInt()
-                        ),
-                        dstSize = liftedDst,
-                        filterQuality = FilterQuality.Medium
-                    )
-                } else {
-                    glyphPaint.textSize = cell * 0.62f * LIFT_SCALE
-                    val metrics = glyphPaint.fontMetrics
-                    drawContext.canvas.nativeCanvas.drawText(
-                        liftedPiece.unicode(),
-                        cx,
-                        cy - (metrics.ascent + metrics.descent) / 2f,
-                        glyphPaint
-                    )
+                val liftedDst = IntSize(liftedSize.roundToInt(), liftedSize.roundToInt())
+                val hoverStroke = Stroke(width = cell * 0.07f)
+                val glyphSize = cell * 0.62f
+                glyphPaint.textSize = glyphSize
+                val glyphMetrics = glyphPaint.fontMetrics
+                val glyphShift = (glyphMetrics.ascent + glyphMetrics.descent) / 2f
+                glyphPaint.textSize = glyphSize * LIFT_SCALE
+                val liftedMetrics = glyphPaint.fontMetrics
+                val liftedGlyphShift = (liftedMetrics.ascent + liftedMetrics.descent) / 2f
+                onDrawBehind {
+                    val lastFrom = if (showLastMove) (lastMove?.from ?: -1) else -1
+                    val lastTo = if (showLastMove) (lastMove?.to ?: -1) else -1
+                    val selected = selectedSquare ?: -1
+                    val checkSquare = if (showCheck) (kingInCheckSquare ?: -1) else -1
+                    val hint = hintSquare ?: -1
+                    val flash = flashSquare ?: -1
+
+                    val dSq = dragSquare
+                    val dPos = dragPos
+                    val liftedSq = if (dSq != null && dPos != null && selected == dSq) dSq else -1
+                    val liftedAt: Offset? = if (liftedSq >= 0) dPos else null
+
+                    for (row in 0 until 8) {
+                        for (col in 0 until 8) {
+                            val displayRank = if (flipped) row else 7 - row
+                            val displayFile = if (flipped) 7 - col else col
+                            val sqIndex = displayRank * 8 + displayFile
+                            val isLight = (displayRank + displayFile) % 2 == 1
+                            var color = if (isLight) theme.light else theme.dark
+                            if (sqIndex == lastFrom || sqIndex == lastTo) color = HighlightLastMove
+                            if (sqIndex == hint) color = HighlightHint
+                            if (sqIndex == selected) color = HighlightMove
+                            if (sqIndex == checkSquare) color = HighlightCheck
+                            drawRect(
+                                color = color,
+                                topLeft = Offset(col * cell, row * cell),
+                                size = Size(cell, cell)
+                            )
+                            if (sqIndex == flash) {
+                                drawRect(color = flashColor, topLeft = Offset(col * cell, row * cell), size = Size(cell, cell))
+                            }
+
+                            if (showCoords) {
+                                val labelColor = if (isLight) theme.dark else theme.light
+                                if (row == 7) {
+                                    drawCoordinate(
+                                        FILE_LABELS[displayFile],
+                                        Offset(col * cell + cell * 0.78f, row * cell + cell * 0.80f),
+                                        cell, labelColor, coordPaint
+                                    )
+                                }
+                                if (col == 0) {
+                                    drawCoordinate(
+                                        RANK_LABELS[displayRank],
+                                        Offset(col * cell + cell * 0.10f, row * cell + cell * 0.22f),
+                                        cell, labelColor, coordPaint
+                                    )
+                                }
+                            }
+                            if ((targetMask shr sqIndex) and 1L != 0L) {
+                                drawCircle(
+                                    color = HighlightMove,
+                                    radius = cell * 0.14f,
+                                    center = Offset(col * cell + cell / 2, row * cell + cell / 2)
+                                )
+                            }
+                        }
+                    }
+
+                    if (pieceImages == null) {
+                        glyphPaint.textSize = glyphSize
+                        glyphPaint.color = GLYPH_COLOR
+                    }
+                    for (row in 0 until 8) {
+                        for (col in 0 until 8) {
+                            val displayRank = if (flipped) row else 7 - row
+                            val displayFile = if (flipped) 7 - col else col
+                            val pieceSq = displayRank * 8 + displayFile
+                            if (pieceSq == liftedSq) continue
+                            val piece = board.pieceAt(pieceSq) ?: continue
+                            if (pieceImages != null) {
+                                drawImage(
+                                    image = pieceImages[PieceImages.indexOf(piece.type, piece.color)],
+                                    dstOffset = IntOffset(
+                                        (col * cell + inset).roundToInt(),
+                                        (row * cell + inset).roundToInt()
+                                    ),
+                                    dstSize = pieceDst,
+                                    filterQuality = FilterQuality.Medium
+                                )
+                            } else {
+                                drawContext.canvas.nativeCanvas.drawText(
+                                    piece.unicode(),
+                                    col * cell + cell / 2f,
+                                    row * cell + cell / 2f - glyphShift,
+                                    glyphPaint
+                                )
+                            }
+                        }
+                    }
+
+                    if (liftedAt != null) {
+                        val liftedPiece = board.pieceAt(liftedSq)
+                        if (liftedPiece != null) {
+                            val hover = squareAt(liftedAt.x, liftedAt.y, size.width, flipped)
+                            if (hover >= 0 && ((targetMask shr hover) and 1L) != 0L) {
+                                val hRank = hover / 8
+                                val hFile = hover % 8
+                                val hRow = if (flipped) hRank else 7 - hRank
+                                val hCol = if (flipped) 7 - hFile else hFile
+                                drawRect(
+                                    color = Color.White.copy(alpha = 0.75f),
+                                    topLeft = Offset(hCol * cell, hRow * cell),
+                                    size = Size(cell, cell),
+                                    style = hoverStroke
+                                )
+                            }
+                            val cx = liftedAt.x
+                            val cy = liftedAt.y - cell * 0.55f
+                            drawOval(
+                                color = Color.Black.copy(alpha = 0.30f),
+                                topLeft = Offset(liftedAt.x - liftedSize * 0.36f, liftedAt.y + cell * 0.05f),
+                                size = Size(liftedSize * 0.72f, liftedSize * 0.28f)
+                            )
+                            if (pieceImages != null) {
+                                drawImage(
+                                    image = pieceImages[PieceImages.indexOf(liftedPiece.type, liftedPiece.color)],
+                                    dstOffset = IntOffset(
+                                        (cx - liftedSize / 2f).roundToInt(),
+                                        (cy - liftedSize / 2f).roundToInt()
+                                    ),
+                                    dstSize = liftedDst,
+                                    filterQuality = FilterQuality.Medium
+                                )
+                            } else {
+                                glyphPaint.textSize = glyphSize * LIFT_SCALE
+                                drawContext.canvas.nativeCanvas.drawText(
+                                    liftedPiece.unicode(),
+                                    cx,
+                                    cy - liftedGlyphShift,
+                                    glyphPaint
+                                )
+                            }
+                        }
+                    }
                 }
             }
-        }
-    }
+    )
 }
 
 private const val LIFT_SCALE = 1.6f
@@ -329,6 +345,9 @@ private fun squareAt(x: Float, y: Float, boardPx: Float, flipped: Boolean): Int 
 }
 
 private val GLYPH_COLOR = Color(0xFF1B1B1B).toArgb()
+
+private val FILE_LABELS = Array(8) { ('a' + it).toString() }
+private val RANK_LABELS = Array(8) { (it + 1).toString() }
 
 private fun DrawScope.drawCoordinate(
     text: String,

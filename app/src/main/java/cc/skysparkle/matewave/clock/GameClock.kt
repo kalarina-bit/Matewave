@@ -106,13 +106,6 @@ class GameClock(private val timeControl: TimeControl, private val scope: Corouti
         publish()
     }
 
-    fun pause() {
-        tickJob?.cancel()
-        account()
-        running = null
-        publish()
-    }
-
     fun stop() {
         tickJob?.cancel()
         account()
