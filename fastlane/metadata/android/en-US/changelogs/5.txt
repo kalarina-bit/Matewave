@@ -1,0 +1,2 @@
+• New sharp icons throughout the app (Material Symbols), with icons on buttons that had none
+• Colour choice shows the kings from the board; the status bar shows a knight

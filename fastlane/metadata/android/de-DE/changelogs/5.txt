@@ -1,0 +1,2 @@
+• Neue scharfe Symbole in der ganzen App (Material Symbols), auch auf Schaltflächen, die bisher keine hatten
+• Bei der Farbwahl erscheinen die Könige vom Brett; in der Statusleiste ein Springer
