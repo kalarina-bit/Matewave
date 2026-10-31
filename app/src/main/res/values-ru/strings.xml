@@ -111,7 +111,7 @@
     <string name="permissions_card_title">Разрешения</string>
     <string name="diag_last_reason">Последняя ошибка связи: %1$s</string>
     <string name="diag_copy_log">Скопировать журнал связи</string>
-    <string name="trust_impersonation">⚠ Этот игрок выдаёт себя за другого — данные не приняты</string>
+    <string name="trust_impersonation">Этот игрок выдаёт себя за другого — данные не приняты</string>
     <string name="trust_unverified">Личность соперника не подтверждена (у него старая версия приложения)</string>
     <string name="trust_outdated">У соперника устаревшая версия приложения — безопасная игра невозможна. Обновите приложение у обоих.</string>
     <string name="perm_grant">Разрешить</string>

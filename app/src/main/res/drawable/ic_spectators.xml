@@ -1,16 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- Material Symbols "visibility" by Google, Apache License 2.0 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
     <path
-        android:pathData="M2,12C4.5,7.5 8,5.5 12,5.5C16,5.5 19.5,7.5 22,12C19.5,16.5 16,18.5 12,18.5C8,18.5 4.5,16.5 2,12Z"
-        android:strokeWidth="2"
-        android:strokeColor="#FFFFFFFF"
-        android:strokeLineJoin="round"
-        android:fillColor="#00000000" />
-    <path
-        android:pathData="M8.8,12a3.2,3.2 0,1 0,6.4 0a3.2,3.2 0,1 0,-6.4 0Z"
-        android:fillColor="#FFFFFFFF" />
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M 15.188 14.688 Q 16.5 13.375 16.5 11.5 t -1.312 -3.187 T 12 7 T 8.813 8.313 T 7.5 11.5 t 1.313 3.188 T 12 16 t 3.188 -1.312 m -5.1 -1.276 Q 9.3 12.625 9.3 11.5 t .788 -1.912 T 12 8.8 t 1.913 .788 t .787 1.912 t -.787 1.913 T 12 14.2 t -1.912 -.787 m -4.738 3.55 Q 2.35 14.925 1 11.5 q 1.35 -3.425 4.35 -5.462 T 12 4 t 6.65 2.038 T 23 11.5 q -1.35 3.425 -4.35 5.463 T 12 19 t -6.65 -2.037" />
 </vector>

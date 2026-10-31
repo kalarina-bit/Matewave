@@ -142,9 +142,11 @@ fun OpeningTrainerScreen(viewModel: OpeningStudyViewModel, onBack: () -> Unit) {
                 }
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     GlassOutlinedButton(onClick = { viewModel.practiceAgain() }, modifier = Modifier.weight(1f)) {
+                        ButtonIcon(R.drawable.ic_replay)
                         Text(stringResource(R.string.study_again), color = ink, maxLines = 1)
                     }
                     GlassButton(onClick = { if (!viewModel.continueStudy()) onBack() }, modifier = Modifier.weight(1f)) {
+                        ButtonIcon(R.drawable.ic_next)
                         Text(stringResource(R.string.study_next), color = ink, maxLines = 1)
                     }
                 }
@@ -166,6 +168,7 @@ fun OpeningTrainerScreen(viewModel: OpeningStudyViewModel, onBack: () -> Unit) {
                 // A review is not restarted: it would only replay the moves still due.
                 if (state.mode != SessionMode.REVIEW) {
                     GlassOutlinedButton(onClick = { viewModel.restart() }, modifier = Modifier.weight(1f)) {
+                        ButtonIcon(R.drawable.ic_restart)
                         Text(stringResource(R.string.study_restart), color = ink, maxLines = 1)
                     }
                 }

@@ -174,6 +174,7 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
                     modifier = Modifier.weight(1f),
                     enabled = !state.drawOfferSentByMe
                 ) {
+                    ButtonIcon(R.drawable.ic_draw)
                     Text(
                         if (state.drawOfferSentByMe) stringResource(R.string.draw_offer_waiting) else stringResource(R.string.offer_draw),
                         color = ink,
@@ -181,6 +182,7 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
                     )
                 }
                 GlassOutlinedButton(onClick = { confirmResign = true }, modifier = Modifier.weight(1f)) {
+                    ButtonIcon(R.drawable.ic_flag)
                     Text(stringResource(R.string.resign), color = ink, maxLines = 1)
                 }
             }
@@ -193,6 +195,7 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
         // The result dialog was closed to look at the board: one tap brings it back.
         if (state.status != GameStatus.ONGOING && gameOverHidden) {
             GlassOutlinedButton(onClick = { gameOverHidden = false }, modifier = Modifier.fillMaxWidth()) {
+                ButtonIcon(R.drawable.ic_trophy)
                 Text(stringResource(R.string.game_over_title), color = ink, maxLines = 1)
             }
         }

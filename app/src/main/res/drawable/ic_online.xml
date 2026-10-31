@@ -1,0 +1,10 @@
+<!-- Material Symbols "wifi-tethering" by Google, Apache License 2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M 5.1 20.25 q -1.425 -1.375 -2.262 -3.238 T 2 13 q 0 -2.075 .788 -3.9 t 2.137 -3.175 T 8.1 3.788 T 12 3 t 3.9 .788 t 3.175 2.137 T 21.213 9.1 T 22 13 q 0 2.15 -.837 4.025 T 18.9 20.25 l -1.4 -1.4 q 1.15 -1.1 1.825 -2.613 T 20 13 q 0 -3.35 -2.325 -5.675 T 12 5 T 6.325 7.325 T 4 13 q 0 1.725 .675 3.225 t 1.85 2.6 z m 2.825 -2.825 q -.875 -.825 -1.4 -1.963 T 6 13 q 0 -2.5 1.75 -4.25 T 12 7 t 4.25 1.75 T 18 13 q 0 1.325 -.525 2.475 t -1.4 1.95 L 14.65 16 q .625 -.575 .988 -1.35 T 16 13 q 0 -1.65 -1.175 -2.825 T 12 9 t -2.825 1.175 T 8 13 q 0 .9 .363 1.663 T 9.35 16 z m 2.663 -3.012 Q 10 13.825 10 13 t .588 -1.412 T 12 11 t 1.413 .588 T 14 13 t -.587 1.413 T 12 15 t -1.412 -.587" />
+</vector>

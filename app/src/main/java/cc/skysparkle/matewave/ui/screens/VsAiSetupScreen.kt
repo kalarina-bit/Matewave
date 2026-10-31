@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import cc.skysparkle.matewave.ui.components.AppIcon
+import cc.skysparkle.matewave.ui.components.ButtonIcon
 import cc.skysparkle.matewave.ui.components.SectionCaption
 import cc.skysparkle.matewave.ui.components.TimeControlGrid
 import cc.skysparkle.matewave.ui.components.displayName
@@ -75,6 +76,7 @@ fun VsAiSetupScreen(
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
+                    ButtonIcon(R.drawable.ic_play)
                     Text(
                         stringResource(R.string.vsai_play_summary, difficultyLabel(difficulty), timeControl.displayName()),
                         color = ink,
@@ -124,8 +126,8 @@ fun VsAiSetupScreen(
 
         SectionCaption(stringResource(R.string.your_color))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            ColorChip(R.drawable.ic_white_colour, stringResource(R.string.color_white), color == PieceColor.WHITE) { color = PieceColor.WHITE }
-            ColorChip(R.drawable.ic_black_colour, stringResource(R.string.color_black), color == PieceColor.BLACK) { color = PieceColor.BLACK }
+            ColorChip(R.drawable.piece_white_king, stringResource(R.string.color_white), color == PieceColor.WHITE) { color = PieceColor.WHITE }
+            ColorChip(R.drawable.piece_black_king, stringResource(R.string.color_black), color == PieceColor.BLACK) { color = PieceColor.BLACK }
             ColorChip(R.drawable.ic_random_colour, stringResource(R.string.color_random), color == null) { color = null }
         }
 
@@ -154,10 +156,11 @@ private fun ColorChip(iconRes: Int, text: String, selected: Boolean, onClick: ()
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        // The king from the board's own piece set; random is half white, half black
         Image(
             painter = painterResource(iconRes),
             contentDescription = null,
-            modifier = Modifier.size(16.dp)
+            modifier = Modifier.size(20.dp)
         )
         Text(text, color = ink, style = MaterialTheme.typography.bodySmall)
     }

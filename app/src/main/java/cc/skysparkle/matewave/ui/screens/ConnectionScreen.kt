@@ -175,7 +175,8 @@ fun ConnectionScreen(
                     Text(stringResource(R.string.nearby_create), color = ink, style = MaterialTheme.typography.titleMedium, maxLines = 1)
                 }
                 GlassOutlinedButton(onClick = { pickTime = true }) {
-                    Text(timeControl.shortLabel() + " ▾", color = ink, maxLines = 1)
+                    Text(timeControl.shortLabel(), color = ink, maxLines = 1)
+                    AppIcon(R.drawable.ic_expand, size = 20.dp)
                 }
             }
         }

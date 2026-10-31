@@ -106,7 +106,7 @@
     <string name="permissions_card_title">Leidimai</string>
     <string name="diag_last_reason">Paskutinė ryšio klaida: %1$s</string>
     <string name="diag_copy_log">Kopijuoti ryšio žurnalą</string>
-    <string name="trust_impersonation">⚠ Šis žaidėjas apsimeta kitu — duomenys atmesti</string>
+    <string name="trust_impersonation">Šis žaidėjas apsimeta kitu — duomenys atmesti</string>
     <string name="trust_unverified">Varžovo tapatybė nepatvirtinta (jis turi seną programos versiją)</string>
     <string name="trust_outdated">Varžovo programa pasenusi – saugus žaidimas neįmanomas. Atnaujinkite programą abiem.</string>
     <string name="perm_grant">Leisti</string>

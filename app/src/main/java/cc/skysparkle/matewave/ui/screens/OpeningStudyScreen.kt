@@ -47,6 +47,7 @@ import cc.skysparkle.matewave.openings.CourseInfo
 import cc.skysparkle.matewave.openings.CourseStatus
 import cc.skysparkle.matewave.openings.artRes
 import cc.skysparkle.matewave.ui.components.AppIcon
+import cc.skysparkle.matewave.ui.components.ButtonIcon
 import cc.skysparkle.matewave.ui.components.GlassButton
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.components.SetupSegmented
@@ -177,7 +178,10 @@ private fun ActionCard(icon: Int, title: String, subtitle: String?, button: Stri
             }
         }
         Spacer(Modifier.width(12.dp))
-        GlassButton(onClick = onClick) { Text(button, color = ink, maxLines = 1) }
+        GlassButton(onClick = onClick) {
+            ButtonIcon(R.drawable.ic_play)
+            Text(button, color = ink, maxLines = 1)
+        }
     }
 }
 

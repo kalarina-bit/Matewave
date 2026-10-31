@@ -129,12 +129,13 @@ fun SpectatorScreen(target: SpectateTarget, onBackToFriends: () -> Unit) {
         )
 
         GlassOutlinedButton(onClick = viewModel::flip, modifier = Modifier.fillMaxWidth()) {
-            ButtonIcon(R.drawable.ic_board_view)
+            ButtonIcon(R.drawable.ic_flip)
             Text(stringResource(R.string.spectate_flip), color = ink, maxLines = 1)
         }
 
         if (state.phase == SpectatePhase.ENDED && resultHidden) {
             GlassOutlinedButton(onClick = { resultHidden = false }, modifier = Modifier.fillMaxWidth()) {
+                ButtonIcon(R.drawable.ic_trophy)
                 Text(stringResource(R.string.game_over_title), color = ink, maxLines = 1)
             }
         }

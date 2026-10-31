@@ -106,7 +106,7 @@
     <string name="permissions_card_title">Permissions</string>
     <string name="diag_last_reason">Last connection error: %1$s</string>
     <string name="diag_copy_log">Copy connection log</string>
-    <string name="trust_impersonation">⚠ This player is impersonating someone else — data rejected</string>
+    <string name="trust_impersonation">This player is impersonating someone else — data rejected</string>
     <string name="trust_unverified">The opponent\'s identity isn\'t verified (they have an old version of the app)</string>
     <string name="trust_outdated">The opponent\'s app is outdated and can\'t play securely with yours. Both players need to update.</string>
     <string name="perm_grant">Allow</string>

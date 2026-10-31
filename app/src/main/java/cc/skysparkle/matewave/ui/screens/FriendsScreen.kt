@@ -43,6 +43,7 @@ import cc.skysparkle.matewave.data.FriendsStore
 import cc.skysparkle.matewave.presence.LocalPresence
 import cc.skysparkle.matewave.ui.components.AppBottomBar
 import cc.skysparkle.matewave.ui.components.AppIcon
+import cc.skysparkle.matewave.ui.components.ButtonIcon
 import cc.skysparkle.matewave.ui.components.BottomTab
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.theme.ChessGreen
@@ -128,6 +129,7 @@ fun FriendsScreen(
             Text(stringResource(R.string.friends_nobody_title), color = ink, style = MaterialTheme.typography.titleMedium)
             Text(stringResource(R.string.friends_nobody_hint), color = ink.copy(alpha = 0.65f), style = MaterialTheme.typography.bodyMedium)
             GlassButton(onClick = onPlay, modifier = Modifier.fillMaxWidth()) {
+                ButtonIcon(R.drawable.ic_play)
                 Text(stringResource(R.string.friends_play_nearby), color = ink)
             }
             return@GlassScaffold

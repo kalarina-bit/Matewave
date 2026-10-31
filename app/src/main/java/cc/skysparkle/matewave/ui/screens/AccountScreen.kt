@@ -59,6 +59,7 @@ import cc.skysparkle.matewave.ui.components.AppBottomBar
 import cc.skysparkle.matewave.ui.components.BottomTab
 import cc.skysparkle.matewave.data.ProfileStore
 import cc.skysparkle.matewave.ui.components.AppIcon
+import cc.skysparkle.matewave.ui.components.ButtonIcon
 import cc.skysparkle.matewave.ui.components.GlassOutlinedButton
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.components.rememberChatImage
@@ -256,6 +257,7 @@ fun AccountScreen(
 
         if (!profile.levelChosen) {
             GlassOutlinedButton(onClick = { showLevelPicker = true }, modifier = Modifier.fillMaxWidth()) {
+                ButtonIcon(R.drawable.ic_speed)
                 Text(stringResource(R.string.account_choose_level), color = ink)
             }
         }
@@ -266,7 +268,7 @@ fun AccountScreen(
             val curve = remember(profile.elo) { cc.skysparkle.matewave.stats.Stats.ratingCurve(profile.elo) }
             ListRow(
                 title = stringResource(R.string.account_rating_row),
-                icon = R.drawable.ic_license,
+                icon = R.drawable.ic_rating,
                 iconTint = ChessGreen,
                 value = "${profile.elo}",
                 valueColor = ink,
@@ -277,7 +279,7 @@ fun AccountScreen(
             ListDivider()
             ListRow(
                 title = stringResource(R.string.study_title),
-                icon = R.drawable.ic_crown,
+                icon = R.drawable.ic_study,
                 value = "${study.learnedCount}/${study.courses.size} · ★${study.masteredCount}",
                 chevron = true,
                 onClick = onStudyClick

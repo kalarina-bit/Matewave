@@ -1,0 +1,10 @@
+<!-- Material Symbols "account-circle" by Google, Apache License 2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M 5.85 17.1 q 1.275 -.975 2.85 -1.537 T 12 15 t 3.3 .563 t 2.85 1.537 q .875 -1.025 1.363 -2.325 T 20 12 q 0 -3.325 -2.337 -5.663 T 12 4 T 6.337 6.338 T 4 12 q 0 1.475 .488 2.775 T 5.85 17.1 m 3.663 -5.113 Q 8.5 10.976 8.5 9.5 t 1.013 -2.488 T 12 6 t 2.488 1.013 T 15.5 9.5 t -1.012 2.488 T 12 13 t -2.488 -1.012 M 12 22 q -2.075 0 -3.9 -.788 t -3.175 -2.137 T 2.788 15.9 T 2 12 t .788 -3.9 t 2.137 -3.175 T 8.1 2.788 T 12 2 t 3.9 .788 t 3.175 2.137 T 21.213 8.1 T 22 12 t -.788 3.9 t -2.137 3.175 t -3.175 2.138 T 12 22" />
+</vector>

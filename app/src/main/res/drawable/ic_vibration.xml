@@ -1,0 +1,10 @@
+<!-- Material Symbols "mobile-vibrate" by Google, Apache License 2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M 8 21 q -.825 0 -1.412 -.587 T 6 19 V 5 q 0 -.825 .588 -1.412 T 8 3 h 8 q .825 0 1.413 .588 T 18 5 v 14 q 0 .825 -.587 1.413 T 16 21 z m 4.713 -13.288 Q 13 7.425 13 7 t -.288 -.712 T 12 6 t -.712 .288 T 11 7 t .288 .713 T 12 8 t .713 -.288 M 0 15 V 9 h 2 v 6 z m 3 2 V 7 h 2 v 10 z m 19 -2 V 9 h 2 v 6 z m -3 2 V 7 h 2 v 10 z" />
+</vector>

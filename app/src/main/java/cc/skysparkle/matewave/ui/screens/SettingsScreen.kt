@@ -144,7 +144,7 @@ fun SettingsScreen(
             ListRow(
                 title = stringResource(R.string.appearance_title),
                 subtitle = stringResource(R.string.appearance_subtitle),
-                icon = R.drawable.ic_board_view,
+                icon = R.drawable.ic_palette,
                 chevron = true,
                 onClick = onOpenAppearance
             )

@@ -1,0 +1,10 @@
+<!-- Material Symbols "smart-toy" by Google, Apache License 2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M 4 15 q -1.25 0 -2.125 -.875 T 1 12 t .875 -2.125 T 4 9 V 7 q 0 -.825 .588 -1.412 T 6 5 h 3 q 0 -1.25 .875 -2.125 T 12 2 t 2.125 .875 T 15 5 h 3 q .825 0 1.413 .588 T 20 7 v 2 q 1.25 0 2.125 .875 T 23 12 t -.875 2.125 T 20 15 v 4 q 0 .825 -.587 1.413 T 18 21 H 6 q -.825 0 -1.412 -.587 T 4 19 z m 6.063 -2.437 q .437 -.438 .437 -1.063 t -.437 -1.062 T 9 10 t -1.062 .438 T 7.5 11.5 t .438 1.063 T 9 13 t 1.063 -.437 m 6 0 q .437 -.438 .437 -1.063 t -.437 -1.062 T 15 10 t -1.062 .438 T 13.5 11.5 t .438 1.063 T 15 13 t 1.063 -.437 M 8 17 h 8 v -2 H 8 z" />
+</vector>

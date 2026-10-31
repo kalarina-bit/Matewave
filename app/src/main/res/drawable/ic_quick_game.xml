@@ -1,0 +1,10 @@
+<!-- Material Symbols "bolt" by Google, Apache License 2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="m 8 22 l 1 -7 H 4 l 9 -13 h 2 l -1 8 h 6 L 10 22 z" />
+</vector>

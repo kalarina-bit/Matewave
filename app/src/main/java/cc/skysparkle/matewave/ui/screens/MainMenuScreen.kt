@@ -142,7 +142,7 @@ fun MainMenuScreen(
                         onClick = { if (profile.levelChosen) onVsAiClick() else showRatingGate = true }
                     )
                     ModeTile(
-                        iconRes = R.drawable.ic_profile_photo,
+                        iconRes = R.drawable.ic_versus,
                         title = stringResource(R.string.mode_online_title),
                         subtitle = stringResource(R.string.mode_online_subtitle),
                         modifier = Modifier.weight(1f),
@@ -180,7 +180,7 @@ fun MainMenuScreen(
                         ListRow(
                             title = stringResource(R.string.study_title),
                             subtitle = stringResource(R.string.study_menu_subtitle),
-                            icon = R.drawable.ic_crown,
+                            icon = R.drawable.ic_study,
                             chevron = true,
                             onClick = onStudyClick
                         )

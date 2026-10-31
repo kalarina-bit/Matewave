@@ -40,6 +40,7 @@ import cc.skysparkle.matewave.puzzles.PuzzleRepository
 import cc.skysparkle.matewave.puzzles.themeTitleRes
 import cc.skysparkle.matewave.stats.Stats
 import cc.skysparkle.matewave.ui.components.ButtonIcon
+import cc.skysparkle.matewave.ui.components.AppIcon
 import cc.skysparkle.matewave.ui.components.ChessBoardView
 import cc.skysparkle.matewave.ui.components.GlassButton
 import cc.skysparkle.matewave.ui.components.GlassOutlinedButton
@@ -109,20 +110,30 @@ fun PuzzleSolveScreen(viewModel: GameViewModel, onBack: () -> Unit, onNextPuzzle
 
         // The task, in the same format as the status in a game: a dot in the side's colour.
         val (text, color) = when {
-            state.puzzleSolved -> "✓ " + stringResource(R.string.puzzle_solved) to ChessGreen
-            state.puzzleFailedAttempt -> "✗ " + stringResource(R.string.puzzle_wrong_move) to WrongRed
+            state.puzzleSolved -> stringResource(R.string.puzzle_solved) to ChessGreen
+            state.puzzleFailedAttempt -> stringResource(R.string.puzzle_wrong_move) to WrongRed
             state.puzzleAutoMoving -> stringResource(R.string.opponent_turn) to ink.copy(alpha = 0.7f)
             state.myColor == PieceColor.WHITE -> stringResource(R.string.puzzle_find_best_white) to ink
             else -> stringResource(R.string.puzzle_find_best_black) to ink
         }
+        // Solved and wrong show a mark instead of the dot
+        val mark = when {
+            state.puzzleSolved -> R.drawable.ic_approve
+            state.puzzleFailedAttempt -> R.drawable.ic_cancel
+            else -> null
+        }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(
-                Modifier
-                    .size(10.dp)
-                    .clip(CircleShape)
-                    .background(if (state.myColor == PieceColor.WHITE) Color(0xFFF0F0F0) else Color(0xFF222222))
-                    .border(1.dp, ink.copy(alpha = 0.5f), CircleShape)
-            )
+            if (mark != null) {
+                AppIcon(mark, size = 20.dp, tint = color)
+            } else {
+                Box(
+                    Modifier
+                        .size(10.dp)
+                        .clip(CircleShape)
+                        .background(if (state.myColor == PieceColor.WHITE) Color(0xFFF0F0F0) else Color(0xFF222222))
+                        .border(1.dp, ink.copy(alpha = 0.5f), CircleShape)
+                )
+            }
             Spacer(Modifier.width(10.dp))
             Text(text, color = color, style = MaterialTheme.typography.titleMedium)
         }
@@ -174,6 +185,7 @@ fun PuzzleSolveScreen(viewModel: GameViewModel, onBack: () -> Unit, onNextPuzzle
             }
             if (next != null) {
                 GlassButton(onClick = { onNextPuzzle(next) }, modifier = Modifier.fillMaxWidth()) {
+                    ButtonIcon(R.drawable.ic_next)
                     Text(stringResource(R.string.puzzle_next), color = ink, style = MaterialTheme.typography.titleMedium)
                 }
             }

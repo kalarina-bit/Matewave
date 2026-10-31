@@ -109,7 +109,7 @@ fun ChatDialog(
                 },
                 enabled = text.isNotBlank()
             ) {
-                AppIcon(R.drawable.ic_arrow_forward, size = 20.dp)
+                AppIcon(R.drawable.ic_send, size = 20.dp)
             }
         }
     }
