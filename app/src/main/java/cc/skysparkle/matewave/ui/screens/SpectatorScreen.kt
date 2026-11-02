@@ -101,9 +101,7 @@ fun SpectatorScreen(target: SpectateTarget, onBackToFriends: () -> Unit) {
 
         val bottom = if (state.flipped) PieceColor.BLACK else PieceColor.WHITE
         val material = remember(view.board) { Material.balance(view.board) }
-        val checkSquare = if (ChessEngine.isInCheck(view.board, view.board.sideToMove)) {
-            view.board.kingSquare(view.board.sideToMove)
-        } else null
+        val checkSquare = remember(view.board) { ChessEngine.checkedKingSquare(view.board) }
 
         SpectatorPlayerRow(view, bottom.opposite(), state, material)
         ChessBoardView(
@@ -123,18 +121,18 @@ fun SpectatorScreen(target: SpectateTarget, onBackToFriends: () -> Unit) {
         MovesBar(
             sans = view.moveSans,
             startBoard = view.startBoard,
-            currentIndex = view.moveSans.size,
             opening = null,
             bookPlies = bookPlies
         )
 
         GlassOutlinedButton(onClick = viewModel::flip, modifier = Modifier.fillMaxWidth()) {
-            ButtonIcon(R.drawable.ic_board_view)
+            ButtonIcon(R.drawable.ic_flip)
             Text(stringResource(R.string.spectate_flip), color = ink, maxLines = 1)
         }
 
         if (state.phase == SpectatePhase.ENDED && resultHidden) {
             GlassOutlinedButton(onClick = { resultHidden = false }, modifier = Modifier.fillMaxWidth()) {
+                ButtonIcon(R.drawable.ic_trophy)
                 Text(stringResource(R.string.game_over_title), color = ink, maxLines = 1)
             }
         }

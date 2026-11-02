@@ -287,6 +287,7 @@ private fun PermissionItem(
         Text(subtitle, color = ink.copy(alpha = 0.75f), style = MaterialTheme.typography.bodySmall)
         if (!granted) {
             GlassOutlinedButton(onClick = onGrant, modifier = Modifier.fillMaxWidth()) {
+                cc.skysparkle.matewave.ui.components.ButtonIcon(R.drawable.ic_approve)
                 Text(stringResource(R.string.perm_grant), color = ink)
             }
         }

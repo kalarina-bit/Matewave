@@ -1,5 +1,7 @@
 package cc.skysparkle.matewave.spectate
 
+import cc.skysparkle.matewave.security.toHex
+
 /**
  * What this device adds to its network announcement while it plays a watchable LAN game: a short
  * tag shared by both players of the game, and, on the host, the spectator port. Older app versions
@@ -40,7 +42,7 @@ object SpectatorAdvert {
     fun tagOf(gameId: String): String {
         if (gameId.isEmpty()) return ""
         val digest = java.security.MessageDigest.getInstance("SHA-256").digest(gameId.toByteArray(Charsets.UTF_8))
-        return digest.take(4).joinToString("") { "%02x".format(it) }
+        return digest.toHex(4)
     }
 
     private val TAG_PATTERN = Regex("^[0-9a-f]{8}$")

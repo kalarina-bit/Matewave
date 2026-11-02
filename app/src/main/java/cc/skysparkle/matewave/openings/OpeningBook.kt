@@ -9,9 +9,8 @@ data class OpeningName(val eco: String, val name: String)
  * deviations, and opening names from lichess-org/chess-openings (CC0). Both are keyed by SAN move
  * sequences from the standard starting position, so no position hashing is needed at runtime.
  *
- * explorer.txt: header "#games N", then one node per line "parentId san white draws black";
- * node ids are line numbers (the root is 0) and parents always come before children. Only the
- * tree shape is used here.
+ * explorer.txt: header "#games N", then one node per line "parentId san"; node ids are line
+ * numbers (the root is 0) and parents always come before children.
  */
 object OpeningBook {
 

@@ -1,0 +1,10 @@
+<!-- Material Symbols "swords" by Google, Apache License 2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="m 19.05 21.6 l -2.925 -2.9 l -2.2 2.2 l -.7 -.7 q -.575 -.575 -.575 -1.425 t .575 -1.425 l 4.225 -4.225 q .575 -.575 1.425 -.575 t 1.425 .575 l .7 .7 l -2.2 2.2 l 2.9 2.925 q .3 .3 .3 .7 t -.3 .7 l -1.25 1.25 q -.3 .3 -.7 .3 t -.7 -.3 M 22 5.9 L 10.65 17.25 l .125 .1 q .575 .575 .575 1.425 t -.575 1.425 l -.7 .7 l -2.2 -2.2 l -2.925 2.9 q -.3 .3 -.7 .3 t -.7 -.3 L 2.3 20.35 q -.3 -.3 -.3 -.7 t .3 -.7 l 2.9 -2.925 l -2.2 -2.2 l .7 -.7 q .575 -.575 1.425 -.575 t 1.425 .575 l .1 .125 L 18 1.9 h 4 z M 6.95 10.85 L 2 5.9 v -4 h 4 l 4.95 4.95 z" />
+</vector>

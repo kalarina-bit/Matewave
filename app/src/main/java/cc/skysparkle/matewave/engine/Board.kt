@@ -13,8 +13,6 @@ data class Board(
 ) {
     fun pieceAt(sq: Int): Piece? = squares[sq]
 
-    fun deepCopySquares(): Array<Piece?> = squares.copyOf()
-
     fun kingSquare(color: PieceColor): Int {
         for (i in 0 until 64) {
             val p = squares[i]

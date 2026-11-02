@@ -56,7 +56,7 @@ private object BackgroundAssetCache {
 }
 
 @Composable
-fun AppBackgroundImage(modifier: Modifier = Modifier.fillMaxSize()) {
+fun AppBackgroundImage() {
     val context = LocalContext.current
 
     var bitmap by remember { mutableStateOf(BackgroundAssetCache.cached()) }
@@ -72,10 +72,10 @@ fun AppBackgroundImage(modifier: Modifier = Modifier.fillMaxSize()) {
         Image(
             bitmap = image,
             contentDescription = null,
-            modifier = modifier,
+            modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
     } else {
-        Box(modifier = modifier.background(Color(0xFF101413)))
+        Box(modifier = Modifier.fillMaxSize().background(Color(0xFF101413)))
     }
 }

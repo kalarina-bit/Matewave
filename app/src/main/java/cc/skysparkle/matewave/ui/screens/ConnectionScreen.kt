@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -175,7 +176,8 @@ fun ConnectionScreen(
                     Text(stringResource(R.string.nearby_create), color = ink, style = MaterialTheme.typography.titleMedium, maxLines = 1)
                 }
                 GlassOutlinedButton(onClick = { pickTime = true }) {
-                    Text(timeControl.shortLabel() + " ▾", color = ink, maxLines = 1)
+                    Text(timeControl.shortLabel(), color = ink, maxLines = 1)
+                    AppIcon(R.drawable.ic_expand, size = 20.dp)
                 }
             }
         }
@@ -294,18 +296,26 @@ private fun SearchPulse() {
     )
     Column(modifier = Modifier.fillMaxWidth().padding(top = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         Box(modifier = Modifier.size(120.dp), contentAlignment = Alignment.Center) {
-            androidx.compose.foundation.Canvas(modifier = Modifier.size(120.dp)) {
-                for (k in 0 until 3) {
-                    val p = (phase + k / 3f) % 1f
-                    drawCircle(
-                        color = ChessGreen.copy(alpha = (1f - p) * 0.45f),
-                        radius = size.minDimension / 2f * (0.3f + 0.7f * p),
-                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx())
-                    )
+            Spacer(
+                modifier = Modifier.size(120.dp).drawWithCache {
+                    val ring = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx())
+                    // The phase is read while drawing: the pulse redraws without recomposing.
+                    onDrawBehind {
+                        for (k in 0 until 3) {
+                            val p = (phase + k / 3f) % 1f
+                            drawCircle(
+                                color = ChessGreen.copy(alpha = (1f - p) * 0.45f),
+                                radius = size.minDimension / 2f * (0.3f + 0.7f * p),
+                                style = ring
+                            )
+                        }
+                    }
                 }
-            }
+            )
             androidx.compose.foundation.Image(
-                painter = androidx.compose.ui.res.painterResource(R.drawable.piece_white_knight),
+                bitmap = cc.skysparkle.matewave.ui.components.PieceImages.of(
+                    LocalContext.current, cc.skysparkle.matewave.engine.PieceType.KNIGHT, cc.skysparkle.matewave.engine.PieceColor.WHITE
+                ),
                 contentDescription = null,
                 modifier = Modifier.size(40.dp)
             )

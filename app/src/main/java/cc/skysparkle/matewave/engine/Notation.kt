@@ -5,6 +5,7 @@ package cc.skysparkle.matewave.engine
  * (e.g. "Nbd7", "exd6", "e8=Q", "O-O"), which is the key format of the opening data.
  */
 object Notation {
+    private val LOOSE_SAN = Regex("^([KQRBN])?([a-h])?([1-8])?x?([a-h][1-8])([QRBN])?$")
 
     fun isCastle(board: Board, move: Move): Boolean {
         if (move.isCastleKingSide || move.isCastleQueenSide) return true
@@ -69,7 +70,7 @@ object Notation {
         legal.firstOrNull { normalizeSan(toSan(board, it, legal)) == wanted }?.let { return it }
 
         // Over-disambiguated or loosely written SAN, e.g. "Ngf3" or "e8Q".
-        val m = Regex("^([KQRBN])?([a-h])?([1-8])?x?([a-h][1-8])([QRBN])?$").find(wanted) ?: return null
+        val m = LOOSE_SAN.find(wanted) ?: return null
         val type = when (m.groupValues[1]) {
             "K" -> PieceType.KING; "Q" -> PieceType.QUEEN; "R" -> PieceType.ROOK
             "B" -> PieceType.BISHOP; "N" -> PieceType.KNIGHT; else -> PieceType.PAWN
@@ -86,6 +87,15 @@ object Notation {
                 (fromFile == null || it.from % 8 == fromFile) &&
                 (fromRank == null || it.from / 8 == fromRank)
         }.singleOrNull()
+    }
+
+    /** The legal move written as [uci]; without a valid promotion letter the first match is taken. */
+    fun fromUci(board: Board, uci: String): Move? {
+        if (uci.length !in 4..5) return null
+        val candidate = runCatching { Move.fromUci(uci) }.getOrNull() ?: return null
+        if (candidate.from !in 0..63 || candidate.to !in 0..63) return null
+        val matches = ChessEngine.legalMoves(board).filter { it.from == candidate.from && it.to == candidate.to }
+        return matches.firstOrNull { it.promotion == candidate.promotion } ?: matches.firstOrNull()
     }
 
     /** Position part of a FEN without move counters, used to compare positions. */

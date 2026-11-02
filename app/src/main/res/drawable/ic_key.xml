@@ -1,0 +1,10 @@
+<!-- Material Symbols "key" by Google, Apache License 2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M 9.125 14.125 Q 10 13.25 10 12 t -.875 -2.125 T 7 9 t -2.125 .875 T 4 12 t .875 2.125 T 7 15 t 2.125 -.875 M 7 18 q -2.5 0 -4.25 -1.75 T 1 12 t 1.75 -4.25 T 7 6 q 2.025 0 3.538 1.15 T 12.65 10 h 8.375 L 23 11.975 l -3.5 4 L 17 14 l -2 2 l -2 -2 h -.35 q -.625 1.8 -2.175 2.9 T 7 18" />
+</vector>

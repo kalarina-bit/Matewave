@@ -1,0 +1,6 @@
+• New sharp Material Symbols icons throughout the app, including previously icon-free buttons
+• Improved contrast and text readability on dark backgrounds
+• More reliable Bluetooth GATT sessions and LAN connection lifecycle handling
+• Improved chess engine and AI performance, with dead code removed to reduce APK size
+• Refined game-state saving and compatibility handling
+• Colour selection shows the kings from the board; the status bar shows a knight

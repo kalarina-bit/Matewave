@@ -20,10 +20,10 @@ import cc.skysparkle.matewave.ui.theme.ink
 
 /** Small, quiet spectator counter for the top bar: an eye and "7" or "7/20". */
 @Composable
-fun SpectatorBadge(count: Int, max: Int? = null, modifier: Modifier = Modifier) {
+fun SpectatorBadge(count: Int, max: Int? = null) {
     val description = stringResource(R.string.spectators_description, count)
     Row(
-        modifier = modifier
+        modifier = Modifier
             .padding(end = 12.dp)
             .clip(RoundedCornerShape(50))
             .background(ink.copy(alpha = 0.10f))

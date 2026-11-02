@@ -43,6 +43,7 @@ import cc.skysparkle.matewave.data.FriendsStore
 import cc.skysparkle.matewave.presence.LocalPresence
 import cc.skysparkle.matewave.ui.components.AppBottomBar
 import cc.skysparkle.matewave.ui.components.AppIcon
+import cc.skysparkle.matewave.ui.components.ButtonIcon
 import cc.skysparkle.matewave.ui.components.BottomTab
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.theme.ChessGreen
@@ -128,6 +129,7 @@ fun FriendsScreen(
             Text(stringResource(R.string.friends_nobody_title), color = ink, style = MaterialTheme.typography.titleMedium)
             Text(stringResource(R.string.friends_nobody_hint), color = ink.copy(alpha = 0.65f), style = MaterialTheme.typography.bodyMedium)
             GlassButton(onClick = onPlay, modifier = Modifier.fillMaxWidth()) {
+                ButtonIcon(R.drawable.ic_play)
                 Text(stringResource(R.string.friends_play_nearby), color = ink)
             }
             return@GlassScaffold
@@ -250,7 +252,6 @@ private fun FriendCard(friend: FriendEntry, status: PresenceStatus, onDismiss: (
                 .clip(cc.skysparkle.matewave.ui.components.DialogShape)
                 .background(cc.skysparkle.matewave.ui.components.DialogSurface)
         ) {
-            androidx.compose.runtime.CompositionLocalProvider(cc.skysparkle.matewave.ui.theme.LocalInk provides Color.White) {
             Box(modifier = Modifier.fillMaxWidth().height(150.dp)) {
                 val bg = cc.skysparkle.matewave.ui.components.rememberChatImage(friend.backgroundBase64)
                 if (bg != null) {
@@ -291,7 +292,6 @@ private fun FriendCard(friend: FriendEntry, status: PresenceStatus, onDismiss: (
                         )
                     }
                 }
-            }
             }
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(

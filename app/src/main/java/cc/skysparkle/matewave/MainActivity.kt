@@ -69,6 +69,8 @@ class MainActivity : ComponentActivity() {
         val appContext = applicationContext
         kotlin.concurrent.thread(name = "warmup", isDaemon = true) {
             runCatching { cc.skysparkle.matewave.data.FriendsStore.preload() }
+            // Decoded here, the pieces are ready before the first board is shown.
+            runCatching { cc.skysparkle.matewave.ui.components.PieceImages.get(appContext) }
             runCatching { cc.skysparkle.matewave.puzzles.PuzzleRepository.load(appContext) }
         }
 

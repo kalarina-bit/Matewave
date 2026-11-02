@@ -47,6 +47,7 @@ import cc.skysparkle.matewave.openings.CourseInfo
 import cc.skysparkle.matewave.openings.CourseStatus
 import cc.skysparkle.matewave.openings.artRes
 import cc.skysparkle.matewave.ui.components.AppIcon
+import cc.skysparkle.matewave.ui.components.ButtonIcon
 import cc.skysparkle.matewave.ui.components.GlassButton
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.components.SetupSegmented
@@ -148,7 +149,7 @@ private fun NextAction(overview: StudyOverview, viewModel: OpeningStudyViewModel
             button = stringResource(R.string.study_start_button)
         ) { if (viewModel.open(firstNew.course)) onOpenTrainer() }
         nextDueAt != null -> Row(verticalAlignment = Alignment.CenterVertically) {
-            AppIcon(R.drawable.ic_review, size = 16.dp, tint = ink.copy(alpha = 0.55f))
+            AppIcon(R.drawable.ic_review, size = 16.dp, tint = ink.copy(alpha = 0.7f))
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.study_next_review, formatDueIn(nextDueAt)), color = ink.copy(alpha = 0.65f), style = MaterialTheme.typography.bodyMedium)
         }
@@ -160,7 +161,7 @@ private fun ActionCard(icon: Int, title: String, subtitle: String?, button: Stri
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .glass(RoundedCornerShape(UiCornerRadius))
+            .glass()
             .padding(horizontal = 14.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -177,7 +178,10 @@ private fun ActionCard(icon: Int, title: String, subtitle: String?, button: Stri
             }
         }
         Spacer(Modifier.width(12.dp))
-        GlassButton(onClick = onClick) { Text(button, color = ink, maxLines = 1) }
+        GlassButton(onClick = onClick) {
+            ButtonIcon(R.drawable.ic_play)
+            Text(button, color = ink, maxLines = 1)
+        }
     }
 }
 
@@ -230,7 +234,7 @@ private fun CourseCard(info: CourseInfo, modifier: Modifier, onClick: () -> Unit
         )
         Spacer(Modifier.height(4.dp))
         Row(verticalAlignment = Alignment.CenterVertically) {
-            AppIcon(R.drawable.ic_timer, size = 12.dp, tint = ink.copy(alpha = 0.55f))
+            AppIcon(R.drawable.ic_timer, size = 14.dp, tint = ink.copy(alpha = 0.7f))
             Spacer(Modifier.width(4.dp))
             Text(
                 LocalContext.current.resources.getQuantityString(R.plurals.study_moves_count, info.total, info.total),
@@ -266,7 +270,7 @@ private fun CourseCard(info: CourseInfo, modifier: Modifier, onClick: () -> Unit
 fun Stars(count: Int, size: androidx.compose.ui.unit.Dp = 16.dp) {
     Row {
         repeat(3) { i ->
-            AppIcon(R.drawable.ic_star, size = size, tint = if (i < count) StarGold else ink.copy(alpha = 0.2f))
+            AppIcon(R.drawable.ic_star, size = size, tint = if (i < count) StarGold else ink.copy(alpha = 0.3f))
         }
     }
 }

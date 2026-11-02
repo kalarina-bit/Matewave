@@ -9,8 +9,7 @@ data class Puzzle(
     val theme: String,
     val fen: String,
     val solutionUci: List<String>,
-    val rating: Int,
-    val themes: List<String> = emptyList()
+    val rating: Int
 )
 
 /** Localized name of the puzzle theme, shown as the screen title. */
@@ -59,16 +58,13 @@ object PuzzleRepository {
                 val o = arr.getJSONObject(i)
                 val solutionArr = o.getJSONArray("solution")
                 val solution = (0 until solutionArr.length()).map { solutionArr.getString(it) }
-                val themesArr = o.optJSONArray("themes")
-                val themes = themesArr?.let { t -> (0 until t.length()).map { t.getString(it) } } ?: emptyList()
                 result.add(
                     Puzzle(
                         id = o.getInt("id"),
                         theme = o.optString("theme", "tactic"),
                         fen = o.getString("fen"),
                         solutionUci = solution,
-                        rating = o.getInt("rating"),
-                        themes = themes
+                        rating = o.getInt("rating")
                     )
                 )
             }

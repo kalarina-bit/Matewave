@@ -15,14 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import cc.skysparkle.matewave.R
-import cc.skysparkle.matewave.engine.Piece
 import cc.skysparkle.matewave.engine.PieceColor
 import cc.skysparkle.matewave.engine.PieceType
 import cc.skysparkle.matewave.ui.theme.PanelBorder
@@ -32,6 +31,7 @@ import cc.skysparkle.matewave.ui.theme.ink
 /** The four promotion pieces, drawn with the same images as the board. */
 @Composable
 fun PromotionDialog(color: PieceColor, onChoose: (PieceType) -> Unit, onDismiss: () -> Unit) {
+    val context = LocalContext.current
     AppDialog(
         onDismissRequest = onDismiss,
         title = stringResource(R.string.promotion_title),
@@ -63,7 +63,7 @@ fun PromotionDialog(color: PieceColor, onChoose: (PieceType) -> Unit, onDismiss:
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
-                        painter = painterResource(Piece(type, color).drawableRes()),
+                        bitmap = PieceImages.of(context, type, color),
                         contentDescription = null,
                         modifier = Modifier.fillMaxWidth().aspectRatio(1f)
                     )

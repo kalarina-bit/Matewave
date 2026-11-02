@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cc.skysparkle.matewave.R
+import cc.skysparkle.matewave.clock.ClockState
 import cc.skysparkle.matewave.ui.components.DialogText
 import cc.skysparkle.matewave.ui.components.DialogAction
 import cc.skysparkle.matewave.ui.components.AppDialog
@@ -51,6 +52,7 @@ import cc.skysparkle.matewave.ui.theme.ChessGreen
 import cc.skysparkle.matewave.viewmodel.GameMode
 import cc.skysparkle.matewave.viewmodel.GameUiState
 import cc.skysparkle.matewave.viewmodel.GameViewModel
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
@@ -116,11 +118,9 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
         val material = remember(state.board) { cc.skysparkle.matewave.engine.Material.balance(state.board) }
         val bottomColor = state.myColor
         val topColor = if (bottomColor == PieceColor.WHITE) PieceColor.BLACK else PieceColor.WHITE
-        val kingInCheckSquare = if (ChessEngine.isInCheck(state.board, state.board.sideToMove)) {
-            state.board.kingSquare(state.board.sideToMove)
-        } else null
+        val kingInCheckSquare = remember(state.board) { ChessEngine.checkedKingSquare(state.board) }
 
-        PlayerRow(state, topColor, isMe = false, material = material)
+        PlayerRow(state, topColor, isMe = false, material = material, clock = viewModel.clockState)
 
         ChessBoardView(
             board = state.board,
@@ -136,14 +136,13 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
                         state.handshake == cc.skysparkle.matewave.viewmodel.HandshakeState.PLAYING))
         )
 
-        PlayerRow(state, bottomColor, isMe = true, material = material)
+        PlayerRow(state, bottomColor, isMe = true, material = material, clock = viewModel.clockState)
 
         // The move ribbon: only moves here, the opening name lives in the top bar.
         if (showOpening) {
             cc.skysparkle.matewave.ui.components.MovesBar(
                 sans = sans,
                 startBoard = start,
-                currentIndex = sans.size,
                 opening = null,
                 bookPlies = bookPlies
             )
@@ -174,6 +173,7 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
                     modifier = Modifier.weight(1f),
                     enabled = !state.drawOfferSentByMe
                 ) {
+                    ButtonIcon(R.drawable.ic_draw)
                     Text(
                         if (state.drawOfferSentByMe) stringResource(R.string.draw_offer_waiting) else stringResource(R.string.offer_draw),
                         color = ink,
@@ -181,6 +181,7 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
                     )
                 }
                 GlassOutlinedButton(onClick = { confirmResign = true }, modifier = Modifier.weight(1f)) {
+                    ButtonIcon(R.drawable.ic_flag)
                     Text(stringResource(R.string.resign), color = ink, maxLines = 1)
                 }
             }
@@ -193,6 +194,7 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
         // The result dialog was closed to look at the board: one tap brings it back.
         if (state.status != GameStatus.ONGOING && gameOverHidden) {
             GlassOutlinedButton(onClick = { gameOverHidden = false }, modifier = Modifier.fillMaxWidth()) {
+                ButtonIcon(R.drawable.ic_trophy)
                 Text(stringResource(R.string.game_over_title), color = ink, maxLines = 1)
             }
         }
@@ -439,7 +441,8 @@ private fun PlayerRow(
     state: GameUiState,
     side: PieceColor,
     isMe: Boolean,
-    material: cc.skysparkle.matewave.engine.MaterialBalance
+    material: cc.skysparkle.matewave.engine.MaterialBalance,
+    clock: StateFlow<ClockState?>
 ) {
     val active = state.status == GameStatus.ONGOING && state.board.sideToMove == side
     // Re-read after the game: the rating changes when it ends.
@@ -488,9 +491,16 @@ private fun PlayerRow(
             }
             SideCaptured(material, side)
         }
-        state.clockState?.let { cs ->
-            BigClock(if (side == PieceColor.WHITE) cs.whiteMillis else cs.blackMillis, active)
-        }
+        PlayerClock(clock, side, active)
+    }
+}
+
+/** Collects the clock here, so its ticks recompose only the clock. */
+@Composable
+private fun PlayerClock(clock: StateFlow<ClockState?>, side: PieceColor, active: Boolean) {
+    val clockState by clock.collectAsState()
+    clockState?.let { cs ->
+        BigClock(if (side == PieceColor.WHITE) cs.whiteMillis else cs.blackMillis, active)
     }
 }
 

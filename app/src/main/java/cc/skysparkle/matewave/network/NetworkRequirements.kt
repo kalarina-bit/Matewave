@@ -14,16 +14,7 @@ data class NetworkStatus(
     val wifiConnected: Boolean,
     val permissionsGranted: Boolean,
     val notificationsGranted: Boolean
-) {
-    val bluetoothReady: Boolean
-        get() = bluetoothSupported && bluetoothOn && permissionsGranted
-
-    val lanReady: Boolean get() = wifiConnected
-
-    val anyChannelReady: Boolean get() = bluetoothReady || lanReady
-
-    val onlineBlocked: Boolean get() = !anyChannelReady
-}
+)
 
 object NetworkRequirements {
     fun check(context: Context): NetworkStatus {

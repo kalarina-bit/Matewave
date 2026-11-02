@@ -18,8 +18,4 @@ class MessageDispatcher {
             }
         }
     }
-
-    fun clear() {
-        listeners.clear()
-    }
 }

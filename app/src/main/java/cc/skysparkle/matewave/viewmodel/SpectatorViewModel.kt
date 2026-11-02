@@ -2,6 +2,7 @@ package cc.skysparkle.matewave.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cc.skysparkle.matewave.engine.PieceColor
 import cc.skysparkle.matewave.network.NetworkLog
 import cc.skysparkle.matewave.spectate.MAX_SPECTATORS
 import cc.skysparkle.matewave.spectate.SpectateTarget
@@ -16,7 +17,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 enum class SpectatePhase { CONNECTING, WATCHING, ENDED, LOST, FAILED }
@@ -129,14 +129,31 @@ class SpectatorViewModel : ViewModel() {
             )
         }
         showClocks()
-        if (ticker?.isActive != true) {
+        if (clockUpdated || ticker?.isActive != true) {
+            ticker?.cancel()
             ticker = viewModelScope.launch {
-                while (isActive) {
-                    delay(TICK_MS)
-                    if (_uiState.value.phase == SpectatePhase.WATCHING) showClocks()
+                while (true) {
+                    delay(untilShownSecondChanges() ?: break)
+                    if (_uiState.value.phase != SpectatePhase.WATCHING) break
+                    showClocks()
                 }
             }
         }
+    }
+
+    /** Milliseconds until the running clock shows the next second; null while nothing counts down. */
+    private fun untilShownSecondChanges(): Long? {
+        if (_uiState.value.phase != SpectatePhase.WATCHING) return null
+        val view = game.view ?: return null
+        val clock = view.clock ?: return null
+        if (view.result != null) return null
+        val shown = clock.advancedBy((System.nanoTime() - clockAtNanos) / 1_000_000L)
+        val left = when (clock.running) {
+            PieceColor.WHITE -> shown.whiteMs
+            PieceColor.BLACK -> shown.blackMs
+            null -> return null
+        }
+        return if (left > 0) left % 1_000 + 1 else null
     }
 
     /** Clocks count down locally between the host's updates. */
@@ -166,9 +183,5 @@ class SpectatorViewModel : ViewModel() {
         client = null
         events.close()
         super.onCleared()
-    }
-
-    private companion object {
-        const val TICK_MS = 250L
     }
 }

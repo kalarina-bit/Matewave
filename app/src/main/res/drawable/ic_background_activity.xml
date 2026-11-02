@@ -1,0 +1,10 @@
+<!-- Material Symbols "battery-charging-full" by Google, Apache License 2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M 16.5 22 v -3 H 14 l 3.5 -5 v 3 H 20 z M 8 22 q -.425 0 -.712 -.288 T 7 21 V 5 q 0 -.425 .288 -.712 T 8 4 h 2 V 2 h 4 v 2 h 2 q .425 0 .713 .288 T 17 5 v 7 q -2.5 .025 -4.25 1.763 T 11 18 q 0 1.15 .4 2.175 T 12.525 22 z" />
+</vector>

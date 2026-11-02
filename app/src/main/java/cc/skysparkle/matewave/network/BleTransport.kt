@@ -25,6 +25,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.ParcelUuid
 import androidx.core.content.ContextCompat
+import cc.skysparkle.matewave.security.toHex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -52,6 +53,7 @@ class BleTransport(
 ) : ConnectionTransport {
     companion object {
         val SERVICE_UUID: UUID = UUID.fromString("6b1e7f10-2c3d-4a5b-8e9f-0a1b2c3d4e5f")
+        private val SERVICE_PARCEL_UUID = ParcelUuid(SERVICE_UUID)
 
         val CHAR_WRITE_UUID: UUID = UUID.fromString("6b1e7f11-2c3d-4a5b-8e9f-0a1b2c3d4e5f")
 
@@ -94,11 +96,6 @@ class BleTransport(
         private const val NAME_BYTES_LIMIT = 6
 
         const val MAX_MESSAGE_BYTES = 1_000_000
-
-        fun fingerprintOf(publicKeyOrId: String): String =
-            java.security.MessageDigest.getInstance("SHA-256")
-                .digest(publicKeyOrId.toByteArray(Charsets.UTF_8))
-                .take(FINGERPRINT_BYTES).joinToString("") { "%02x".format(it) }
     }
 
     override val type = TransportType.BLUETOOTH
@@ -110,16 +107,12 @@ class BleTransport(
     private val adapter: BluetoothAdapter? = manager?.adapter
 
     private val dispatcher = MessageDispatcher()
-    var lastError: String? = null
-        private set
 
     private enum class Role { NONE, PERIPHERAL, CENTRAL }
     private var role = Role.NONE
 
     private var gattServerActive = false
     private var advertisingActive = false
-
-    private var shuttingDown = false
 
     private var gattServer: BluetoothGattServer? = null
     private var notifyCharacteristic: BluetoothGattCharacteristic? = null
@@ -143,8 +136,10 @@ class BleTransport(
 
     private var outgoingMessageId = 0
 
-    private var sendGeneration = 0
-    private var partialWatcherStarted = false
+    @Volatile private var sendGeneration = 0
+
+    /** Guarded by [incoming]. */
+    private var partialWatcherRunning = false
 
     private val pendingAcks = HashMap<Int, kotlinx.coroutines.CompletableDeferred<Set<Int>>>()
 
@@ -211,25 +206,17 @@ class BleTransport(
 
     @SuppressLint("MissingPermission")
     fun startPresence() {
-        shuttingDown = false
         val ad = adapter
-        if (ad == null || !ad.isEnabled) {
-            lastError = "Bluetooth is off"
-            return
-        }
+        if (ad == null || !ad.isEnabled) return
         try {
             val serverWasReady = gattServerActive
             if (!gattServerActive) {
-                if (!startGattServer()) {
-                    lastError = "Could not start the Bluetooth service"
-                    return
-                }
+                if (!startGattServer()) return
                 gattServerActive = true
             }
 
             if (serverWasReady && !advertisingActive) startAdvertising()
-        } catch (e: SecurityException) {
-            lastError = "No Bluetooth permission"
+        } catch (_: SecurityException) {
             NetworkLog.reason("BLE", DisconnectReason.PERMISSION_DENIED)
         }
     }
@@ -238,12 +225,10 @@ class BleTransport(
     override fun startHosting() {
         val ad = adapter
         if (ad == null || !ad.isEnabled) {
-            lastError = "Bluetooth is off"
             NetworkLog.reason("BLE", DisconnectReason.BLUETOOTH_OFF)
             _connectionState.value = ConnectionState.FAILED
             return
         }
-        lastError = null
         role = Role.PERIPHERAL
         hosting = true
 
@@ -310,7 +295,6 @@ class BleTransport(
         if (!announceAllowed()) return
         val advertiser = adapter?.bluetoothLeAdvertiser
         if (advertiser == null) {
-            lastError = "This device does not support Bluetooth advertising"
             if (hosting) _connectionState.value = ConnectionState.FAILED
             return
         }
@@ -325,12 +309,12 @@ class BleTransport(
 
         val data = AdvertiseData.Builder()
             .setIncludeDeviceName(false)
-            .addServiceUuid(ParcelUuid(SERVICE_UUID))
+            .addServiceUuid(SERVICE_PARCEL_UUID)
             .build()
 
         val scanResponse = AdvertiseData.Builder()
             .setIncludeDeviceName(false)
-            .addServiceData(ParcelUuid(SERVICE_UUID), buildIdentityPayload())
+            .addServiceData(SERVICE_PARCEL_UUID, buildIdentityPayload())
             .build()
 
         val cb = object : AdvertiseCallback() {
@@ -345,7 +329,6 @@ class BleTransport(
                 }
                 advertisingActive = false
                 if (advertiseCallback === this) advertiseCallback = null
-                lastError = "Advertising failed (code $errorCode)"
                 NetworkLog.log("BLE", "Advertising failed, code $errorCode")
                 // Without advertising nobody can find a hosted game; plain presence just goes quiet.
                 if (hosting && connectedCentral == null) _connectionState.value = ConnectionState.FAILED
@@ -354,9 +337,8 @@ class BleTransport(
         advertiseCallback = cb
         try {
             advertiser.startAdvertising(settings, data, scanResponse, cb)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             advertiseCallback = null
-            lastError = "Advertising failed: ${e.message}"
             if (hosting) _connectionState.value = ConnectionState.FAILED
         }
     }
@@ -380,7 +362,7 @@ class BleTransport(
 
     private fun parseIdentityPayload(data: ByteArray?): Pair<String?, String?> {
         if (data == null || data.size < FINGERPRINT_BYTES) return null to null
-        val fingerprint = data.take(FINGERPRINT_BYTES).joinToString("") { "%02x".format(it) }
+        val fingerprint = data.toHex(FINGERPRINT_BYTES)
         val name = if (data.size > FINGERPRINT_BYTES) {
             String(data, FINGERPRINT_BYTES, data.size - FINGERPRINT_BYTES, Charsets.UTF_8)
                 .trim().ifBlank { null }
@@ -392,12 +374,11 @@ class BleTransport(
         @SuppressLint("MissingPermission")
         override fun onServiceAdded(status: Int, service: BluetoothGattService?) {
             if (status != BluetoothGatt.GATT_SUCCESS) {
-                lastError = "Could not start the Bluetooth service (code $status)"
                 NetworkLog.log("BLE", "Service not added, code $status")
                 gattServerActive = false
                 return
             }
-            if (!advertisingActive && !shuttingDown) startAdvertising()
+            if (!advertisingActive) startAdvertising()
         }
 
         @SuppressLint("MissingPermission")
@@ -420,7 +401,6 @@ class BleTransport(
                 role = Role.PERIPHERAL
                 // A new peer starts at the default MTU until it negotiates a larger one.
                 chunkSize = SAFE_CHUNK
-                startWriterIfNeeded()
 
                 _connectionState.value = ConnectionState.CONNECTING
                 stopAdvertising()
@@ -462,7 +442,7 @@ class BleTransport(
                 if (enabled) {
                     subscribeWatchJob?.cancel()
                     subscribeWatchJob = null
-                    _connectionState.value = ConnectionState.CONNECTED
+                    markReady()
                 } else {
                     NetworkLog.log("BLE", "Opponent disabled notifications")
                     dropPeripheralPeer(device)
@@ -539,7 +519,22 @@ class BleTransport(
 
         val lastSeen = HashMap<String, Long>()
 
-        val filter = ScanFilter.Builder().setServiceUuid(ParcelUuid(SERVICE_UUID)).build()
+        // Drops players not seen for a while; true if any were dropped.
+        fun dropExpired(now: Long): Boolean {
+            var dropped = false
+            val entries = lastSeen.entries.iterator()
+            while (entries.hasNext()) {
+                val entry = entries.next()
+                if (now - entry.value > NEARBY_TTL_MS) {
+                    found.remove(entry.key)
+                    entries.remove()
+                    dropped = true
+                }
+            }
+            return dropped
+        }
+
+        val filter = ScanFilter.Builder().setServiceUuid(SERVICE_PARCEL_UUID).build()
         val settings = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
 
@@ -552,7 +547,7 @@ class BleTransport(
                 if (myGeneration != scanGeneration) return
                 val device = result.device ?: return
 
-                val payload = result.scanRecord?.getServiceData(ParcelUuid(SERVICE_UUID))
+                val payload = result.scanRecord?.getServiceData(SERVICE_PARCEL_UUID)
                 val (fingerprint, advertisedName) = parseIdentityPayload(payload)
 
                 val bondedName = try { device.name } catch (e: SecurityException) { null }
@@ -566,25 +561,20 @@ class BleTransport(
                 val previous = found.put(player.address, player)
                 lastSeen[player.address] = now
 
-                val expired = lastSeen.filterValues { now - it > NEARBY_TTL_MS }.keys
-                expired.forEach { found.remove(it); lastSeen.remove(it) }
+                val expired = dropExpired(now)
 
-                if (previous == null || previous.name != player.name || expired.isNotEmpty()) {
+                if (previous == null || previous.name != player.name || expired) {
                     val snapshot = found.values.toList()
                     scope.launch(Dispatchers.Main) { onFound(snapshot) }
                 }
             }
 
-            override fun onScanFailed(errorCode: Int) {
-                if (myGeneration != scanGeneration) return
-                lastError = "Nearby scan failed to start (code $errorCode)"
-            }
+            override fun onScanFailed(errorCode: Int) {}
         }
         scanCallback = cb
         try {
             scanner.startScan(listOf(filter), settings, cb)
-        } catch (e: SecurityException) {
-            lastError = "No permission to scan for devices"
+        } catch (_: SecurityException) {
         }
 
         // Scan results arrive on the main thread, so the expiry check runs there too.
@@ -592,12 +582,7 @@ class BleTransport(
             while (true) {
                 kotlinx.coroutines.delay(NEARBY_TTL_MS / 3)
                 if (myGeneration != scanGeneration) return@launch
-                val now = System.currentTimeMillis()
-                val expired = lastSeen.filterValues { now - it > NEARBY_TTL_MS }.keys.toList()
-                if (expired.isNotEmpty()) {
-                    expired.forEach { found.remove(it); lastSeen.remove(it) }
-                    onFound(found.values.toList())
-                }
+                if (dropExpired(System.currentTimeMillis())) onFound(found.values.toList())
             }
         }
     }
@@ -617,18 +602,15 @@ class BleTransport(
     override fun startDiscoveryAndConnect(targetId: String?) {
         val ad = adapter
         if (ad == null || !ad.isEnabled || targetId.isNullOrBlank()) {
-            lastError = "Bluetooth is off or no opponent selected"
             _connectionState.value = ConnectionState.FAILED
             return
         }
 
         if (role == Role.PERIPHERAL && connectedCentral != null) {
-            lastError = "A connection is already active, close it first"
             _connectionState.value = ConnectionState.FAILED
             return
         }
         _connectionState.value = ConnectionState.CONNECTING
-        lastError = null
         stopDiscovery()
         // A previous attempt must release its client: Android allows only a few at a time.
         gattClient?.let { old ->
@@ -646,8 +628,7 @@ class BleTransport(
                 context, false, clientCallback(myGeneration), BluetoothDevice.TRANSPORT_LE
             )
             gattClient = gatt
-        } catch (e: Exception) {
-            lastError = "Connection failed: ${e.message}"
+        } catch (_: Exception) {
             _connectionState.value = ConnectionState.FAILED
         }
     }
@@ -700,7 +681,6 @@ class BleTransport(
             if (!isCurrent()) return
             val service = if (status == BluetoothGatt.GATT_SUCCESS) gatt.getService(SERVICE_UUID) else null
             if (service == null) {
-                lastError = "Peer does not expose this app's service"
                 NetworkLog.reason("BLE", DisconnectReason.SERVICE_NOT_FOUND, "status $status")
                 _connectionState.value = ConnectionState.FAILED
                 closeClient()
@@ -708,7 +688,6 @@ class BleTransport(
             }
             writeCharacteristic = service.getCharacteristic(CHAR_WRITE_UUID)
             if (writeCharacteristic == null) {
-                lastError = "Peer does not support move exchange"
                 NetworkLog.reason("BLE", DisconnectReason.SERVICE_NOT_FOUND, "no write characteristic")
                 _connectionState.value = ConnectionState.FAILED
                 closeClient()
@@ -717,7 +696,12 @@ class BleTransport(
 
             val notifyChar = service.getCharacteristic(CHAR_NOTIFY_UUID)
             if (notifyChar != null) {
-                gatt.setCharacteristicNotification(notifyChar, true)
+                if (!gatt.setCharacteristicNotification(notifyChar, true)) {
+                    NetworkLog.reason("BLE", DisconnectReason.SUBSCRIBE_FAILED, "local notification registration failed")
+                    _connectionState.value = ConnectionState.FAILED
+                    closeClient()
+                    return
+                }
                 val cccd = notifyChar.getDescriptor(CCCD_UUID)
                 if (cccd != null) {
                     @Suppress("DEPRECATION")
@@ -728,7 +712,6 @@ class BleTransport(
             }
 
             if (notifyChar == null || notifyChar.getDescriptor(CCCD_UUID) == null) {
-                lastError = "Peer does not support the Bluetooth return channel"
                 NetworkLog.reason("BLE", DisconnectReason.SERVICE_NOT_FOUND, "no notify characteristic")
                 _connectionState.value = ConnectionState.FAILED
                 closeClient()
@@ -739,7 +722,6 @@ class BleTransport(
                 kotlinx.coroutines.delay(SUBSCRIBE_TIMEOUT_MS)
                 if (!isCurrent()) return@launch
                 if (_connectionState.value != ConnectionState.CONNECTED) {
-                    lastError = "Peer did not confirm readiness"
                     NetworkLog.reason("BLE", DisconnectReason.SUBSCRIBE_FAILED)
                     _connectionState.value = ConnectionState.FAILED
                     closeClient()
@@ -762,7 +744,6 @@ class BleTransport(
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 markReady()
             } else {
-                lastError = "Could not enable Bluetooth notifications (code $status)"
                 NetworkLog.reason("BLE", DisconnectReason.SUBSCRIBE_FAILED, "code $status")
                 _connectionState.value = ConnectionState.FAILED
                 closeClient()
@@ -812,6 +793,7 @@ class BleTransport(
             val entry = incoming.getOrPut(messageId) { PartialMessage(total, now) }
             if (entry.total != total) {
                 incoming[messageId] = PartialMessage(total, now).also { it.parts[index] = payload }
+                startPartialWatcher()
                 return
             }
             if (entry.receivedBytes + payload.size > MAX_MESSAGE_BYTES) {
@@ -833,6 +815,8 @@ class BleTransport(
                     }
                 }
                 incoming.remove(messageId)
+            } else {
+                startPartialWatcher()
             }
         }
 
@@ -945,14 +929,22 @@ class BleTransport(
         var lastChunkAt: Long = startedAt
     }
 
+    /**
+     * Asks again for the missing chunks of stalled messages. Runs only while some message is
+     * incomplete; call with [incoming] locked.
+     */
     private fun startPartialWatcher() {
-        if (partialWatcherStarted) return
-        partialWatcherStarted = true
+        if (partialWatcherRunning) return
+        partialWatcherRunning = true
         scope.launch {
             while (true) {
                 kotlinx.coroutines.delay(STALLED_PARTIAL_MS)
                 val requests = ArrayList<Pair<Int, List<Int>>>()
                 synchronized(incoming) {
+                    if (incoming.isEmpty()) {
+                        partialWatcherRunning = false
+                        return@launch
+                    }
                     val now = System.currentTimeMillis()
                     for ((messageId, entry) in incoming) {
                         if (now - entry.lastChunkAt < STALLED_PARTIAL_MS) continue
@@ -971,7 +963,6 @@ class BleTransport(
     private fun startWriterIfNeeded() {
         if (writerStarted) return
         writerStarted = true
-        startPartialWatcher()
         scope.launch(Dispatchers.IO) {
             while (true) {
                 var handled = false
@@ -1064,9 +1055,12 @@ class BleTransport(
             }
 
             val answer = kotlinx.coroutines.withTimeoutOrNull(ACK_TIMEOUT_MS) {
+                // Control frames keep going out while we wait for the answer.
                 while (!waiter.isCompleted) {
-                    val control = controlOutbox.tryReceive().getOrNull()
-                    if (control != null) writeRaw(control) else kotlinx.coroutines.delay(20)
+                    kotlinx.coroutines.selects.select<Unit> {
+                        waiter.onAwait {}
+                        controlOutbox.onReceive { writeRaw(it) }
+                    }
                 }
                 waiter.await()
             }
@@ -1117,6 +1111,9 @@ class BleTransport(
         synchronized(nackAccumulator) { nackAccumulator.clear() }
         synchronized(incoming) { incoming.clear() }
         synchronized(recentlyCompleted) { recentlyCompleted.clear() }
+        while (outbox.tryReceive().isSuccess) { }
+        while (bulkOutbox.tryReceive().isSuccess) { }
+        while (controlOutbox.tryReceive().isSuccess) { }
     }
 
     @SuppressLint("MissingPermission")
@@ -1125,12 +1122,17 @@ class BleTransport(
             val central = connectedCentral
             if (role == Role.PERIPHERAL && central != null) {
                 val ch = notifyCharacteristic ?: return false
-                @Suppress("DEPRECATION")
-                ch.value = chunk
                 val waiter = kotlinx.coroutines.CompletableDeferred<Boolean>()
                 notificationSent = waiter
-                @Suppress("DEPRECATION")
-                val queued = gattServer?.notifyCharacteristicChanged(central, ch, false) ?: false
+                val queued = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    gattServer?.notifyCharacteristicChanged(central, ch, false, chunk) ==
+                        android.bluetooth.BluetoothStatusCodes.SUCCESS
+                } else {
+                    @Suppress("DEPRECATION")
+                    ch.value = chunk
+                    @Suppress("DEPRECATION")
+                    gattServer?.notifyCharacteristicChanged(central, ch, false) ?: false
+                }
                 if (!queued) {
                     notificationSent = null
                     return false
@@ -1141,14 +1143,19 @@ class BleTransport(
                 sent == true
             } else {
                 val ch = writeCharacteristic ?: return false
-                @Suppress("DEPRECATION")
-                ch.value = chunk
-
-                ch.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                 val waiter = kotlinx.coroutines.CompletableDeferred<Boolean>()
                 characteristicWritten = waiter
-                @Suppress("DEPRECATION")
-                val queued = gattClient?.writeCharacteristic(ch) ?: false
+                val queued = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    gattClient?.writeCharacteristic(
+                        ch, chunk, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                    ) == android.bluetooth.BluetoothStatusCodes.SUCCESS
+                } else {
+                    @Suppress("DEPRECATION")
+                    ch.value = chunk
+                    ch.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                    @Suppress("DEPRECATION")
+                    gattClient?.writeCharacteristic(ch) ?: false
+                }
                 if (!queued) {
                     characteristicWritten = null
                     return false
@@ -1173,6 +1180,11 @@ class BleTransport(
     }
 
     override fun send(message: GameMessage) {
+        if (_connectionState.value != ConnectionState.CONNECTED) {
+            NetworkMetrics.messageDropped()
+            NetworkLog.log("BLE", "Message not queued: GATT session is not ready")
+            return
+        }
         val json = message.toJson()
 
         if (json.toByteArray(Charsets.UTF_8).size > currentMaxMessageBytes()) {
@@ -1225,19 +1237,5 @@ class BleTransport(
 
         while (controlOutbox.tryReceive().isSuccess) {  }
         _connectionState.value = ConnectionState.DISCONNECTED
-    }
-
-    @SuppressLint("MissingPermission")
-    fun shutdown() {
-        shuttingDown = true
-        stopDiscovery()
-        stopAdvertising()
-        disconnect()
-        try { gattServer?.close() } catch (_: Exception) {}
-        gattServer = null
-        notifyCharacteristic = null
-        gattServerActive = false
-        advertisingActive = false
-        shuttingDown = false
     }
 }

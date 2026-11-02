@@ -66,8 +66,6 @@ object ProfileStore {
         prefs()?.edit()?.putString(KEY_AVATAR, base64)?.apply()
     }
 
-    fun resetAvatarToDefault() = setAvatar(null)
-
     fun setBackground(base64: String?) {
         prefs()?.edit()?.putString(KEY_BACKGROUND, base64)?.apply()
     }

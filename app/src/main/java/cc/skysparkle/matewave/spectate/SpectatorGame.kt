@@ -42,7 +42,7 @@ class SpectatorGame {
         val sans = ArrayList<String>(snapshot.movesUci.size)
         var last: Move? = null
         for (uci in snapshot.movesUci) {
-            val move = resolve(board, uci) ?: return false
+            val move = Notation.fromUci(board, uci) ?: return false
             sans.add(Notation.toSan(board, move))
             board = ChessEngine.applyMove(board, move)
             last = move
@@ -69,7 +69,7 @@ class SpectatorGame {
         if (message.gameId != current.gameId) return Applied.NEEDS_RESYNC
         if (current.result != null || message.ply <= current.ply) return Applied.IGNORED
         if (message.ply != current.ply + 1) return Applied.NEEDS_RESYNC
-        val move = resolve(current.board, message.uci) ?: return Applied.NEEDS_RESYNC
+        val move = Notation.fromUci(current.board, message.uci) ?: return Applied.NEEDS_RESYNC
         view = current.copy(
             board = ChessEngine.applyMove(current.board, move),
             movesUci = current.movesUci + move.toUci(),
@@ -94,14 +94,6 @@ class SpectatorGame {
         val current = view ?: return
         if (clock == null || current.result != null) return
         view = current.copy(clock = clock)
-    }
-
-    private fun resolve(board: Board, uci: String): Move? {
-        if (uci.length !in 4..5) return null
-        val candidate = runCatching { Move.fromUci(uci) }.getOrNull() ?: return null
-        if (candidate.from !in 0..63 || candidate.to !in 0..63) return null
-        val matches = ChessEngine.legalMoves(board).filter { it.from == candidate.from && it.to == candidate.to }
-        return matches.firstOrNull { it.promotion == candidate.promotion } ?: matches.firstOrNull()
     }
 }
 

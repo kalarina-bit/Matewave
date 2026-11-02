@@ -4,6 +4,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 data class SavedGame(
     val fen: String,
@@ -13,11 +16,15 @@ data class SavedGame(
     val incrementSeconds: Int,
     val whiteMillis: Long = -1,
     val blackMillis: Long = -1,
-    /** Moves from the standard start in UCI, space separated; empty for saves made before version 3. */
+    /** Moves from the standard start in UCI, space separated; empty for a game that started elsewhere. */
     val movesUci: String = ""
 )
 
-/** Persists the unfinished game against the AI: moves, position and remaining clock time. */
+/**
+ * Persists the unfinished game against the AI: moves, position and remaining clock time.
+ * The game is kept in memory once read or saved; the database is written in the background,
+ * in order, so moves never wait for the disk.
+ */
 object GameSaveStore {
     private const val DB_NAME = "chess_save.db"
     private const val DB_VERSION = 3
@@ -25,11 +32,29 @@ object GameSaveStore {
 
     @Volatile private var helper: DbHelper? = null
 
+    /** One thread at most, so writes keep their order; it ends when idle. */
+    private val io = ThreadPoolExecutor(0, 1, 10, TimeUnit.SECONDS, LinkedBlockingQueue()) { task ->
+        Thread(task, "game-save").apply { isDaemon = true }
+    }
+
+    private val lock = Any()
+    /** Whether [current] matches what is (or is about to be) on disk. */
+    private var known = false
+    private var current: SavedGame? = null
+
     fun init(context: Context) {
         if (helper == null) synchronized(this) {
             if (helper == null) helper = DbHelper(context.applicationContext)
         }
     }
+
+    /** Reads the save in the background, so the first screen finds it in memory. */
+    fun preload() {
+        io.execute { load() }
+    }
+
+    /** Whether [load] would return without reading the database. */
+    fun isLoaded(): Boolean = synchronized(lock) { known }
 
     private class DbHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
         override fun onCreate(db: SQLiteDatabase) {
@@ -50,18 +75,19 @@ object GameSaveStore {
             )
         }
 
+        // Saves from older versions are not carried over.
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-            if (oldVersion < 2) {
-                db.execSQL("ALTER TABLE $TABLE ADD COLUMN white_ms INTEGER NOT NULL DEFAULT -1")
-                db.execSQL("ALTER TABLE $TABLE ADD COLUMN black_ms INTEGER NOT NULL DEFAULT -1")
-            }
-            if (oldVersion < 3) {
-                db.execSQL("ALTER TABLE $TABLE ADD COLUMN moves TEXT NOT NULL DEFAULT ''")
-            }
+            db.execSQL("DROP TABLE IF EXISTS $TABLE")
+            onCreate(db)
         }
     }
 
     fun save(game: SavedGame) {
+        synchronized(lock) { current = game; known = true }
+        io.execute { write(game) }
+    }
+
+    private fun write(game: SavedGame) {
         val db = runCatching { helper?.writableDatabase }.getOrNull() ?: return
         val values = ContentValues().apply {
             put("id", 1)
@@ -77,7 +103,21 @@ object GameSaveStore {
         runCatching { db.insertWithOnConflict(TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE) }
     }
 
+    /** The saved game; the first call reads the database, so make it off the main thread. */
     fun load(): SavedGame? {
+        synchronized(lock) { if (known) return current }
+        val read = read()
+        synchronized(lock) {
+            // A save or clear made while reading is newer than what was read.
+            if (!known) {
+                current = read
+                known = true
+            }
+            return current
+        }
+    }
+
+    private fun read(): SavedGame? {
         val db = runCatching { helper?.readableDatabase }.getOrNull() ?: return null
         return runCatching {
             db.query(TABLE, null, "id = 1", null, null, null, null).use { cursor ->
@@ -97,6 +137,7 @@ object GameSaveStore {
     }
 
     fun clear() {
-        runCatching { helper?.writableDatabase?.delete(TABLE, "id = 1", null) }
+        synchronized(lock) { current = null; known = true }
+        io.execute { runCatching { helper?.writableDatabase?.delete(TABLE, "id = 1", null) } }
     }
 }

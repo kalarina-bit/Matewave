@@ -57,8 +57,6 @@ class LanTransport(
 
         const val MAX_MESSAGE_CHARS = 1_400_000
 
-        const val ACCEPT_POLL_MS = 1_000
-
         const val RESOLVE_RETRY_MS = 400L
 
         fun presencePayload(playerId: String, name: String, elo: Int): String =
@@ -108,9 +106,6 @@ class LanTransport(
     private val resolveQueue = java.util.ArrayDeque<Pair<Int, NsdServiceInfo>>()
     private var resolving = false
 
-    var lastError: String? = null
-        private set
-
     private val outbox = Channel<String>(capacity = Channel.UNLIMITED)
     private var writerStarted = false
 
@@ -154,13 +149,12 @@ class LanTransport(
 
                 server.bind(InetSocketAddress(0))
 
-                server.soTimeout = ACCEPT_POLL_MS
+                // accept() blocks until a peer connects; shutdown() closes the socket to end it.
                 synchronized(presenceLock) { serverSocket = server; presenceStarting = false }
                 if (announceAllowed()) registerService(server.localPort)
                 acceptLoop(server)
             } catch (e: IOException) {
                 synchronized(presenceLock) { presenceStarting = false }
-                lastError = "Could not open port: ${e.message}"
                 NetworkLog.reason("LAN", DisconnectReason.PORT_BUSY, e.message)
             }
         }
@@ -186,8 +180,6 @@ class LanTransport(
                     continue
                 }
                 onConnected(client)
-            } catch (e: java.net.SocketTimeoutException) {
-                continue
             } catch (e: IOException) {
                 if (server.isClosed) return
                 NetworkLog.log("LAN", "Accept failed: ${e.message}")
@@ -199,7 +191,6 @@ class LanTransport(
     override fun startHosting() {
         hosting = true
         _connectionState.value = ConnectionState.CONNECTING
-        lastError = null
 
         val port = serverSocket?.localPort
         if (port != null) registerService(port) else startPresence()
@@ -236,16 +227,18 @@ class LanTransport(
                 registeredServiceName = info?.serviceName
             }
             override fun onRegistrationFailed(info: NsdServiceInfo?, errorCode: Int) {
-                lastError = "Network service registration failed (code $errorCode). Connect by address manually."
+                NetworkLog.log("LAN", "Service registration failed, code $errorCode")
+                if (registrationListener === this) registrationListener = null
             }
             override fun onServiceUnregistered(info: NsdServiceInfo?) {}
-            override fun onUnregistrationFailed(info: NsdServiceInfo?, errorCode: Int) {}
+            override fun onUnregistrationFailed(info: NsdServiceInfo?, errorCode: Int) {
+                NetworkLog.log("LAN", "Service unregistration failed, code $errorCode")
+            }
         }
         registrationListener = listener
         try {
             nsd.registerService(info, NsdManager.PROTOCOL_DNS_SD, listener)
-        } catch (e: Exception) {
-            lastError = "Service registration: ${e.message}"
+        } catch (_: Exception) {
         }
     }
 
@@ -290,8 +283,8 @@ class LanTransport(
 
             override fun onDiscoveryStopped(serviceType: String?) {}
             override fun onStartDiscoveryFailed(serviceType: String?, errorCode: Int) {
-                lastError = "Network discovery failed (code $errorCode). Enter the address manually."
                 NetworkLog.log("LAN", "Network discovery failed to start, code $errorCode")
+                if (discoveryListener === this) discoveryListener = null
             }
             override fun onStopDiscoveryFailed(serviceType: String?, errorCode: Int) {}
         }
@@ -299,8 +292,8 @@ class LanTransport(
         try {
             nsd.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, listener)
         } catch (e: Exception) {
-            lastError = "Network discovery: ${e.message}"
             NetworkLog.log("LAN", "Network discovery: ${e.message}")
+            discoveryListener = null
         }
     }
 
@@ -386,8 +379,11 @@ class LanTransport(
 
         if (serviceName == ownServiceName) return true
 
-        return Regex("^${Regex.escape(ownServiceName)} \\(\\d+\\)$").matches(serviceName)
+        return renamedOwnService.matches(serviceName)
     }
+
+    /** Our own service after NSD renamed it on a clash, e.g. "ChessApp-ab12 (2)". */
+    private val renamedOwnService: Regex by lazy { Regex("^${Regex.escape(ownServiceName)} \\(\\d+\\)$") }
 
     private fun isSelfEndpoint(host: String, port: Int): Boolean {
         val ourPort = serverSocket?.localPort ?: return false
@@ -484,14 +480,12 @@ class LanTransport(
         val host = targetId.substringBeforeLast(':', targetId).trim()
 
         val port = targetId.substringAfterLast(':', "").toIntOrNull() ?: run {
-            lastError = "Address must look like 192.168.1.5:port"
             NetworkLog.reason("LAN", DisconnectReason.PEER_NOT_FOUND)
             _connectionState.value = ConnectionState.FAILED
             return
         }
 
         _connectionState.value = ConnectionState.CONNECTING
-        lastError = null
         scope.launch(Dispatchers.IO) {
             try {
                 val s = Socket()
@@ -508,8 +502,7 @@ class LanTransport(
                     return@launch
                 }
                 onConnected(s)
-            } catch (e: IOException) {
-                lastError = "Could not connect to $host:$port: ${e.message}"
+            } catch (_: IOException) {
                 NetworkLog.reason("LAN", DisconnectReason.CONNECT_TIMEOUT, "$host:$port")
                 _connectionState.value = ConnectionState.FAILED
             }
@@ -560,6 +553,12 @@ class LanTransport(
         if (wasCurrent) {
             hosting = false
             onHostingEnded()
+            var dropped = 0
+            while (outbox.tryReceive().isSuccess) dropped++
+            if (dropped > 0) {
+                repeat(dropped) { NetworkMetrics.messageDropped() }
+                NetworkLog.log("LAN", "Dropped unsent messages after disconnect: $dropped")
+            }
             _connectionState.value = ConnectionState.DISCONNECTED
         }
     }
@@ -586,6 +585,11 @@ class LanTransport(
     }
 
     override fun send(message: GameMessage) {
+        if (_connectionState.value != ConnectionState.CONNECTED) {
+            NetworkMetrics.messageDropped()
+            NetworkLog.log("LAN", "Message not queued: TCP session is not connected")
+            return
+        }
         val json = message.toJson()
         val size = json.length
         if (size > MAX_MESSAGE_CHARS) {

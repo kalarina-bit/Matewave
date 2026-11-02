@@ -1,0 +1,10 @@
+<!-- Material Symbols "chess-knight" by Google, Apache License 2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M 5 22 v -4 q 0 -.575 .3 -1.037 t .8 -.738 L 11 13.75 V 12 l -3.475 1.725 q -.3 .15 -.625 .225 t -.65 .075 q -.775 0 -1.463 -.4 t -1.062 -1.15 q -.35 -.675 -.3 -1.437 T 3.9 9.625 L 7 5 L 5 2 h 6 q 3.325 0 5.663 2.325 T 19 10 v 12 z" />
+</vector>

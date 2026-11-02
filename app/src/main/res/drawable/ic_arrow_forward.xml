@@ -1,0 +1,10 @@
+<!-- Material Symbols "chevron-right" by Google, Apache License 2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M 12.6 12 L 8 7.4 L 9.4 6 l 6 6 l -6 6 L 8 16.6 z" />
+</vector>

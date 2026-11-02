@@ -1,0 +1,10 @@
+<!-- Material Symbols "bluetooth" by Google, Apache License 2.0 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M 11 22 v -7.6 L 6.4 19 L 5 17.6 l 5.6 -5.6 L 5 6.4 L 6.4 5 L 11 9.6 V 2 h 1 l 5.7 5.7 l -4.3 4.3 l 4.3 4.3 L 12 22 z m 2 -12.4 l 1.9 -1.9 L 13 5.85 z m 0 8.55 l 1.9 -1.85 l -1.9 -1.9 z" />
+</vector>

@@ -15,9 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import cc.skysparkle.matewave.engine.Piece
 import cc.skysparkle.matewave.engine.PieceColor
 import cc.skysparkle.matewave.engine.PieceType
 
@@ -25,11 +24,11 @@ import cc.skysparkle.matewave.engine.PieceType
 fun CapturedPiecesRow(
     captured: List<PieceType>,
     capturedColor: PieceColor,
-    advantage: Int,
-    modifier: Modifier = Modifier
+    advantage: Int
 ) {
+    val context = LocalContext.current
     Row(
-        modifier = modifier.fillMaxWidth().height(22.dp),
+        modifier = Modifier.fillMaxWidth().height(22.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(3.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -37,7 +36,7 @@ fun CapturedPiecesRow(
                 Row(horizontalArrangement = Arrangement.spacedBy((-10).dp)) {
                     repeat(group.size) {
                         Image(
-                            painter = painterResource(Piece(type, capturedColor).drawableRes()),
+                            bitmap = PieceImages.of(context, type, capturedColor),
                             contentDescription = null,
                             modifier = Modifier.size(20.dp)
                         )
