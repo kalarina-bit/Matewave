@@ -136,7 +136,7 @@ class BleTransport(
 
     private var outgoingMessageId = 0
 
-    private var sendGeneration = 0
+    @Volatile private var sendGeneration = 0
 
     /** Guarded by [incoming]. */
     private var partialWatcherRunning = false
@@ -401,7 +401,6 @@ class BleTransport(
                 role = Role.PERIPHERAL
                 // A new peer starts at the default MTU until it negotiates a larger one.
                 chunkSize = SAFE_CHUNK
-                startWriterIfNeeded()
 
                 _connectionState.value = ConnectionState.CONNECTING
                 stopAdvertising()
@@ -443,6 +442,7 @@ class BleTransport(
                 if (enabled) {
                     subscribeWatchJob?.cancel()
                     subscribeWatchJob = null
+                    startWriterIfNeeded()
                     _connectionState.value = ConnectionState.CONNECTED
                 } else {
                     NetworkLog.log("BLE", "Opponent disabled notifications")
@@ -702,7 +702,12 @@ class BleTransport(
 
             val notifyChar = service.getCharacteristic(CHAR_NOTIFY_UUID)
             if (notifyChar != null) {
-                gatt.setCharacteristicNotification(notifyChar, true)
+                if (!gatt.setCharacteristicNotification(notifyChar, true)) {
+                    NetworkLog.reason("BLE", DisconnectReason.SUBSCRIBE_FAILED, "local notification registration failed")
+                    _connectionState.value = ConnectionState.FAILED
+                    closeClient()
+                    return
+                }
                 val cccd = notifyChar.getDescriptor(CCCD_UUID)
                 if (cccd != null) {
                     val enabled = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
@@ -1117,6 +1122,9 @@ class BleTransport(
         synchronized(nackAccumulator) { nackAccumulator.clear() }
         synchronized(incoming) { incoming.clear() }
         synchronized(recentlyCompleted) { recentlyCompleted.clear() }
+        while (outbox.tryReceive().isSuccess) { }
+        while (bulkOutbox.tryReceive().isSuccess) { }
+        while (controlOutbox.tryReceive().isSuccess) { }
     }
 
     @SuppressLint("MissingPermission")
@@ -1125,12 +1133,17 @@ class BleTransport(
             val central = connectedCentral
             if (role == Role.PERIPHERAL && central != null) {
                 val ch = notifyCharacteristic ?: return false
-                @Suppress("DEPRECATION")
-                ch.value = chunk
                 val waiter = kotlinx.coroutines.CompletableDeferred<Boolean>()
                 notificationSent = waiter
-                @Suppress("DEPRECATION")
-                val queued = gattServer?.notifyCharacteristicChanged(central, ch, false) ?: false
+                val queued = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    gattServer?.notifyCharacteristicChanged(central, ch, false, chunk) ==
+                        android.bluetooth.BluetoothStatusCodes.SUCCESS
+                } else {
+                    @Suppress("DEPRECATION")
+                    ch.value = chunk
+                    @Suppress("DEPRECATION")
+                    gattServer?.notifyCharacteristicChanged(central, ch, false) ?: false
+                }
                 if (!queued) {
                     notificationSent = null
                     return false
@@ -1141,14 +1154,19 @@ class BleTransport(
                 sent == true
             } else {
                 val ch = writeCharacteristic ?: return false
-                @Suppress("DEPRECATION")
-                ch.value = chunk
-
-                ch.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
                 val waiter = kotlinx.coroutines.CompletableDeferred<Boolean>()
                 characteristicWritten = waiter
-                @Suppress("DEPRECATION")
-                val queued = gattClient?.writeCharacteristic(ch) ?: false
+                val queued = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    gattClient?.writeCharacteristic(
+                        ch, chunk, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                    ) == android.bluetooth.BluetoothStatusCodes.SUCCESS
+                } else {
+                    @Suppress("DEPRECATION")
+                    ch.value = chunk
+                    ch.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+                    @Suppress("DEPRECATION")
+                    gattClient?.writeCharacteristic(ch) ?: false
+                }
                 if (!queued) {
                     characteristicWritten = null
                     return false
@@ -1173,6 +1191,11 @@ class BleTransport(
     }
 
     override fun send(message: GameMessage) {
+        if (_connectionState.value != ConnectionState.CONNECTED) {
+            NetworkMetrics.messageDropped()
+            NetworkLog.log("BLE", "Message not queued: GATT session is not ready")
+            return
+        }
         val json = message.toJson()
 
         if (json.toByteArray(Charsets.UTF_8).size > currentMaxMessageBytes()) {
