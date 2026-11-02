@@ -78,6 +78,8 @@ class LanTransport(
         wifi.createMulticastLock("matewave-lan").apply { setReferenceCounted(true) }
     }
     private var multicastHeld = 0
+    private var registrationMulticastHeld = false
+    private var discoveryMulticastHeld = false
 
     private fun acquireMulticast() {
         if (multicastHeld == 0) {
@@ -233,7 +235,10 @@ class LanTransport(
     private fun registerService(port: Int) {
         val nsd = nsdManager ?: return
         unregisterService()
-        acquireMulticast()
+        if (!registrationMulticastHeld) {
+            acquireMulticast()
+            registrationMulticastHeld = true
+        }
         val info = NsdServiceInfo().apply {
             serviceName = ownServiceName
             serviceType = SERVICE_TYPE
@@ -257,9 +262,15 @@ class LanTransport(
             override fun onServiceRegistered(info: NsdServiceInfo?) {
                 registeredServiceName = info?.serviceName
             }
-            override fun onRegistrationFailed(info: NsdServiceInfo?, errorCode: Int) {}
+            override fun onRegistrationFailed(info: NsdServiceInfo?, errorCode: Int) {
+                NetworkLog.log("LAN", "Service registration failed, code $errorCode")
+                releaseRegistrationMulticast()
+                if (registrationListener === this) registrationListener = null
+            }
             override fun onServiceUnregistered(info: NsdServiceInfo?) {}
-            override fun onUnregistrationFailed(info: NsdServiceInfo?, errorCode: Int) {}
+            override fun onUnregistrationFailed(info: NsdServiceInfo?, errorCode: Int) {
+                NetworkLog.log("LAN", "Service unregistration failed, code $errorCode")
+            }
         }
         registrationListener = listener
         try {
@@ -268,20 +279,34 @@ class LanTransport(
         }
     }
 
+    private fun releaseRegistrationMulticast() {
+        if (!registrationMulticastHeld) return
+        registrationMulticastHeld = false
+        releaseMulticast()
+    }
+
+    private fun releaseDiscoveryMulticast() {
+        if (!discoveryMulticastHeld) return
+        discoveryMulticastHeld = false
+        releaseMulticast()
+    }
+
     private fun unregisterService() {
-        val nsd = nsdManager ?: return
-        registrationListener?.let {
-            try { nsd.unregisterService(it) } catch (_: Exception) {}
+        registrationListener?.let { listener ->
+            try { nsdManager?.unregisterService(listener) } catch (_: Exception) {}
         }
         registrationListener = null
         registeredServiceName = null
-        releaseMulticast()
+        releaseRegistrationMulticast()
     }
 
     fun discoverPeers(onFound: (List<LanPeer>) -> Unit) {
         val nsd = nsdManager ?: return
         stopDiscovery()
-        acquireMulticast()
+        if (!discoveryMulticastHeld) {
+            acquireMulticast()
+            discoveryMulticastHeld = true
+        }
         discoveryGeneration += 1
         val myGeneration = discoveryGeneration
         val found = LinkedHashMap<String, LanPeer>()
@@ -312,6 +337,8 @@ class LanTransport(
             override fun onDiscoveryStopped(serviceType: String?) {}
             override fun onStartDiscoveryFailed(serviceType: String?, errorCode: Int) {
                 NetworkLog.log("LAN", "Network discovery failed to start, code $errorCode")
+                releaseDiscoveryMulticast()
+                if (discoveryListener === this) discoveryListener = null
             }
             override fun onStopDiscoveryFailed(serviceType: String?, errorCode: Int) {}
         }
@@ -320,6 +347,8 @@ class LanTransport(
             nsd.discoverServices(SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, listener)
         } catch (e: Exception) {
             NetworkLog.log("LAN", "Network discovery: ${e.message}")
+            releaseDiscoveryMulticast()
+            discoveryListener = null
         }
     }
 
@@ -509,12 +538,11 @@ class LanTransport(
 
     fun stopDiscovery() {
         discoveryGeneration += 1
-        val nsd = nsdManager ?: return
         discoveryListener?.let {
-            try { nsd.stopServiceDiscovery(it) } catch (_: Exception) {}
+            try { nsdManager?.stopServiceDiscovery(it) } catch (_: Exception) {}
         }
         discoveryListener = null
-        releaseMulticast()
+        releaseDiscoveryMulticast()
     }
 
     override fun startDiscoveryAndConnect(targetId: String?) {
@@ -598,6 +626,12 @@ class LanTransport(
         if (wasCurrent) {
             hosting = false
             onHostingEnded()
+            var dropped = 0
+            while (outbox.tryReceive().isSuccess) dropped++
+            if (dropped > 0) {
+                repeat(dropped) { NetworkMetrics.messageDropped() }
+                NetworkLog.log("LAN", "Dropped unsent messages after disconnect: $dropped")
+            }
             _connectionState.value = ConnectionState.DISCONNECTED
         }
     }
@@ -624,6 +658,11 @@ class LanTransport(
     }
 
     override fun send(message: GameMessage) {
+        if (_connectionState.value != ConnectionState.CONNECTED) {
+            NetworkMetrics.messageDropped()
+            NetworkLog.log("LAN", "Message not queued: TCP session is not connected")
+            return
+        }
         val json = message.toJson()
         val size = json.length
         if (size > MAX_MESSAGE_CHARS) {
