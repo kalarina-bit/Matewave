@@ -21,11 +21,9 @@
 </p>
 
 <p align="center">
-  <img src="assets/screenshots/5-move-count.png" width="160" alt="Make your next move count">
-  <img src="assets/screenshots/4-home.png" width="160" alt="Home screen">
-  <img src="assets/screenshots/1-friendly-matches.png" width="160" alt="From solo games to friendly matches">
-  <img src="assets/screenshots/3-play-together.png" width="160" alt="Play together">
-  <img src="assets/screenshots/2-keep-growing.png" width="160" alt="Keep growing">
+  <img src="assets/screenshots/1-play-learn-solve-left.png" width="160" alt="Play, learn, solve"><img src="assets/screenshots/2-play-learn-solve-right.png" width="160" alt="Home screen">
+  <img src="assets/screenshots/3-play-ai-or-a-friend.png" width="160" alt="Play AI or a friend">
+  <img src="assets/screenshots/4-puzzles.png" width="160" alt="Puzzles for your rating">
 </p>
 
 > [!TIP]
