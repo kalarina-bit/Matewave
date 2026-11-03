@@ -1,2 +1,6 @@
 • Naujos ryškios piktogramos visoje programėlėje (Material Symbols), jos atsirado ir ant mygtukų, kur jų nebuvo
+• Geresnis kontrastas ir lengviau įskaitomas tekstas tamsiame fone
+• Patikimesni Bluetooth ir LAN ryšiai
+• Greitesnis šachmatų variklis ir DI, pašalintas nenaudojamas kodas, mažesnė programėlė
+• Patobulintas žaidimo būsenos išsaugojimas
 • Renkantis spalvą rodomi lentos karaliai; būsenos juostoje – žirgas

@@ -1,2 +1,6 @@
 • Neue scharfe Symbole in der ganzen App (Material Symbols), auch auf Schaltflächen, die bisher keine hatten
+• Besserer Kontrast und besser lesbarer Text auf dunklem Hintergrund
+• Zuverlässigere Bluetooth- und LAN-Verbindungen
+• Schnellere Schach-Engine und KI, ungenutzter Code entfernt, kleinere App
+• Verbessertes Speichern des Spielstands
 • Bei der Farbwahl erscheinen die Könige vom Brett; in der Statusleiste ein Springer
