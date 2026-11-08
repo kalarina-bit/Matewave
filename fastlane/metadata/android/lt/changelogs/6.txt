@@ -1,0 +1,4 @@
+• Vibracija dabar įjungiama ir išjungiama tik vienoje vietoje: Nustatymai → Garsas
+• Iš ekrano „Leidimai“ pašalintas ryšio žurnalas ir tinklo skaitikliai
+• Piktogramos prie visų parinkčių skiltyje „Lentos išvaizda“
+• Matewave taip pat yra mano Gitea: https://git.skysparkle.cc/kalarina/Matewave

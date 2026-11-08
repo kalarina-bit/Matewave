@@ -104,8 +104,6 @@
     <string name="mesh_permission_title">附近对战所需的权限</string>
     <string name="mesh_permission_text">要查找附近的玩家并在无网络时与他们对战，应用需要蓝牙权限。仅在“附近对战”页面打开时进行搜索。</string>
     <string name="permissions_card_title">权限</string>
-    <string name="diag_last_reason">最近一次连接错误：%1$s</string>
-    <string name="diag_copy_log">复制连接日志</string>
     <string name="trust_impersonation">该玩家冒充他人 — 数据已拒绝</string>
     <string name="trust_unverified">对手身份未验证（对方使用的是旧版应用）</string>
     <string name="trust_outdated">对手的应用版本过旧，无法安全对局。请双方都更新应用。</string>
@@ -197,8 +195,8 @@
     <string name="share_no_wifi">未找到 Wi-Fi 网络。请连接 Wi-Fi 或开启热点，然后重新打开此页面。</string>
     <string name="share_split_warning">此应用是以拆分包形式安装的（例如来自 Google Play），因此分享的文件可能无法在另一部手机上安装。</string>
     <string name="share_failed">无法准备要分享的文件。</string>
-    <string name="perm_vibration_title">振动</string>
-    <string name="perm_vibration_text">选子、走子和吃子时短振一下，将军或对局结束时振动两下。如不需要，可以关闭。</string>
+    <string name="settings_vibration">振动</string>
+    <string name="settings_vibration_subtitle">走子、吃子和将军</string>
     <string name="appearance_last_move">高亮上一步</string>
     <string name="appearance_last_move_hint">为上一步走出和落下的格子上色</string>
     <string name="appearance_check">高亮将军</string>
@@ -215,15 +213,6 @@
     <string name="reason_remote_disconnected">对手已断开连接</string>
     <string name="reason_port_busy">无法打开端口</string>
     <string name="reason_unknown">未知连接错误</string>
-    <string name="metrics_connect_attempts">连接尝试：%1$d 次，成功：%2$d 次</string>
-    <string name="metrics_last_connect">上次连接用时：%1$d 毫秒</string>
-    <string name="metrics_chunks">已发送分片：%1$d，重发：%2$d（%3$d%%）</string>
-    <string name="metrics_duplicates">收到重复分片：%1$d</string>
-    <string name="metrics_corrupted">损坏的消息：%1$d</string>
-    <string name="metrics_dropped">丢失的消息：%1$d</string>
-    <string name="diag_report_counters">=== 网络计数 ===</string>
-    <string name="diag_report_events">=== 事件 ===</string>
-    <string name="diag_log_empty">日志为空</string>
     <string name="nearby_player_default">附近的玩家</string>
     <string name="player_default_name">玩家</string>
     <string name="time_no_limit">无时间限制</string>

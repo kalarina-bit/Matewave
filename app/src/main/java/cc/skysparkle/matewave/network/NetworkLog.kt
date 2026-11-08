@@ -24,7 +24,6 @@ data class NetworkEvent(
     val text: String
 )
 
-/** In-memory connection log, copied into the diagnostics report from Settings. */
 object NetworkLog {
     private const val CAPACITY = 60
 
@@ -41,12 +40,5 @@ object NetworkLog {
     fun reason(transport: String, reason: DisconnectReason, detail: String? = null) {
         _lastReason.value = reason
         log(transport, reason.userText + (detail?.let { ": $it" } ?: ""))
-    }
-
-    fun asText(): String {
-        val format = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
-        return _events.value.joinToString("\n") { e ->
-            "${format.format(java.util.Date(e.at))} [${e.transport}] ${e.text}"
-        }
     }
 }

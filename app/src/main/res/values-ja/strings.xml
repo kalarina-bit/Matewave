@@ -104,8 +104,6 @@
     <string name="mesh_permission_title">近くで対戦するための権限</string>
     <string name="mesh_permission_text">近くのプレイヤーを見つけてインターネットなしで対戦するには、Bluetoothへのアクセスが必要です。検索は「近くで対戦」画面を開いている間だけ行われます。</string>
     <string name="permissions_card_title">権限</string>
-    <string name="diag_last_reason">直近の通信エラー: %1$s</string>
-    <string name="diag_copy_log">通信ログをコピー</string>
     <string name="trust_impersonation">このプレイヤーは他人になりすましています — データを拒否しました</string>
     <string name="trust_unverified">相手の本人確認ができていません（古いバージョンのアプリです）</string>
     <string name="trust_outdated">相手のアプリが古いため、安全に対局できません。両方のアプリを更新してください。</string>
@@ -197,8 +195,8 @@
     <string name="share_no_wifi">Wi-Fiネットワークが見つかりません。Wi-Fiに接続するかテザリングをオンにして、この画面を開き直してください。</string>
     <string name="share_split_warning">このアプリは分割パッケージ（例: Google Play）としてインストールされているため、共有したファイルは別のスマホにインストールできない場合があります。</string>
     <string name="share_failed">共有用のファイルを準備できませんでした。</string>
-    <string name="perm_vibration_title">バイブレーション</string>
-    <string name="perm_vibration_text">駒の選択、移動、駒を取ったときに短く振動し、チェックや対局終了時には2回振動します。不要ならオフにしてください。</string>
+    <string name="settings_vibration">バイブレーション</string>
+    <string name="settings_vibration_subtitle">移動、駒を取る、王手</string>
     <string name="appearance_last_move">直前の手をハイライト</string>
     <string name="appearance_last_move_hint">直前の手の移動元と移動先のマスに色を付けます</string>
     <string name="appearance_check">チェックをハイライト</string>
@@ -215,15 +213,6 @@
     <string name="reason_remote_disconnected">相手が切断しました</string>
     <string name="reason_port_busy">ポートを開けませんでした</string>
     <string name="reason_unknown">不明な通信エラー</string>
-    <string name="metrics_connect_attempts">接続試行: %1$d 回、成功: %2$d 回</string>
-    <string name="metrics_last_connect">直近の接続時間: %1$d ms</string>
-    <string name="metrics_chunks">送信パート: %1$d、再送: %2$d (%3$d%%)</string>
-    <string name="metrics_duplicates">重複受信パート: %1$d</string>
-    <string name="metrics_corrupted">破損したメッセージ: %1$d</string>
-    <string name="metrics_dropped">失われたメッセージ: %1$d</string>
-    <string name="diag_report_counters">=== ネットワークカウンター ===</string>
-    <string name="diag_report_events">=== イベント ===</string>
-    <string name="diag_log_empty">ログは空です</string>
     <string name="nearby_player_default">近くのプレイヤー</string>
     <string name="player_default_name">プレイヤー</string>
     <string name="time_no_limit">時間制限なし</string>

@@ -133,7 +133,8 @@ fun SettingsScreen(
             )
             ListDivider()
             ListRow(
-                title = stringResource(R.string.perm_vibration_title),
+                title = stringResource(R.string.settings_vibration),
+                subtitle = stringResource(R.string.settings_vibration_subtitle),
                 icon = R.drawable.ic_vibration,
                 trailing = { SettingSwitch(vibrationOn) { vibrationOn = it; feedback.vibrationEnabled = it } }
             )

@@ -37,22 +37,4 @@ object NetworkMetrics {
     fun duplicateChunk() { duplicateChunks.incrementAndGet() }
     fun messageCorrupted() { corruptedMessages.incrementAndGet(); touch() }
     fun messageDropped() { messagesDropped.incrementAndGet(); touch() }
-
-    private fun retryPercent(): Int {
-        val sent = chunksSent.get()
-        if (sent == 0L) return 0
-        return ((chunkRetries.get() * 100) / sent).toInt()
-    }
-
-    fun asText(res: android.content.res.Resources): String = buildString {
-        appendLine(res.getString(cc.skysparkle.matewave.R.string.metrics_connect_attempts,
-            connectAttempts.get(), connectSuccesses.get()))
-        val last = lastConnectMillis.get()
-        if (last > 0) appendLine(res.getString(cc.skysparkle.matewave.R.string.metrics_last_connect, last))
-        appendLine(res.getString(cc.skysparkle.matewave.R.string.metrics_chunks,
-            chunksSent.get(), chunkRetries.get(), retryPercent()))
-        appendLine(res.getString(cc.skysparkle.matewave.R.string.metrics_duplicates, duplicateChunks.get()))
-        appendLine(res.getString(cc.skysparkle.matewave.R.string.metrics_corrupted, corruptedMessages.get()))
-        appendLine(res.getString(cc.skysparkle.matewave.R.string.metrics_dropped, messagesDropped.get()))
-    }
 }

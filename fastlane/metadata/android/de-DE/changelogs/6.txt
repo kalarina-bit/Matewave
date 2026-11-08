@@ -1,0 +1,4 @@
+• Vibration wird jetzt nur noch an einer Stelle geschaltet: Einstellungen → Ton
+• Verbindungsprotokoll und Netzwerkzähler aus dem Bildschirm „Berechtigungen“ entfernt
+• Symbole für alle Optionen unter „Aussehen des Bretts“
+• Matewave gibt es auch auf meinem eigenen Gitea: https://git.skysparkle.cc/kalarina/Matewave

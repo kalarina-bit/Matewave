@@ -104,8 +104,6 @@
     <string name="mesh_permission_title">Leidimai žaidimui netoliese</string>
     <string name="mesh_permission_text">Kad rastų netoliese esančius žaidėjus ir galėtų su jais žaisti be interneto, programai reikia prieigos prie „Bluetooth“. Paieška vyksta tik kol atidarytas ekranas „Žaidimas netoliese“.</string>
     <string name="permissions_card_title">Leidimai</string>
-    <string name="diag_last_reason">Paskutinė ryšio klaida: %1$s</string>
-    <string name="diag_copy_log">Kopijuoti ryšio žurnalą</string>
     <string name="trust_impersonation">Šis žaidėjas apsimeta kitu — duomenys atmesti</string>
     <string name="trust_unverified">Varžovo tapatybė nepatvirtinta (jis turi seną programos versiją)</string>
     <string name="trust_outdated">Varžovo programa pasenusi – saugus žaidimas neįmanomas. Atnaujinkite programą abiem.</string>
@@ -197,8 +195,8 @@
     <string name="share_no_wifi">Wi-Fi tinklo nerasta. Prisijunkite prie Wi-Fi arba įjunkite viešosios prieigos tašką ir vėl atidarykite šį ekraną.</string>
     <string name="share_split_warning">Ši programa įdiegta kaip dalių rinkinys (pavyzdžiui, iš „Google Play“), todėl bendrinamas failas gali neįsidiegti kitame telefone.</string>
     <string name="share_failed">Nepavyko paruošti failo dalijimuisi.</string>
-    <string name="perm_vibration_title">Vibracija</string>
-    <string name="perm_vibration_text">Trumpas virptelėjimas pasirinkus figūrą, einant ir kertant, dvigubas – esant šachui ir pasibaigus partijai. Išjunkite, jei jo nenorite.</string>
+    <string name="settings_vibration">Vibracija</string>
+    <string name="settings_vibration_subtitle">Ėjimas, paėmimas ir šachas</string>
     <string name="appearance_last_move">Paryškinti paskutinį ėjimą</string>
     <string name="appearance_last_move_hint">Nuspalvina langelius, iš kurio ir į kurį padarytas paskutinis ėjimas</string>
     <string name="appearance_check">Paryškinti šachą</string>
@@ -215,15 +213,6 @@
     <string name="reason_remote_disconnected">Varžovas atsijungė</string>
     <string name="reason_port_busy">Nepavyko atidaryti prievado</string>
     <string name="reason_unknown">Nežinoma ryšio klaida</string>
-    <string name="metrics_connect_attempts">Bandymų prisijungti: %1$d, sėkmingų: %2$d</string>
-    <string name="metrics_last_connect">Paskutinis prisijungimas užtruko: %1$d ms</string>
-    <string name="metrics_chunks">Išsiųsta dalių: %1$d, pakartotinai: %2$d (%3$d%%)</string>
-    <string name="metrics_duplicates">Gauta pasikartojančių dalių: %1$d</string>
-    <string name="metrics_corrupted">Sugadintų pranešimų: %1$d</string>
-    <string name="metrics_dropped">Prarastų pranešimų: %1$d</string>
-    <string name="diag_report_counters">=== Tinklo skaitikliai ===</string>
-    <string name="diag_report_events">=== Įvykiai ===</string>
-    <string name="diag_log_empty">žurnalas tuščias</string>
     <string name="nearby_player_default">Netoliese esantis žaidėjas</string>
     <string name="player_default_name">Žaidėjas</string>
     <string name="time_no_limit">Be laiko kontrolės</string>

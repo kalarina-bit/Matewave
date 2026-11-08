@@ -1,0 +1,4 @@
+• Vibration is now switched on and off in one place only: Settings → Sound
+• Removed the connection log and network counters from the Permissions screen
+• Icons for every option in Board appearance
+• Matewave is also on my own Gitea: https://git.skysparkle.cc/kalarina/Matewave

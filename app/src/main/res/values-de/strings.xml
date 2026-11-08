@@ -104,8 +104,6 @@
     <string name="mesh_permission_title">Berechtigungen für Spiele in der Nähe</string>
     <string name="mesh_permission_text">Um Spieler in der Nähe zu finden und ohne Internet mit ihnen zu spielen, braucht die App Zugriff auf Bluetooth. Die Suche läuft nur, solange der Bildschirm „Spiel in der Nähe“ geöffnet ist.</string>
     <string name="permissions_card_title">Berechtigungen</string>
-    <string name="diag_last_reason">Letzter Verbindungsfehler: %1$s</string>
-    <string name="diag_copy_log">Verbindungsprotokoll kopieren</string>
     <string name="trust_impersonation">Dieser Spieler gibt sich als jemand anderes aus – Daten abgelehnt</string>
     <string name="trust_unverified">Die Identität des Gegners ist nicht bestätigt (er hat eine alte App-Version)</string>
     <string name="trust_outdated">Die App des Gegners ist veraltet – sicheres Spielen ist nicht möglich. Beide sollten die App aktualisieren.</string>
@@ -197,8 +195,8 @@
     <string name="share_no_wifi">Kein WLAN gefunden. Verbinde dich mit einem WLAN oder schalte einen Hotspot ein und öffne diese Seite erneut.</string>
     <string name="share_split_warning">Diese App wurde als Paket aus mehreren Teilen installiert (z. B. über Google Play). Die geteilte Datei lässt sich deshalb eventuell auf einem anderen Handy nicht installieren.</string>
     <string name="share_failed">Die Datei konnte nicht zum Teilen vorbereitet werden.</string>
-    <string name="perm_vibration_title">Vibration</string>
-    <string name="perm_vibration_text">Ein kurzes Vibrieren beim Wählen einer Figur, beim Ziehen und Schlagen, ein doppeltes bei Schach und am Ende der Partie. Schalte es aus, wenn du es nicht möchtest.</string>
+    <string name="settings_vibration">Vibration</string>
+    <string name="settings_vibration_subtitle">Zug, Schlagen und Schach</string>
     <string name="appearance_last_move">Letzten Zug hervorheben</string>
     <string name="appearance_last_move_hint">Färbt die Felder, von und auf die der letzte Zug ging</string>
     <string name="appearance_check">Schach hervorheben</string>
@@ -215,15 +213,6 @@
     <string name="reason_remote_disconnected">Der Gegner hat die Verbindung getrennt</string>
     <string name="reason_port_busy">Port konnte nicht geöffnet werden</string>
     <string name="reason_unknown">Unbekannter Verbindungsfehler</string>
-    <string name="metrics_connect_attempts">Verbindungsversuche: %1$d, erfolgreich: %2$d</string>
-    <string name="metrics_last_connect">Letzte Verbindung dauerte: %1$d ms</string>
-    <string name="metrics_chunks">Teile gesendet: %1$d, erneut: %2$d (%3$d%%)</string>
-    <string name="metrics_duplicates">Doppelte Teile empfangen: %1$d</string>
-    <string name="metrics_corrupted">Beschädigte Nachrichten: %1$d</string>
-    <string name="metrics_dropped">Verlorene Nachrichten: %1$d</string>
-    <string name="diag_report_counters">=== Netzwerkzähler ===</string>
-    <string name="diag_report_events">=== Ereignisse ===</string>
-    <string name="diag_log_empty">Protokoll ist leer</string>
     <string name="nearby_player_default">Spieler in der Nähe</string>
     <string name="player_default_name">Spieler</string>
     <string name="time_no_limit">Ohne Zeitkontrolle</string>

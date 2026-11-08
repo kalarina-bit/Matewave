@@ -109,8 +109,6 @@
     <string name="mesh_permission_title">Разрешения для связи поблизости</string>
     <string name="mesh_permission_text">Чтобы находить игроков рядом и играть с ними без интернета, приложению нужен доступ к Bluetooth. Поиск идёт, только пока открыт экран «Игра рядом».</string>
     <string name="permissions_card_title">Разрешения</string>
-    <string name="diag_last_reason">Последняя ошибка связи: %1$s</string>
-    <string name="diag_copy_log">Скопировать журнал связи</string>
     <string name="trust_impersonation">Этот игрок выдаёт себя за другого — данные не приняты</string>
     <string name="trust_unverified">Личность соперника не подтверждена (у него старая версия приложения)</string>
     <string name="trust_outdated">У соперника устаревшая версия приложения — безопасная игра невозможна. Обновите приложение у обоих.</string>
@@ -203,8 +201,8 @@
     <string name="share_no_wifi">Сеть Wi-Fi не найдена. Подключитесь к Wi-Fi или включите точку доступа и откройте экран заново.</string>
     <string name="share_split_warning">Это приложение установлено как набор частей (например, из Google Play), поэтому переданный файл может не установиться на другой телефон.</string>
     <string name="share_failed">Не удалось подготовить файл для передачи.</string>
-    <string name="perm_vibration_title">Вибрация</string>
-    <string name="perm_vibration_text">Короткая вибрация при выборе фигуры, ходе и взятии, двойная — при шахе и в конце партии. Выключите, если она не нужна.</string>
+    <string name="settings_vibration">Вибрация</string>
+    <string name="settings_vibration_subtitle">Ход, взятие и шах</string>
     <string name="appearance_last_move">Подсвечивать последний ход</string>
     <string name="appearance_last_move_hint">Закрашивает клетки, с которой и на которую сделан последний ход</string>
     <string name="appearance_check">Подсвечивать шах</string>
@@ -221,15 +219,6 @@
     <string name="reason_remote_disconnected">Соперник отключился</string>
     <string name="reason_port_busy">Не удалось открыть порт</string>
     <string name="reason_unknown">Неизвестная ошибка связи</string>
-    <string name="metrics_connect_attempts">Попыток подключения: %1$d, успешных: %2$d</string>
-    <string name="metrics_last_connect">Последнее подключение заняло: %1$d мс</string>
-    <string name="metrics_chunks">Частей отправлено: %1$d, повторно: %2$d (%3$d%%)</string>
-    <string name="metrics_duplicates">Повторных частей принято: %1$d</string>
-    <string name="metrics_corrupted">Повреждённых сообщений: %1$d</string>
-    <string name="metrics_dropped">Сообщений потеряно: %1$d</string>
-    <string name="diag_report_counters">=== Счётчики сети ===</string>
-    <string name="diag_report_events">=== События ===</string>
-    <string name="diag_log_empty">журнал пуст</string>
     <string name="nearby_player_default">Игрок поблизости</string>
     <string name="player_default_name">Игрок</string>
     <string name="time_no_limit">Без контроля времени</string>

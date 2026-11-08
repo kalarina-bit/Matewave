@@ -85,30 +85,35 @@ fun AppearanceScreen(onBack: () -> Unit) {
         }
 
         AppearanceToggle(
+            icon = R.drawable.ic_coordinates,
             title = stringResource(R.string.appearance_coordinates),
             subtitle = stringResource(R.string.appearance_coordinates_hint),
             checked = coords
         ) { coords = it; appearance.showCoordinates = it }
 
         AppearanceToggle(
+            icon = R.drawable.ic_image_pieces,
             title = stringResource(R.string.appearance_image_pieces),
             subtitle = stringResource(R.string.appearance_image_pieces_hint),
             checked = images
         ) { images = it; appearance.useImagePieces = it }
 
         AppearanceToggle(
+            icon = R.drawable.ic_last_move,
             title = stringResource(R.string.appearance_last_move),
             subtitle = stringResource(R.string.appearance_last_move_hint),
             checked = lastMove
         ) { lastMove = it; appearance.showLastMove = it }
 
         AppearanceToggle(
+            icon = R.drawable.ic_check_alert,
             title = stringResource(R.string.appearance_check),
             subtitle = stringResource(R.string.appearance_check_hint),
             checked = checkGlow
         ) { checkGlow = it; appearance.showCheckHighlight = it }
 
         AppearanceToggle(
+            icon = R.drawable.ic_move_list,
             title = stringResource(R.string.appearance_opening_in_game),
             subtitle = stringResource(R.string.appearance_opening_in_game_hint),
             checked = openingBar
@@ -160,6 +165,7 @@ private fun ThemePreview(theme: BoardTheme, showPieces: Boolean) {
 
 @Composable
 private fun AppearanceToggle(
+    icon: Int,
     title: String,
     subtitle: String,
     checked: Boolean,
@@ -167,6 +173,7 @@ private fun AppearanceToggle(
 ) {
     GlassCard(modifier = Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            cc.skysparkle.matewave.ui.components.ButtonIcon(icon, size = 24.dp)
             Column(modifier = Modifier.weight(1f)) {
                 Text(title, color = ink, style = MaterialTheme.typography.titleMedium)
                 Text(subtitle, color = ink.copy(alpha = 0.7f), style = MaterialTheme.typography.bodySmall)

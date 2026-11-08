@@ -1,0 +1,4 @@
+• 振动开关现在只在一个位置：设置 → 声音
+• 从“权限”页面移除了连接日志和网络计数器
+• “棋盘外观”中的每个选项都有了图标
+• Matewave 也发布在我自己的 Gitea 上：https://git.skysparkle.cc/kalarina/Matewave
