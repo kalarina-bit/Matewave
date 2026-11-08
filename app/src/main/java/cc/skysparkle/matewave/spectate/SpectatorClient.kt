@@ -27,7 +27,7 @@ class SpectatorClient(
 ) {
     data class Timing(val connectTimeoutMs: Int = 5_000, val silenceTimeoutMs: Int = 15_000)
 
-    enum class Failure { UNREACHABLE, FULL, NO_GAME, UPDATE_THIS_APP, UPDATE_HOST_APP }
+    enum class Failure { UNREACHABLE, FULL, NO_GAME }
 
     sealed class Event {
         data class Joined(val welcome: SpectatorMessage.Welcome) : Event()
@@ -97,13 +97,8 @@ class SpectatorClient(
                 val envelope = SpectatorProtocol.decode(read.text) ?: continue
                 val message = envelope.message
                 if (!joined) {
-                    // reject keeps its shape across versions, so read it before the version gate.
                     if (message is SpectatorMessage.Reject) {
                         emit(Event.JoinFailed(failureOf(message)))
-                        return
-                    }
-                    if (envelope.version < minVersion) {
-                        emit(Event.JoinFailed(Failure.UPDATE_HOST_APP))
                         return
                     }
                     if (message is SpectatorMessage.Welcome) {
@@ -133,8 +128,6 @@ class SpectatorClient(
     private fun failureOf(reject: SpectatorMessage.Reject): Failure = when (reject.reason) {
         RejectReason.FULL -> Failure.FULL
         RejectReason.NO_GAME -> Failure.NO_GAME
-        RejectReason.UPDATE_REQUIRED ->
-            if (version < reject.minVersion) Failure.UPDATE_THIS_APP else Failure.UPDATE_HOST_APP
         RejectReason.OTHER -> Failure.UNREACHABLE
     }
 

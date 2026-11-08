@@ -110,8 +110,7 @@
     <string name="mesh_permission_text">Чтобы находить игроков рядом и играть с ними без интернета, приложению нужен доступ к Bluetooth. Поиск идёт, только пока открыт экран «Игра рядом».</string>
     <string name="permissions_card_title">Разрешения</string>
     <string name="trust_impersonation">Этот игрок выдаёт себя за другого — данные не приняты</string>
-    <string name="trust_unverified">Личность соперника не подтверждена (у него старая версия приложения)</string>
-    <string name="trust_outdated">У соперника устаревшая версия приложения — безопасная игра невозможна. Обновите приложение у обоих.</string>
+    <string name="trust_unverified">Личность соперника не подтверждена</string>
     <string name="perm_grant">Разрешить</string>
     <string name="perm_nearby_title">Связь с устройствами рядом</string>
     <string name="perm_nearby_text">Нужна, чтобы находить игроков поблизости и играть без интернета.</string>
@@ -369,9 +368,6 @@
     <string name="spectate_lost_text">Устройство, на котором идёт партия, больше недоступно.</string>
     <string name="spectate_full_title">Мест нет</string>
     <string name="spectate_full_text">У этой партии уже максимум зрителей (%1$d). Попробуйте позже.</string>
-    <string name="spectate_update_title">Требуется обновление</string>
-    <string name="spectate_update_this">Обновите Matewave, чтобы смотреть эту партию.</string>
-    <string name="spectate_update_host">Игроку, который проводит эту партию, нужно обновить Matewave, чтобы её можно было смотреть.</string>
     <string name="spectate_failed_title">Не удаётся посмотреть партию</string>
     <string name="spectate_no_game">Эта партия больше недоступна.</string>
     <string name="spectate_unreachable">Устройство, на котором идёт партия, недоступно. Убедитесь, что вы подключены к той же сети Wi-Fi.</string>

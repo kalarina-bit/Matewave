@@ -57,7 +57,6 @@ data class SpectatorSnapshot(
 
 enum class RejectReason(val wire: String) {
     FULL("full"),
-    UPDATE_REQUIRED("update"),
     NO_GAME("no_game"),
     OTHER("other");
 
@@ -94,11 +93,7 @@ data class SpectatorEnvelope(val version: Int, val message: SpectatorMessage?)
  * the sender's protocol version in "sv". Unknown types are skipped, never fatal.
  */
 object SpectatorProtocol {
-    /**
-     * Bump on incompatible changes and raise [MIN_COMPATIBLE_VERSION] to the oldest version still
-     * understood. hello, status and reject keep their shape so any two versions can still tell
-     * each other that an update is required.
-     */
+    /** Sent with every message for information only; no version is ever refused. */
     const val VERSION = 1
     const val MIN_COMPATIBLE_VERSION = 1
 

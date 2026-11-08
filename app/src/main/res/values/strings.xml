@@ -105,8 +105,7 @@
     <string name="mesh_permission_text">To find players nearby and play with them without the internet, the app needs Bluetooth access. Searching runs only while the nearby play screen is open.</string>
     <string name="permissions_card_title">Permissions</string>
     <string name="trust_impersonation">This player is impersonating someone else — data rejected</string>
-    <string name="trust_unverified">The opponent\'s identity isn\'t verified (they have an old version of the app)</string>
-    <string name="trust_outdated">The opponent\'s app is outdated and can\'t play securely with yours. Both players need to update.</string>
+    <string name="trust_unverified">The opponent\'s identity isn\'t verified</string>
     <string name="perm_grant">Allow</string>
     <string name="perm_nearby_title">Nearby device connection</string>
     <string name="perm_nearby_text">Needed to find players nearby and play without the internet.</string>
@@ -361,9 +360,6 @@
     <string name="spectate_lost_text">The host\'s device can no longer be reached.</string>
     <string name="spectate_full_title">Game is full</string>
     <string name="spectate_full_text">This game already has the maximum of %1$d spectators. Try again later.</string>
-    <string name="spectate_update_title">Update required</string>
-    <string name="spectate_update_this">Update Matewave to watch this game.</string>
-    <string name="spectate_update_host">The player hosting this game needs to update Matewave before it can be watched.</string>
     <string name="spectate_failed_title">Can\'t watch this game</string>
     <string name="spectate_no_game">This game is no longer available.</string>
     <string name="spectate_unreachable">The host\'s device can\'t be reached. Make sure you\'re on the same Wi-Fi network.</string>

@@ -182,10 +182,6 @@ fun SpectatorScreen(target: SpectateTarget, onBackToFriends: () -> Unit) {
 private fun failureTexts(failure: SpectatorClient.Failure?, max: Int): Pair<String, String> = when (failure) {
     SpectatorClient.Failure.FULL ->
         stringResource(R.string.spectate_full_title) to stringResource(R.string.spectate_full_text, max)
-    SpectatorClient.Failure.UPDATE_THIS_APP ->
-        stringResource(R.string.spectate_update_title) to stringResource(R.string.spectate_update_this)
-    SpectatorClient.Failure.UPDATE_HOST_APP ->
-        stringResource(R.string.spectate_update_title) to stringResource(R.string.spectate_update_host)
     SpectatorClient.Failure.NO_GAME ->
         stringResource(R.string.spectate_failed_title) to stringResource(R.string.spectate_no_game)
     SpectatorClient.Failure.UNREACHABLE, null ->

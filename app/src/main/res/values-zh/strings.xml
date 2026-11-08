@@ -105,8 +105,7 @@
     <string name="mesh_permission_text">要查找附近的玩家并在无网络时与他们对战，应用需要蓝牙权限。仅在“附近对战”页面打开时进行搜索。</string>
     <string name="permissions_card_title">权限</string>
     <string name="trust_impersonation">该玩家冒充他人 — 数据已拒绝</string>
-    <string name="trust_unverified">对手身份未验证（对方使用的是旧版应用）</string>
-    <string name="trust_outdated">对手的应用版本过旧，无法安全对局。请双方都更新应用。</string>
+    <string name="trust_unverified">对手身份未验证</string>
     <string name="perm_grant">允许</string>
     <string name="perm_nearby_title">与附近设备通信</string>
     <string name="perm_nearby_text">用于发现附近的玩家并在无网络时对战。</string>
@@ -360,9 +359,6 @@
     <string name="spectate_lost_text">无法再连接到主持对局的设备。</string>
     <string name="spectate_full_title">观战人数已满</string>
     <string name="spectate_full_text">此对局的观战人数已达上限（%1$d 人），请稍后再试。</string>
-    <string name="spectate_update_title">需要更新</string>
-    <string name="spectate_update_this">请更新 Matewave 以观看此对局。</string>
-    <string name="spectate_update_host">主持此对局的玩家需要更新 Matewave 后才能观战。</string>
     <string name="spectate_failed_title">无法观看此对局</string>
     <string name="spectate_no_game">此对局已不可观看。</string>
     <string name="spectate_unreachable">无法连接到主持对局的设备。请确认你们连接的是同一个 Wi-Fi 网络。</string>

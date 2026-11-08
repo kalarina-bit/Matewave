@@ -558,7 +558,6 @@ private fun ConnectionBanner(state: GameUiState) {
 private fun TrustBanners(state: GameUiState) {
     val (icon, text, color) = when {
         state.opponentUntrusted -> Triple(R.drawable.ic_no_encryption, stringResource(R.string.trust_impersonation), Color(0xFFFF6B6B))
-        state.opponentOutdated -> Triple(R.drawable.ic_error, stringResource(R.string.trust_outdated), Color(0xFFFF6B6B))
         state.opponentUnverified -> Triple(R.drawable.ic_no_encryption, stringResource(R.string.trust_unverified), Color(0xFFFFC46B))
         else -> Triple(0, null, Color.Unspecified)
     }

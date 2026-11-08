@@ -1,4 +1,5 @@
 • Vibration wird jetzt nur noch an einer Stelle geschaltet: Einstellungen → Ton
 • Verbindungsprotokoll und Netzwerkzähler aus dem Bildschirm „Berechtigungen“ entfernt
+• Keine Prüfung und Warnungen mehr wegen veralteter App beim Verbinden mit dem Gegner oder Zuschauen bei Freunden
 • Symbole für alle Optionen unter „Aussehen des Bretts“
 • Matewave gibt es auch auf meinem eigenen Gitea: https://git.skysparkle.cc/kalarina/Matewave

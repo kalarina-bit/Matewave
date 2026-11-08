@@ -84,7 +84,6 @@ data class GameUiState(
 
     val opponentUntrusted: Boolean = false,
     val opponentUnverified: Boolean = false,
-    val opponentOutdated: Boolean = false,
     val handshake: HandshakeState = HandshakeState.DISCONNECTED,
     val newPeerFingerprint: String? = null,
 
@@ -1076,13 +1075,6 @@ class GameViewModel : ViewModel() {
         val myGeneration = sessionGeneration
         if (sessionAuth != null) {
             NetworkLog.log("GAME", "Repeated profile in current session ignored")
-            return
-        }
-        if (msg.protocolVersion < GameMessage.PROTOCOL_VERSION) {
-            NetworkLog.log(
-                "GAME", "Opponent protocol version ${msg.protocolVersion} < ${GameMessage.PROTOCOL_VERSION}, incompatible"
-            )
-            _uiState.value = _uiState.value.copy(opponentOutdated = true)
             return
         }
         val peers = knownPeers

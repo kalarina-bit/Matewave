@@ -2,7 +2,6 @@ package cc.skysparkle.matewave
 
 import cc.skysparkle.matewave.engine.PieceColor
 import cc.skysparkle.matewave.spectate.MAX_SPECTATORS
-import cc.skysparkle.matewave.spectate.RejectReason
 import cc.skysparkle.matewave.spectate.SpectatorBroadcaster
 import cc.skysparkle.matewave.spectate.SpectatorClient
 import cc.skysparkle.matewave.spectate.SpectatorClient.Event
@@ -24,10 +23,8 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
-import java.io.BufferedReader
 import java.io.Closeable
 import java.io.IOException
-import java.io.InputStreamReader
 import java.net.InetAddress
 import java.net.ServerSocket
 import java.net.Socket
@@ -269,35 +266,6 @@ class SpectatorHubTest {
         }
         val elapsedMs = (System.nanoTime() - started) / 1_000_000
         assertTrue("publish took $elapsedMs ms", elapsedMs < 1_000)
-    }
-
-    @Test
-    fun outdatedSpectatorIsToldToUpdate() {
-        val hub = hub()
-        val (_, recorder) = watch(hub.port, version = 0, minVersion = 0)
-        assertEquals(Event.JoinFailed(Failure.UPDATE_THIS_APP), recorder.next())
-        assertEquals(0, hub.count.value)
-    }
-
-    @Test
-    fun outdatedHostIsReported() {
-        val hub = hub()
-        val newer = SpectatorProtocol.VERSION + 1
-        val (_, recorder) = watch(hub.port, version = newer, minVersion = newer)
-        assertEquals(Event.JoinFailed(Failure.UPDATE_HOST_APP), recorder.next())
-    }
-
-    @Test
-    fun rawOldClientGetsAClearRejectInsteadOfACrash() {
-        val hub = hub()
-        Socket(loopback, hub.port).use { s ->
-            s.soTimeout = 2_000
-            s.getOutputStream().write("{\"type\":\"hello\",\"sv\":0}\n".toByteArray())
-            val reply = BufferedReader(InputStreamReader(s.getInputStream())).readLine()
-            val reject = SpectatorProtocol.decode(reply)!!.message as SpectatorMessage.Reject
-            assertEquals(RejectReason.UPDATE_REQUIRED, reject.reason)
-            assertEquals(SpectatorProtocol.MIN_COMPATIBLE_VERSION, reject.minVersion)
-        }
     }
 
     @Test

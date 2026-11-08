@@ -105,8 +105,7 @@
     <string name="mesh_permission_text">Um Spieler in der Nähe zu finden und ohne Internet mit ihnen zu spielen, braucht die App Zugriff auf Bluetooth. Die Suche läuft nur, solange der Bildschirm „Spiel in der Nähe“ geöffnet ist.</string>
     <string name="permissions_card_title">Berechtigungen</string>
     <string name="trust_impersonation">Dieser Spieler gibt sich als jemand anderes aus – Daten abgelehnt</string>
-    <string name="trust_unverified">Die Identität des Gegners ist nicht bestätigt (er hat eine alte App-Version)</string>
-    <string name="trust_outdated">Die App des Gegners ist veraltet – sicheres Spielen ist nicht möglich. Beide sollten die App aktualisieren.</string>
+    <string name="trust_unverified">Die Identität des Gegners ist nicht bestätigt</string>
     <string name="perm_grant">Erlauben</string>
     <string name="perm_nearby_title">Verbindung zu Geräten in der Nähe</string>
     <string name="perm_nearby_text">Nötig, um Spieler in der Nähe zu finden und ohne Internet zu spielen.</string>
@@ -361,9 +360,6 @@
     <string name="spectate_lost_text">Das Gerät, auf dem die Partie läuft, ist nicht mehr erreichbar.</string>
     <string name="spectate_full_title">Partie ist voll</string>
     <string name="spectate_full_text">Diese Partie hat bereits die maximale Zahl von %1$d Zuschauern. Versuch es später noch einmal.</string>
-    <string name="spectate_update_title">Update erforderlich</string>
-    <string name="spectate_update_this">Aktualisiere Matewave, um diese Partie anzusehen.</string>
-    <string name="spectate_update_host">Der Spieler, der diese Partie ausrichtet, muss Matewave aktualisieren, bevor man zuschauen kann.</string>
     <string name="spectate_failed_title">Zuschauen nicht möglich</string>
     <string name="spectate_no_game">Diese Partie ist nicht mehr verfügbar.</string>
     <string name="spectate_unreachable">Das Gerät, auf dem die Partie läuft, ist nicht erreichbar. Achte darauf, dass du im selben WLAN bist.</string>

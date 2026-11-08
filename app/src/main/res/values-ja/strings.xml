@@ -105,8 +105,7 @@
     <string name="mesh_permission_text">近くのプレイヤーを見つけてインターネットなしで対戦するには、Bluetoothへのアクセスが必要です。検索は「近くで対戦」画面を開いている間だけ行われます。</string>
     <string name="permissions_card_title">権限</string>
     <string name="trust_impersonation">このプレイヤーは他人になりすましています — データを拒否しました</string>
-    <string name="trust_unverified">相手の本人確認ができていません（古いバージョンのアプリです）</string>
-    <string name="trust_outdated">相手のアプリが古いため、安全に対局できません。両方のアプリを更新してください。</string>
+    <string name="trust_unverified">相手の本人確認ができていません</string>
     <string name="perm_grant">許可</string>
     <string name="perm_nearby_title">近くのデバイスとの通信</string>
     <string name="perm_nearby_text">近くのプレイヤーを見つけ、インターネットなしで対戦するために必要です。</string>
@@ -360,9 +359,6 @@
     <string name="spectate_lost_text">対局をホストしている端末に接続できなくなりました。</string>
     <string name="spectate_full_title">満員です</string>
     <string name="spectate_full_text">この対局の観戦者はすでに上限の%1$d人です。しばらくしてからもう一度お試しください。</string>
-    <string name="spectate_update_title">アップデートが必要です</string>
-    <string name="spectate_update_this">この対局を観戦するには Matewave をアップデートしてください。</string>
-    <string name="spectate_update_host">この対局を観戦するには、対局をホストしているプレイヤーが Matewave をアップデートする必要があります。</string>
     <string name="spectate_failed_title">観戦できません</string>
     <string name="spectate_no_game">この対局はもう観戦できません。</string>
     <string name="spectate_unreachable">対局をホストしている端末に接続できません。同じWi-Fiネットワークに接続しているか確認してください。</string>

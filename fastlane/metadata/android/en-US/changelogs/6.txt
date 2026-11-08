@@ -1,4 +1,5 @@
 • Vibration is now switched on and off in one place only: Settings → Sound
 • Removed the connection log and network counters from the Permissions screen
+• No more outdated-app check and warnings when connecting to an opponent or watching a friend's game
 • Icons for every option in Board appearance
 • Matewave is also on my own Gitea: https://git.skysparkle.cc/kalarina/Matewave

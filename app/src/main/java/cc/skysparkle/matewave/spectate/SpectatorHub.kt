@@ -141,14 +141,7 @@ class SpectatorHub(
             val envelope = (first as? LineResult.Line)?.let { SpectatorProtocol.decode(it.text) }
             when (envelope?.message) {
                 SpectatorMessage.StatusQuery -> reply(client, status())
-                is SpectatorMessage.Hello -> {
-                    if (envelope.version < SpectatorProtocol.MIN_COMPATIBLE_VERSION) {
-                        log("Spectator with protocol ${envelope.version} told to update")
-                        reply(client, SpectatorMessage.Reject(RejectReason.UPDATE_REQUIRED, SpectatorProtocol.MIN_COMPATIBLE_VERSION))
-                    } else {
-                        spectator = admit(client)
-                    }
-                }
+                is SpectatorMessage.Hello -> { spectator = admit(client) }
                 else -> Unit
             }
         } catch (e: IOException) {

@@ -105,8 +105,7 @@
     <string name="mesh_permission_text">Kad rastų netoliese esančius žaidėjus ir galėtų su jais žaisti be interneto, programai reikia prieigos prie „Bluetooth“. Paieška vyksta tik kol atidarytas ekranas „Žaidimas netoliese“.</string>
     <string name="permissions_card_title">Leidimai</string>
     <string name="trust_impersonation">Šis žaidėjas apsimeta kitu — duomenys atmesti</string>
-    <string name="trust_unverified">Varžovo tapatybė nepatvirtinta (jis turi seną programos versiją)</string>
-    <string name="trust_outdated">Varžovo programa pasenusi – saugus žaidimas neįmanomas. Atnaujinkite programą abiem.</string>
+    <string name="trust_unverified">Varžovo tapatybė nepatvirtinta</string>
     <string name="perm_grant">Leisti</string>
     <string name="perm_nearby_title">Ryšys su netoliese esančiais įrenginiais</string>
     <string name="perm_nearby_text">Reikalinga, kad rastumėte žaidėjų netoliese ir žaistumėte be interneto.</string>
@@ -363,9 +362,6 @@
     <string name="spectate_lost_text">Įrenginio, kuriame vyksta partija, nebepavyksta pasiekti.</string>
     <string name="spectate_full_title">Vietų nebėra</string>
     <string name="spectate_full_text">Šią partiją jau stebi didžiausias leidžiamas žiūrovų skaičius (%1$d). Pabandykite vėliau.</string>
-    <string name="spectate_update_title">Reikia atnaujinti</string>
-    <string name="spectate_update_this">Atnaujinkite Matewave, kad galėtumėte stebėti šią partiją.</string>
-    <string name="spectate_update_host">Partiją rengiantis žaidėjas turi atnaujinti Matewave, kad ją būtų galima stebėti.</string>
     <string name="spectate_failed_title">Šios partijos stebėti negalima</string>
     <string name="spectate_no_game">Ši partija nebepasiekiama.</string>
     <string name="spectate_unreachable">Nepavyksta pasiekti įrenginio, kuriame vyksta partija. Įsitikinkite, kad esate prisijungę prie to paties „Wi-Fi“ tinklo.</string>

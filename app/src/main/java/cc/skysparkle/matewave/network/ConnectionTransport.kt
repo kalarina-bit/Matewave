@@ -9,8 +9,8 @@ enum class ConnectionState { DISCONNECTED, CONNECTING, CONNECTED, FAILED }
 /**
  * Wire protocol shared by all transports: one JSON object per message.
  * Game messages travel inside [SignedMsg] once the handshake is done; only
- * [ProfileMsg] and [PingMsg] are sent in the clear. Bump [PROTOCOL_VERSION] on any
- * incompatible change: peers with an older version are rejected during the handshake.
+ * [ProfileMsg] and [PingMsg] are sent in the clear. [PROTOCOL_VERSION] is sent in the
+ * profile for information only; peers are not rejected by version.
  */
 sealed class GameMessage {
     data class MoveMsg(
