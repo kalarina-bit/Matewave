@@ -273,7 +273,7 @@ private fun SettingSwitch(checked: Boolean, onCheckedChange: (Boolean) -> Unit) 
         onCheckedChange = onCheckedChange,
         colors = SwitchDefaults.colors(
             checkedTrackColor = ChessGreen,
-            checkedThumbColor = Color.White,
+            checkedThumbColor = cc.skysparkle.matewave.ui.theme.OnAccent,
             uncheckedTrackColor = ink.copy(alpha = 0.15f),
             uncheckedThumbColor = Color.White.copy(alpha = 0.7f)
         )

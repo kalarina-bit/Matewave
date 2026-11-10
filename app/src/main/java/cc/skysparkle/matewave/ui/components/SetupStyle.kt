@@ -19,6 +19,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cc.skysparkle.matewave.ui.theme.ChessGreen
+import cc.skysparkle.matewave.ui.theme.OnAccent
+import cc.skysparkle.matewave.ui.theme.Surface1
 
 @Composable
 fun SetupSectionLabel(text: String, modifier: Modifier = Modifier) {
@@ -36,7 +38,7 @@ fun SetupSegmented(options: List<String>, selectedIndex: Int, onSelect: (Int) ->
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(50))
-            .background(ink.copy(alpha = 0.08f))
+            .background(Surface1)
             .padding(4.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
@@ -46,12 +48,16 @@ fun SetupSegmented(options: List<String>, selectedIndex: Int, onSelect: (Int) ->
                 modifier = Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(50))
-                    .background(if (selected) ChessGreen.copy(alpha = 0.35f) else Color.Transparent)
+                    .background(if (selected) ChessGreen else Color.Transparent)
                     .clickable { onSelect(index) }
                     .padding(vertical = 10.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(label, color = ink, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    label,
+                    color = if (selected) OnAccent else ink.copy(alpha = 0.8f),
+                    style = MaterialTheme.typography.labelLarge
+                )
             }
         }
     }

@@ -49,6 +49,7 @@ import cc.skysparkle.matewave.ui.components.GlassOutlinedButton
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.components.PromotionDialog
 import cc.skysparkle.matewave.ui.theme.ChessGreen
+import cc.skysparkle.matewave.ui.theme.OnAccent
 import cc.skysparkle.matewave.viewmodel.GameMode
 import cc.skysparkle.matewave.viewmodel.GameUiState
 import cc.skysparkle.matewave.viewmodel.GameViewModel
@@ -300,7 +301,7 @@ private fun ChatButton(unreadCount: Int, onClick: () -> Unit) {
                     .background(ChessGreen),
                 contentAlignment = Alignment.Center
             ) {
-                Text(unreadCount.toString(), color = Color.White, fontSize = 11.sp)
+                Text(unreadCount.toString(), color = OnAccent, fontSize = 11.sp)
             }
         }
     }

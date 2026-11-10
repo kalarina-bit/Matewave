@@ -47,6 +47,8 @@ import cc.skysparkle.matewave.ui.components.ButtonIcon
 import cc.skysparkle.matewave.ui.components.BottomTab
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.theme.ChessGreen
+import cc.skysparkle.matewave.ui.theme.Lime
+import cc.skysparkle.matewave.ui.theme.OnAccent
 import cc.skysparkle.matewave.spectate.FriendGameStatus
 import cc.skysparkle.matewave.spectate.FriendStatusResolver
 import cc.skysparkle.matewave.spectate.NearbyPlayerGame
@@ -130,7 +132,7 @@ fun FriendsScreen(
             Text(stringResource(R.string.friends_nobody_hint), color = ink.copy(alpha = 0.65f), style = MaterialTheme.typography.bodyMedium)
             GlassButton(onClick = onPlay, modifier = Modifier.fillMaxWidth()) {
                 ButtonIcon(R.drawable.ic_play)
-                Text(stringResource(R.string.friends_play_nearby), color = ink)
+                Text(stringResource(R.string.friends_play_nearby), style = MaterialTheme.typography.titleMedium)
             }
             return@GlassScaffold
         }
@@ -234,11 +236,11 @@ private fun displayName(name: String, id: String): String {
 private fun PlayChip(onClick: () -> Unit) {
     Text(
         stringResource(R.string.friends_play),
-        color = Color.White,
+        color = OnAccent,
         style = MaterialTheme.typography.labelLarge,
         modifier = Modifier
             .clip(RoundedCornerShape(50))
-            .background(ChessGreen)
+            .background(Lime)
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 6.dp)
     )
@@ -384,12 +386,12 @@ private fun WatchChip(status: FriendGameStatus, onClick: () -> Unit) {
     }
     Text(
         label,
-        color = if (enabled) Color.White else ink.copy(alpha = 0.5f),
+        color = if (enabled) OnAccent else ink.copy(alpha = 0.5f),
         style = MaterialTheme.typography.labelLarge,
         maxLines = 1,
         modifier = Modifier
             .clip(RoundedCornerShape(50))
-            .background(if (enabled) ChessGreen else ink.copy(alpha = 0.12f))
+            .background(if (enabled) Lime else ink.copy(alpha = 0.12f))
             .then(if (enabled) Modifier.clickable(onClick = onClick) else Modifier)
             .padding(horizontal = 14.dp, vertical = 6.dp)
     )

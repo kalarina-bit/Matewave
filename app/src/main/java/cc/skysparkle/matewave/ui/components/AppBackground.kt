@@ -1,81 +1,39 @@
 package cc.skysparkle.matewave.ui.components
 
-import android.content.Context
-import android.graphics.BitmapFactory
-import android.util.DisplayMetrics
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import cc.skysparkle.matewave.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import cc.skysparkle.matewave.ui.theme.AppBackground
+import cc.skysparkle.matewave.ui.theme.ChessGreen
+import cc.skysparkle.matewave.ui.theme.Lime
 
-private object BackgroundAssetCache {
-    @Volatile private var bitmap: ImageBitmap? = null
-
-    fun cached(): ImageBitmap? = bitmap
-
-    fun load(context: Context): ImageBitmap? {
-        bitmap?.let { return it }
-        synchronized(this) {
-            bitmap?.let { return it }
-            val metrics: DisplayMetrics = context.resources.displayMetrics
-            val target = maxOf(metrics.widthPixels, metrics.heightPixels).coerceAtLeast(1)
-
-            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-            BitmapFactory.decodeResource(context.resources, R.drawable.bg_forest, bounds)
-
-            var sample = 1
-            while (maxOf(bounds.outWidth, bounds.outHeight) / sample > target * 2) sample *= 2
-
-            val options = BitmapFactory.Options().apply {
-                inSampleSize = sample
-                inPreferredConfig = android.graphics.Bitmap.Config.RGB_565
-            }
-            val decoded = runCatching {
-                BitmapFactory.decodeResource(context.resources, R.drawable.bg_forest, options)
-                    ?.asImageBitmap()
-            }.getOrNull()
-            bitmap = decoded
-            return decoded
-        }
-    }
-}
-
+/** Near-black backdrop with a faint neon glow at the top and a lime one at the bottom. */
 @Composable
-fun AppBackgroundImage() {
-    val context = LocalContext.current
-
-    var bitmap by remember { mutableStateOf(BackgroundAssetCache.cached()) }
-
-    LaunchedEffect(Unit) {
-        if (bitmap == null) {
-            bitmap = withContext(Dispatchers.IO) { BackgroundAssetCache.load(context) }
-        }
-    }
-
-    val image = bitmap
-    if (image != null) {
-        Image(
-            bitmap = image,
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-    } else {
-        Box(modifier = Modifier.fillMaxSize().background(Color(0xFF101413)))
-    }
+fun AppBackdrop() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AppBackground)
+            .drawWithCache {
+                val top = Brush.radialGradient(
+                    colors = listOf(ChessGreen.copy(alpha = 0.16f), ChessGreen.copy(alpha = 0f)),
+                    center = Offset(size.width * 0.85f, size.height * 0.02f),
+                    radius = size.maxDimension * 0.55f
+                )
+                val bottom = Brush.radialGradient(
+                    colors = listOf(Lime.copy(alpha = 0.06f), Lime.copy(alpha = 0f)),
+                    center = Offset(0f, size.height),
+                    radius = size.maxDimension * 0.5f
+                )
+                onDrawBehind {
+                    drawRect(top)
+                    drawRect(bottom)
+                }
+            }
+    )
 }

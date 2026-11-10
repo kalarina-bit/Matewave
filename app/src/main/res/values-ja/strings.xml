@@ -306,6 +306,10 @@
     <string name="study_start_button">始める</string>
     <string name="study_locked_short">ロック中</string>
     <string name="home_today">今日</string>
+    <string name="home_hero">さあ、対局</string>
+    <string name="stat_games">対局数</string>
+    <string name="stat_wins">勝利</string>
+    <string name="stat_streak">連勝</string>
     <string name="home_continue_details">%1$d手目 · %2$s</string>
     <string name="home_your_move">あなたの番</string>
     <string name="home_ai_move">AIの番</string>

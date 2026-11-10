@@ -64,6 +64,8 @@ import cc.skysparkle.matewave.ui.components.GlassButton
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.components.rememberPermissionRequester
 import cc.skysparkle.matewave.ui.theme.ChessGreen
+import cc.skysparkle.matewave.ui.theme.Lime
+import cc.skysparkle.matewave.ui.theme.OnAccent
 
 private enum class Hint { BLUETOOTH_PERMISSION, BLUETOOTH_OFF, WIFI_OFF }
 
@@ -173,7 +175,7 @@ fun ConnectionScreen(
                     modifier = Modifier.weight(1f)
                 ) {
                     ButtonIcon(R.drawable.ic_add, size = 20.dp)
-                    Text(stringResource(R.string.nearby_create), color = ink, style = MaterialTheme.typography.titleMedium, maxLines = 1)
+                    Text(stringResource(R.string.nearby_create), style = MaterialTheme.typography.titleMedium, maxLines = 1)
                 }
                 GlassOutlinedButton(onClick = { pickTime = true }) {
                     Text(timeControl.shortLabel(), color = ink, maxLines = 1)
@@ -256,11 +258,11 @@ fun ConnectionScreen(
                             Spacer(Modifier.width(8.dp))
                             Text(
                                 stringResource(R.string.players_play),
-                                color = Color.White,
+                                color = OnAccent,
                                 style = MaterialTheme.typography.labelLarge,
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(50))
-                                    .background(ChessGreen)
+                                    .background(Lime)
                                     .clickable { onJoin(entry.type, timeControl, entry.address) }
                                     .padding(horizontal = 14.dp, vertical = 6.dp)
                             )

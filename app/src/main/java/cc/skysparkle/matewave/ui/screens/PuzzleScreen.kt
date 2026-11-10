@@ -184,7 +184,7 @@ fun PuzzleSolveScreen(viewModel: GameViewModel, onBack: () -> Unit, onNextPuzzle
             if (next != null) {
                 GlassButton(onClick = { onNextPuzzle(next) }, modifier = Modifier.fillMaxWidth()) {
                     ButtonIcon(R.drawable.ic_next)
-                    Text(stringResource(R.string.puzzle_next), color = ink, style = MaterialTheme.typography.titleMedium)
+                    Text(stringResource(R.string.puzzle_next), style = MaterialTheme.typography.titleMedium)
                 }
             }
             Text(

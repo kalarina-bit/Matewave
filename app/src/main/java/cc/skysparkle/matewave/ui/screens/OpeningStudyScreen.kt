@@ -180,7 +180,7 @@ private fun ActionCard(icon: Int, title: String, subtitle: String?, button: Stri
         Spacer(Modifier.width(12.dp))
         GlassButton(onClick = onClick) {
             ButtonIcon(R.drawable.ic_play)
-            Text(button, color = ink, maxLines = 1)
+            Text(button, maxLines = 1)
         }
     }
 }

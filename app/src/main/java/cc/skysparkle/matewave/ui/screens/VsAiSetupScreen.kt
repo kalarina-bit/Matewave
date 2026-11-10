@@ -80,7 +80,6 @@ fun VsAiSetupScreen(
                     ButtonIcon(R.drawable.ic_play)
                     Text(
                         stringResource(R.string.vsai_play_summary, difficultyLabel(difficulty), timeControl.displayName()),
-                        color = ink,
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1
                     )

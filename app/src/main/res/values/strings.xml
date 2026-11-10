@@ -307,6 +307,10 @@
     <string name="study_start_button">Start</string>
     <string name="study_locked_short">Locked</string>
     <string name="home_today">Today</string>
+    <string name="home_hero">Play it</string>
+    <string name="stat_games">Games</string>
+    <string name="stat_wins">Wins</string>
+    <string name="stat_streak">Streak</string>
     <string name="home_continue_details">Move %1$d · %2$s</string>
     <string name="home_your_move">your move</string>
     <string name="home_ai_move">AI to move</string>

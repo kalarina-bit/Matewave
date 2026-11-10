@@ -1,6 +1,5 @@
 package cc.skysparkle.matewave.ui.screens
 
-import cc.skysparkle.matewave.ui.components.ListDivider
 import cc.skysparkle.matewave.ui.components.ListGroup
 import cc.skysparkle.matewave.ui.components.ListRow
 import cc.skysparkle.matewave.ui.components.SectionCaption
@@ -45,12 +44,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import cc.skysparkle.matewave.R
 import cc.skysparkle.matewave.ui.components.DialogText
 import cc.skysparkle.matewave.ui.components.DialogAction
@@ -60,12 +57,18 @@ import cc.skysparkle.matewave.ui.components.BottomTab
 import cc.skysparkle.matewave.data.ProfileStore
 import cc.skysparkle.matewave.ui.components.AppIcon
 import cc.skysparkle.matewave.ui.components.ButtonIcon
-import cc.skysparkle.matewave.ui.components.GlassOutlinedButton
+import cc.skysparkle.matewave.ui.components.GlassButton
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.components.rememberChatImage
 import cc.skysparkle.matewave.ui.components.encodeImageForChat
 import cc.skysparkle.matewave.ui.theme.ChessGreen
 import cc.skysparkle.matewave.ui.theme.PanelBorder
+import cc.skysparkle.matewave.ui.theme.GlassShape
+import cc.skysparkle.matewave.ui.theme.Lime
+import cc.skysparkle.matewave.ui.theme.OnAccent
+import cc.skysparkle.matewave.ui.theme.Surface1
+import cc.skysparkle.matewave.ui.theme.Surface2
+import androidx.compose.foundation.layout.Spacer
 import cc.skysparkle.matewave.ui.theme.whiteOutlinedTextFieldColors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -137,108 +140,63 @@ fun AccountScreen(
             )
         }
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(168.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .clickable { backgroundPicker.launch("image/*") }
-        ) {
-            val bgBitmap = rememberChatImage(profile.backgroundBase64)
-            if (bgBitmap != null) {
-                Image(
-                    bitmap = bgBitmap,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth().height(168.dp),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                Image(
-                    painter = painterResource(R.drawable.bg_profile_default),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth().height(168.dp),
-                    contentScale = ContentScale.Crop
-                )
-            }
+        ProfileHero(
+            profile = profile,
+            onPickBackground = { backgroundPicker.launch("image/*") },
+            onPickAvatar = { avatarPicker.launch("image/*") },
+            onEditName = { editingName = true }
+        )
 
-            Box(
-                modifier = Modifier.fillMaxWidth().height(168.dp).background(
-                    Brush.verticalGradient(
-                        0.0f to Color.Black.copy(alpha = 0.30f),
-                        0.55f to Color.Black.copy(alpha = 0.45f),
-                        1.0f to Color.Black.copy(alpha = 0.72f)
-                    )
-                )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            AppIcon(R.drawable.ic_rating, size = 20.dp, tint = Lime)
+            Spacer(Modifier.width(8.dp))
+            Text(
+                stringResource(R.string.friends_rating, profile.elo),
+                color = ink,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
             )
-
-            Box(
+            Text(
+                stringResource(R.string.stats_dialog_title),
+                color = ChessGreen,
+                style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(10.dp)
-                    .size(36.dp)
-                    .clip(CircleShape)
-                    .background(Color.Black.copy(alpha = 0.45f))
-                    .clickable { backgroundPicker.launch("image/*") },
-                contentAlignment = Alignment.Center
-            ) {
-                AppIcon(R.drawable.ic_add_photo, size = 20.dp)
-            }
+                    .clip(RoundedCornerShape(50))
+                    .border(1.dp, ChessGreen.copy(alpha = 0.6f), RoundedCornerShape(50))
+                    .clickable { showStats = true }
+                    .padding(horizontal = 14.dp, vertical = 6.dp)
+            )
+        }
 
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .fillMaxWidth()
-                    .padding(horizontal = 18.dp, vertical = 16.dp)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Box {
-                        AvatarCircle(
-                            base64 = profile.avatarBase64,
-                            size = 76.dp,
-                            modifier = Modifier.clickable { avatarPicker.launch("image/*") }
-                        )
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .size(28.dp)
-                                .clip(CircleShape)
-                                .background(ChessGreen)
-                                .clickable { avatarPicker.launch("image/*") },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            AppIcon(R.drawable.ic_edit, size = 14.dp)
-                        }
-                    }
-                    Column {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            Text(
-                                profile.name,
-                                color = ink,
-                                fontSize = 23.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-
-                            AppIcon(
-                                R.drawable.ic_edit,
-                                size = 18.dp,
-                                tint = ink.copy(alpha = 0.75f),
-                                modifier = Modifier.clickable { editingName = true }
-                            )
-                        }
-                        Text(
-                            stringResource(R.string.account_header_summary, profile.elo, cc.skysparkle.matewave.stats.Stats.gamesPlayed()),
-                            color = ink.copy(alpha = 0.72f),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                }
+        if (!profile.levelChosen) {
+            GlassButton(onClick = { showLevelPicker = true }, modifier = Modifier.fillMaxWidth()) {
+                ButtonIcon(R.drawable.ic_speed)
+                Text(stringResource(R.string.account_choose_level), style = MaterialTheme.typography.titleMedium)
             }
         }
+
+        StatTiles()
+
+        // Progress: the reason to open a profile.
+        SectionCaption(stringResource(R.string.account_progress))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            HighlightCard(
+                iconRes = R.drawable.ic_study,
+                title = stringResource(R.string.study_title),
+                value = "${study.learnedCount}/${study.courses.size} · ★${study.masteredCount}",
+                modifier = Modifier.weight(1f),
+                onClick = onStudyClick
+            )
+            HighlightCard(
+                iconRes = R.drawable.ic_puzzle,
+                title = stringResource(R.string.puzzles_title),
+                value = "${cc.skysparkle.matewave.stats.Stats.solvedPuzzles().size}",
+                modifier = Modifier.weight(1f),
+                onClick = null
+            )
+        }
+
+        RatingHistoryCard(elo = profile.elo, onClick = { showStats = true })
 
         if (profile.avatarBase64 != null || profile.backgroundBase64 != null) {
             Text(
@@ -250,43 +208,6 @@ fun AccountScreen(
                     ProfileStore.setBackground(null)
                     profile = ProfileStore.get()
                 }
-            )
-        }
-
-        if (!profile.levelChosen) {
-            GlassOutlinedButton(onClick = { showLevelPicker = true }, modifier = Modifier.fillMaxWidth()) {
-                ButtonIcon(R.drawable.ic_speed)
-                Text(stringResource(R.string.account_choose_level), color = ink)
-            }
-        }
-
-        // Progress: the reason to open a profile. The rating is shown here once, with its trend.
-        SectionCaption(stringResource(R.string.account_progress))
-        ListGroup {
-            val curve = remember(profile.elo) { cc.skysparkle.matewave.stats.Stats.ratingCurve(profile.elo) }
-            ListRow(
-                title = stringResource(R.string.account_rating_row),
-                icon = R.drawable.ic_rating,
-                iconTint = ChessGreen,
-                value = "${profile.elo}",
-                valueColor = ink,
-                trailing = { MiniRatingGraph(points = curve, modifier = Modifier.width(64.dp).height(24.dp)) },
-                chevron = true,
-                onClick = { showStats = true }
-            )
-            ListDivider()
-            ListRow(
-                title = stringResource(R.string.study_title),
-                icon = R.drawable.ic_study,
-                value = "${study.learnedCount}/${study.courses.size} · ★${study.masteredCount}",
-                chevron = true,
-                onClick = onStudyClick
-            )
-            ListDivider()
-            ListRow(
-                title = stringResource(R.string.puzzles_title),
-                icon = R.drawable.ic_puzzle,
-                value = stringResource(R.string.puzzle_solved_count, cc.skysparkle.matewave.stats.Stats.solvedPuzzles().size)
             )
         }
 
@@ -393,6 +314,176 @@ fun AccountScreen(
     }
 }
 
+/** Big name over a dimmed cover, with a large avatar in a neon ring, as in the mockup. */
+@Composable
+private fun ProfileHero(
+    profile: cc.skysparkle.matewave.data.Profile,
+    onPickBackground: () -> Unit,
+    onPickAvatar: () -> Unit,
+    onEditName: () -> Unit
+) {
+    val heroHeight = 236.dp
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(heroHeight)
+            .clip(GlassShape)
+            .background(Surface1)
+    ) {
+        val bgBitmap = rememberChatImage(profile.backgroundBase64)
+        if (bgBitmap != null) {
+            Image(
+                bitmap = bgBitmap,
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth().height(heroHeight),
+                contentScale = ContentScale.Crop,
+                alpha = 0.45f
+            )
+        } else {
+            Image(
+                painter = painterResource(R.drawable.bg_profile_default),
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth().height(heroHeight),
+                contentScale = ContentScale.Crop,
+                alpha = 0.45f
+            )
+        }
+        Box(
+            modifier = Modifier.fillMaxWidth().height(heroHeight).background(
+                Brush.verticalGradient(
+                    0.0f to Surface1.copy(alpha = 0.2f),
+                    0.6f to Surface1.copy(alpha = 0.6f),
+                    1.0f to Surface1.copy(alpha = 0.95f)
+                )
+            )
+        )
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(12.dp)
+                .size(36.dp)
+                .clip(CircleShape)
+                .background(Color.Black.copy(alpha = 0.45f))
+                .clickable(onClick = onPickBackground),
+            contentAlignment = Alignment.Center
+        ) {
+            AppIcon(R.drawable.ic_add_photo, size = 20.dp)
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 16.dp, end = 16.dp)
+        ) {
+            Box(
+                modifier = Modifier.size(148.dp).clip(CircleShape).background(ChessGreen),
+                contentAlignment = Alignment.Center
+            ) {
+                AvatarCircle(
+                    base64 = profile.avatarBase64,
+                    size = 136.dp,
+                    modifier = Modifier.clickable(onClick = onPickAvatar)
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 8.dp, bottom = 8.dp)
+                    .size(34.dp)
+                    .clip(CircleShape)
+                    .background(Lime)
+                    .clickable(onClick = onPickAvatar),
+                contentAlignment = Alignment.Center
+            ) {
+                AppIcon(R.drawable.ic_edit, size = 16.dp, tint = OnAccent)
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .fillMaxWidth()
+                .clickable(onClick = onEditName)
+                .padding(start = 18.dp, end = 18.dp, bottom = 16.dp),
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Text(
+                profile.name,
+                color = ink,
+                style = MaterialTheme.typography.displaySmall,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false)
+            )
+            Spacer(Modifier.width(8.dp))
+            AppIcon(
+                R.drawable.ic_edit,
+                size = 18.dp,
+                tint = ink.copy(alpha = 0.7f),
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun HighlightCard(
+    iconRes: Int,
+    title: String,
+    value: String,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)?
+) {
+    Row(
+        modifier = modifier
+            .clip(GlassShape)
+            .background(Surface1)
+            .border(1.dp, PanelBorder, GlassShape)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier.size(40.dp).clip(RoundedCornerShape(14.dp)).background(Surface2),
+            contentAlignment = Alignment.Center
+        ) {
+            AppIcon(iconRes, size = 22.dp, tint = ChessGreen)
+        }
+        Spacer(Modifier.width(10.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(title, color = ink.copy(alpha = 0.6f), style = MaterialTheme.typography.labelSmall, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            Text(value, color = ink, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        }
+    }
+}
+
+@Composable
+private fun RatingHistoryCard(elo: Int, onClick: () -> Unit) {
+    val curve = remember(elo) { cc.skysparkle.matewave.stats.Stats.ratingCurve(elo) }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(GlassShape)
+            .background(Surface1)
+            .border(1.dp, PanelBorder, GlassShape)
+            .clickable(onClick = onClick)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                stringResource(R.string.account_rating_row),
+                color = ink,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(1f)
+            )
+            AppIcon(R.drawable.ic_arrow_forward, size = 20.dp, tint = ink.copy(alpha = 0.6f))
+        }
+        MiniRatingGraph(points = curve, modifier = Modifier.fillMaxWidth().height(96.dp), showDots = false)
+    }
+}
+
 private const val MAX_NAME_LENGTH = 20
 
 @Composable
@@ -463,12 +554,12 @@ private fun LevelPickerDialog(onChoose: (Int) -> Unit, onDismiss: () -> Unit) {
         }
     ) {
         SKILL_LEVELS.forEach { level ->
-            val rowShape = RoundedCornerShape(12.dp)
+            val rowShape = RoundedCornerShape(16.dp)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(rowShape)
-                    .background(ink.copy(alpha = 0.07f))
+                    .background(Surface2)
                     .clickable { onChoose(level.elo) }
                     .padding(horizontal = 16.dp, vertical = 14.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -487,7 +578,7 @@ fun AvatarCircle(base64: String?, size: Dp, modifier: Modifier = Modifier) {
         modifier = modifier
             .size(size)
             .clip(CircleShape)
-            .background(ChessGreen.copy(alpha = 0.6f))
+            .background(Surface2)
             .border(2.dp, PanelBorder, CircleShape),
         contentAlignment = Alignment.Center
     ) {
@@ -502,7 +593,7 @@ fun AvatarCircle(base64: String?, size: Dp, modifier: Modifier = Modifier) {
             Image(
                 painter = painterResource(R.drawable.ic_default_avatar),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(ink),
+                colorFilter = ColorFilter.tint(ink.copy(alpha = 0.8f)),
                 modifier = Modifier.size(size * 0.8f)
             )
         }

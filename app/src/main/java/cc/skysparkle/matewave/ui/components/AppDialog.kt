@@ -22,6 +22,7 @@ import androidx.compose.ui.window.DialogWindowProvider
 import cc.skysparkle.matewave.ui.theme.DialogScrimColor
 import cc.skysparkle.matewave.ui.theme.ink
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -49,8 +50,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
-val DialogSurface = Color(0xFF262B29)
-val DialogAccent = Color(0xFF93DBA3)
+val DialogSurface = cc.skysparkle.matewave.ui.theme.Surface1
+val DialogAccent = cc.skysparkle.matewave.ui.theme.ChessGreen
 val DialogShape = RoundedCornerShape(28.dp)
 
 @Composable
@@ -115,7 +116,7 @@ fun AppDialog(
                     }
                     .clip(DialogShape)
                     .background(DialogSurface)
-
+                    .border(1.dp, cc.skysparkle.matewave.ui.theme.PanelBorder, DialogShape)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null

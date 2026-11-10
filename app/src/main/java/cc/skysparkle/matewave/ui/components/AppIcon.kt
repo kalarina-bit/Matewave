@@ -1,10 +1,9 @@
 package cc.skysparkle.matewave.ui.components
 
-import cc.skysparkle.matewave.ui.theme.ink
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,7 +16,7 @@ import androidx.compose.ui.unit.dp
 fun AppIcon(
     resId: Int,
     size: Dp = 20.dp,
-    tint: Color = ink,
+    tint: Color = LocalContentColor.current,
     modifier: Modifier = Modifier,
     contentDescription: String? = null
 ) {
@@ -30,6 +29,6 @@ fun AppIcon(
 }
 
 @Composable
-fun ButtonIcon(resId: Int, tint: Color = ink, size: Dp = 18.dp) {
+fun ButtonIcon(resId: Int, tint: Color = LocalContentColor.current, size: Dp = 18.dp) {
     AppIcon(resId, size = size, tint = tint, modifier = Modifier.padding(end = 8.dp))
 }

@@ -1,6 +1,5 @@
 package cc.skysparkle.matewave
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 
 import android.os.Build
@@ -57,7 +56,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // The app has one dark look: light system bar icons over the background photo.
+        // The app has one dark look: light system bar icons over the dark backdrop.
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
@@ -79,12 +78,7 @@ class MainActivity : ComponentActivity() {
                 androidx.compose.foundation.layout.Box(
                     modifier = androidx.compose.ui.Modifier.fillMaxSize()
                 ) {
-                    cc.skysparkle.matewave.ui.components.AppBackgroundImage()
-                    androidx.compose.foundation.layout.Box(
-                        modifier = androidx.compose.ui.Modifier
-                            .fillMaxSize()
-                            .background(cc.skysparkle.matewave.ui.theme.PhotoScrim)
-                    )
+                    cc.skysparkle.matewave.ui.components.AppBackdrop()
                     AppNavHost()
                 }
             }

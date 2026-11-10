@@ -147,7 +147,7 @@ fun OpeningTrainerScreen(viewModel: OpeningStudyViewModel, onBack: () -> Unit) {
                     }
                     GlassButton(onClick = { if (!viewModel.continueStudy()) onBack() }, modifier = Modifier.weight(1f)) {
                         ButtonIcon(R.drawable.ic_next)
-                        Text(stringResource(R.string.study_next), color = ink, maxLines = 1)
+                        Text(stringResource(R.string.study_next), maxLines = 1)
                     }
                 }
             }

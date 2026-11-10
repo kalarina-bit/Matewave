@@ -309,6 +309,10 @@
     <string name="study_start_button">Pradėti</string>
     <string name="study_locked_short">Užrakinta</string>
     <string name="home_today">Šiandien</string>
+    <string name="home_hero">Žaisk</string>
+    <string name="stat_games">Partijos</string>
+    <string name="stat_wins">Pergalės</string>
+    <string name="stat_streak">Serija</string>
     <string name="home_continue_details">Ėjimas %1$d · %2$s</string>
     <string name="home_your_move">jūsų ėjimas</string>
     <string name="home_ai_move">DI ėjimas</string>

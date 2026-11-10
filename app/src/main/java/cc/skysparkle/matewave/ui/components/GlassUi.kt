@@ -42,9 +42,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cc.skysparkle.matewave.R
 import cc.skysparkle.matewave.ui.theme.ChessGreen
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.text.style.TextOverflow
+import cc.skysparkle.matewave.ui.theme.Lime
+import cc.skysparkle.matewave.ui.theme.OnAccent
+import cc.skysparkle.matewave.ui.theme.Surface2
 import cc.skysparkle.matewave.ui.theme.GlassShape
 import cc.skysparkle.matewave.ui.theme.PanelBorder
-import cc.skysparkle.matewave.ui.theme.PanelFill
 import cc.skysparkle.matewave.ui.theme.TabletMaxContentWidth
 import cc.skysparkle.matewave.ui.theme.glass
 
@@ -61,7 +67,7 @@ fun GlassScaffold(
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         Column(modifier = Modifier.fillMaxSize().widthIn(max = TabletMaxContentWidth)) {
             Row(
-                modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 4.dp, vertical = 4.dp),
+                modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (onBack != null) {
@@ -69,11 +75,12 @@ fun GlassScaffold(
                         AppIcon(
                             R.drawable.ic_arrow_back,
                             size = 24.dp,
+                            tint = ChessGreen,
                             contentDescription = stringResource(R.string.back)
                         )
                     }
                 } else {
-                    Spacer(Modifier.width(48.dp))
+                    Spacer(Modifier.width(16.dp))
                 }
                 if (titleContent != null) {
                     Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, content = titleContent)
@@ -81,7 +88,9 @@ fun GlassScaffold(
                     Text(
                         title,
                         color = ink,
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.headlineSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -122,6 +131,9 @@ private fun Modifier.pressScale(interactionSource: MutableInteractionSource): Mo
     return this.graphicsLayer { scaleX = scale; scaleY = scale }
 }
 
+private val PillShape = RoundedCornerShape(50)
+
+/** The main action: a lime pill with dark text and icons. */
 @Composable
 fun GlassButton(
     onClick: () -> Unit,
@@ -130,24 +142,26 @@ fun GlassButton(
     content: @Composable RowScope.() -> Unit
 ) {
     val interaction = remember { MutableInteractionSource() }
-    Row(
-        modifier = modifier
-            .pressScale(interaction)
-            .alpha(if (enabled) 1f else 0.4f)
-            .clip(GlassShape)
-            .background(ChessGreen)
-            .then(
-                if (enabled) Modifier.clickable(
-                    interactionSource = interaction,
-                    indication = LocalIndication.current,
-                    onClick = onClick
-                ) else Modifier
-            )
-            .padding(horizontal = 20.dp, vertical = 14.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        content = content
-    )
+    CompositionLocalProvider(LocalContentColor provides OnAccent) {
+        Row(
+            modifier = modifier
+                .pressScale(interaction)
+                .alpha(if (enabled) 1f else 0.4f)
+                .clip(PillShape)
+                .background(Lime)
+                .then(
+                    if (enabled) Modifier.clickable(
+                        interactionSource = interaction,
+                        indication = LocalIndication.current,
+                        onClick = onClick
+                    ) else Modifier
+                )
+                .padding(horizontal = 22.dp, vertical = 15.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            content = content
+        )
+    }
 }
 
 @Composable
@@ -162,9 +176,9 @@ fun GlassOutlinedButton(
         modifier = modifier
             .pressScale(interaction)
             .alpha(if (enabled) 1f else 0.4f)
-            .clip(GlassShape)
-            .background(PanelFill)
-            .border(1.dp, PanelBorder, GlassShape)
+            .clip(PillShape)
+            .background(Surface2)
+            .border(1.dp, PanelBorder, PillShape)
             .then(
                 if (enabled) Modifier.clickable(
                     interactionSource = interaction,
@@ -172,7 +186,7 @@ fun GlassOutlinedButton(
                     onClick = onClick
                 ) else Modifier
             )
-            .padding(horizontal = 20.dp, vertical = 14.dp),
+            .padding(horizontal = 22.dp, vertical = 15.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         content = content
@@ -185,7 +199,7 @@ fun GlassCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.()
         modifier = modifier
             .glass()
             .border(1.dp, PanelBorder, GlassShape)
-            .padding(14.dp),
+            .padding(16.dp),
         content = content
     )
 }
@@ -193,7 +207,7 @@ fun GlassCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.()
 @Composable
 fun GlassProgress(text: String) {
     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-        CircularProgressIndicator(color = ink, modifier = Modifier.padding(2.dp))
+        CircularProgressIndicator(color = ChessGreen, modifier = Modifier.padding(2.dp))
         Text(text, color = ink, style = MaterialTheme.typography.bodyMedium)
     }
 }

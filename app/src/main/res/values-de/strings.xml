@@ -307,6 +307,10 @@
     <string name="study_start_button">Start</string>
     <string name="study_locked_short">Gesperrt</string>
     <string name="home_today">Heute</string>
+    <string name="home_hero">Spiel los</string>
+    <string name="stat_games">Partien</string>
+    <string name="stat_wins">Siege</string>
+    <string name="stat_streak">Serie</string>
     <string name="home_continue_details">Zug %1$d · %2$s</string>
     <string name="home_your_move">du bist am Zug</string>
     <string name="home_ai_move">KI am Zug</string>

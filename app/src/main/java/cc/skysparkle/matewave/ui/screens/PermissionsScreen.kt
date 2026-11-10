@@ -84,8 +84,8 @@ fun PermissionsScreen(onBack: () -> Unit) {
                         cc.skysparkle.matewave.network.Transports.applyAnnounceSetting()
                     },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.White,
-                        checkedTrackColor = Color(0xFF4F8A5B)
+                        checkedThumbColor = cc.skysparkle.matewave.ui.theme.OnAccent,
+                        checkedTrackColor = cc.skysparkle.matewave.ui.theme.ChessGreen
                     )
                 )
             }
@@ -142,8 +142,8 @@ fun PermissionsScreen(onBack: () -> Unit) {
                         }
                     },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.White,
-                        checkedTrackColor = Color(0xFF4F8A5B)
+                        checkedThumbColor = cc.skysparkle.matewave.ui.theme.OnAccent,
+                        checkedTrackColor = cc.skysparkle.matewave.ui.theme.ChessGreen
                     )
                 )
             }
