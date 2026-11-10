@@ -27,9 +27,9 @@
 </p>
 
 <p align="center">
-  <img src="assets/screenshots/1-play-learn-solve.png" width="200" alt="Play, learn, solve">
-  <img src="assets/screenshots/2-play-ai-or-a-friend.png" width="200" alt="Play AI or a friend">
-  <img src="assets/screenshots/3-puzzles.png" width="200" alt="Puzzles for your rating">
+  <img src="assets/screenshots/1-play-learn-solve-left.png" width="160" alt="Play, learn, solve"><img src="assets/screenshots/2-play-learn-solve-right.png" width="160" alt="Home screen">
+  <img src="assets/screenshots/3-play-ai-or-a-friend.png" width="160" alt="Play AI or a friend">
+  <img src="assets/screenshots/4-puzzles.png" width="160" alt="Puzzles for your rating">
 </p>
 
 > [!TIP]
