@@ -177,6 +177,8 @@
     <string name="licenses_group_data">Данные</string>
     <string name="licenses_group_radio">Радио</string>
     <string name="licenses_apache_full">Полный текст Apache License 2.0</string>
+    <string name="licenses_ofl_full">Полный текст SIL Open Font License 1.1</string>
+    <string name="licenses_note_fonts">Шрифты интерфейса: Unbounded для заголовков, Manrope для текста.</string>
     <string name="licenses_note_puzzles">Тактические задачи отобраны из открытой базы Lichess. Лицензия CC0 не требует указания авторства — мы благодарим команду Lichess.</string>
     <string name="licenses_note_swissjazz">Общедоступный интернет-поток SRG SSR: без рекламы и без ведущих, финансируется лицензионными сборами. Права на музыку принадлежат вещателю и правообладателям; приложение только воспроизводит поток и ничего не сохраняет.</string>
     <string name="licenses_radio_hint">Джаз-радио в настройках играет только Radio Swiss Jazz; если одна из его официальных ссылок недоступна, приложение берёт другую.</string>

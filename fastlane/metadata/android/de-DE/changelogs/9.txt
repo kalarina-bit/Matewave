@@ -2,3 +2,5 @@
 • Neuer Startbildschirm: große Modus-Karten, „Partie fortsetzen“ direkt daneben, Fortschrittsanzeige mit Wertung, Partien, Siegen und Serie
 • Neues Profil: großer Name und Avatar, Statistik-Kacheln und Wertungsdiagramm
 • Neue schwebende Navigationsleiste
+• Neue Schriften: Unbounded für Überschriften, Manrope für Text
+• Spielerkarten und eine Uhr in Limette im Partiebildschirm

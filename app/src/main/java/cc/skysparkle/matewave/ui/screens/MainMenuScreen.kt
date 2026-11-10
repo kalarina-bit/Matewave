@@ -48,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import cc.skysparkle.matewave.R
 import cc.skysparkle.matewave.stats.Stats
 import cc.skysparkle.matewave.ui.components.AppBottomBar
@@ -58,6 +59,7 @@ import cc.skysparkle.matewave.ui.components.DialogAction
 import cc.skysparkle.matewave.ui.components.DialogText
 import cc.skysparkle.matewave.ui.components.SectionCaption
 import cc.skysparkle.matewave.ui.components.displayName
+import cc.skysparkle.matewave.ui.components.wavePattern
 import cc.skysparkle.matewave.ui.theme.ChessGreen
 import cc.skysparkle.matewave.ui.theme.GlassShape
 import cc.skysparkle.matewave.ui.theme.HeroTextStyle
@@ -106,7 +108,7 @@ fun MainMenuScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
-                    modifier = Modifier.size(44.dp).clip(CircleShape).background(Surface2),
+                    modifier = Modifier.size(44.dp).clip(CircleShape).background(ChessGreen),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
@@ -115,6 +117,13 @@ fun MainMenuScreen(
                         modifier = Modifier.size(width = 20.dp, height = 29.dp)
                     )
                 }
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    "matewave",
+                    color = ink,
+                    style = MaterialTheme.typography.headlineSmall.copy(fontSize = 17.sp, letterSpacing = (-0.3).sp),
+                    maxLines = 1
+                )
                 Spacer(Modifier.weight(1f))
                 // The rating is always in sight.
                 Row(
@@ -142,7 +151,7 @@ fun MainMenuScreen(
                 Hero()
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().height(250.dp),
+                    modifier = Modifier.fillMaxWidth().height(268.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     AiCard(
@@ -238,7 +247,7 @@ private fun Hero() {
         else -> stringResource(R.string.greeting_night)
     }
     Box(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
-        Column(modifier = Modifier.padding(end = 92.dp)) {
+        Column(modifier = Modifier.padding(end = 76.dp)) {
             Text("$greeting 👋", color = ink.copy(alpha = 0.6f), style = MaterialTheme.typography.bodyLarge)
             Spacer(Modifier.height(2.dp))
             Text(
@@ -254,7 +263,7 @@ private fun Hero() {
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterEnd)
-                .size(96.dp)
+                .size(88.dp)
                 .rotate(-14f)
         )
     }
@@ -267,6 +276,7 @@ private fun AiCard(subtitle: String, modifier: Modifier = Modifier, onClick: () 
         modifier = modifier
             .clip(GlassShape)
             .background(ChessGreen)
+            .wavePattern(OnAccent.copy(alpha = 0.16f))
             .clickable(onClick = onClick)
     ) {
         Image(
@@ -284,23 +294,18 @@ private fun AiCard(subtitle: String, modifier: Modifier = Modifier, onClick: () 
             Text(
                 stringResource(R.string.mode_ai_title),
                 color = OnAccent,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineSmall.copy(fontSize = 19.sp, lineHeight = 24.sp),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(Modifier.height(4.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    subtitle,
-                    color = OnAccent.copy(alpha = 0.7f),
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(Modifier.width(8.dp))
-                ArrowBubble(fill = OnAccent, tint = ChessGreen)
-            }
+            Text(
+                subtitle,
+                color = OnAccent.copy(alpha = 0.7f),
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -332,7 +337,7 @@ private fun SmallModeCard(
             ArrowBubble(fill = Surface2, tint = ink)
         }
         Spacer(Modifier.weight(1f))
-        Text(title, color = ink, style = MaterialTheme.typography.titleMedium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(title, color = ink, style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
         Text(subtitle, color = ink.copy(alpha = 0.55f), style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }
@@ -368,7 +373,7 @@ private fun ContinueCard(info: ResumeInfo, modifier: Modifier = Modifier, onClic
             stringResource(R.string.continue_game_title),
             color = OnAccent,
             style = MaterialTheme.typography.titleMedium,
-            maxLines = 1,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
         Text(details, color = OnAccent.copy(alpha = 0.7f), style = MaterialTheme.typography.bodySmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -399,7 +404,7 @@ private fun LearnCard(
             .height(148.dp)
             .clip(GlassShape)
             .background(Surface1)
-            .border(1.dp, if (highlighted) Lime.copy(alpha = 0.7f) else PanelBorder, GlassShape)
+            .border(1.dp, if (highlighted) ChessGreen.copy(alpha = 0.7f) else PanelBorder, GlassShape)
             .clickable(onClick = onClick)
             .padding(14.dp)
     ) {
@@ -407,7 +412,7 @@ private fun LearnCard(
             modifier = Modifier
                 .size(40.dp)
                 .clip(RoundedCornerShape(14.dp))
-                .background(if (highlighted) Lime else Surface2),
+                .background(if (highlighted) ChessGreen else Surface2),
             contentAlignment = Alignment.Center
         ) {
             AppIcon(iconRes, size = 22.dp, tint = if (highlighted) OnAccent else ChessGreen)

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import cc.skysparkle.matewave.ui.theme.ink
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -461,15 +462,26 @@ private fun PlayerRow(
             state.opponentProfile?.avatarBase64
         )
     }
-    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+    // A card per player; the side to move gets a neon outline and ring.
+    val cardShape = RoundedCornerShape(18.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(cardShape)
+            .background(cc.skysparkle.matewave.ui.theme.Surface1)
+            .border(1.dp, if (active) ChessGreen.copy(alpha = 0.7f) else cc.skysparkle.matewave.ui.theme.PanelBorder, cardShape)
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Box(
             modifier = Modifier
-                .size(8.dp)
+                .size(40.dp)
                 .clip(CircleShape)
-                .background(if (active) ChessGreen else ink.copy(alpha = 0.15f))
-        )
-        Spacer(Modifier.width(10.dp))
-        AvatarCircle(base64 = avatar, size = 34.dp)
+                .background(if (active) ChessGreen else Color.Transparent),
+            contentAlignment = Alignment.Center
+        ) {
+            AvatarCircle(base64 = avatar, size = 36.dp)
+        }
         Spacer(Modifier.width(10.dp))
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -514,21 +526,27 @@ internal fun BigClock(millis: Long, active: Boolean) {
         active -> ink
         else -> ink.copy(alpha = 0.45f)
     }
+    // The running clock is a lime pill, like the main action; a low clock turns red.
+    val fill = when {
+        low -> Color(0xFFFF6B6B)
+        active -> cc.skysparkle.matewave.ui.theme.Lime
+        else -> ink.copy(alpha = 0.06f)
+    }
+    val textColor = if (active) cc.skysparkle.matewave.ui.theme.OnAccent else color
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(10.dp))
-            .background(if (active) ink.copy(alpha = 0.12f) else Color.Transparent)
-            .padding(horizontal = 12.dp, vertical = 6.dp),
+            .clip(RoundedCornerShape(50))
+            .background(fill)
+            .padding(horizontal = 14.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center
     ) {
         if (totalSeconds >= NO_LIMIT_THRESHOLD_SECONDS) {
-            AppIcon(R.drawable.ic_infinity, size = 28.dp, tint = color)
+            AppIcon(R.drawable.ic_infinity, size = 26.dp, tint = textColor)
         } else {
             Text(
                 "%d:%02d".format(totalSeconds / 60, totalSeconds % 60),
-                color = color,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+                color = textColor,
+                style = MaterialTheme.typography.titleLarge.copy(fontFeatureSettings = "tnum")
             )
         }
     }

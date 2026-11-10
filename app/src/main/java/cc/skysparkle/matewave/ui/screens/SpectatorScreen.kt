@@ -1,6 +1,7 @@
 package cc.skysparkle.matewave.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -223,15 +224,25 @@ private fun SpectatorPlayerRow(
     val avatar = remember(player.id) {
         if (player.id.isEmpty()) null else FriendsStore.list().firstOrNull { it.userId == player.id }?.avatarBase64
     }
-    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+    val cardShape = androidx.compose.foundation.shape.RoundedCornerShape(18.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(cardShape)
+            .background(cc.skysparkle.matewave.ui.theme.Surface1)
+            .border(1.dp, if (active) ChessGreen.copy(alpha = 0.7f) else cc.skysparkle.matewave.ui.theme.PanelBorder, cardShape)
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Box(
             modifier = Modifier
-                .size(8.dp)
+                .size(40.dp)
                 .clip(CircleShape)
-                .background(if (active) ChessGreen else ink.copy(alpha = 0.15f))
-        )
-        Spacer(Modifier.width(10.dp))
-        AvatarCircle(base64 = avatar, size = 34.dp)
+                .background(if (active) ChessGreen else androidx.compose.ui.graphics.Color.Transparent),
+            contentAlignment = Alignment.Center
+        ) {
+            AvatarCircle(base64 = avatar, size = 36.dp)
+        }
         Spacer(Modifier.width(10.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(

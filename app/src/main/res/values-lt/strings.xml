@@ -171,6 +171,8 @@
     <string name="licenses_group_data">Duomenys</string>
     <string name="licenses_group_radio">Radijas</string>
     <string name="licenses_apache_full">Pilnas Apache License 2.0 tekstas</string>
+    <string name="licenses_ofl_full">Pilnas SIL Open Font License 1.1 tekstas</string>
+    <string name="licenses_note_fonts">Sąsajos šriftai: „Unbounded“ antraštėms, „Manrope“ tekstui.</string>
     <string name="licenses_note_puzzles">Užduotys atrinktos iš atviros „Lichess“ galvosūkių duomenų bazės. CC0 licencija nereikalauja nurodyti autorystės – dėkojame „Lichess“ komandai.</string>
     <string name="licenses_note_swissjazz">Viešai prieinama SRG SSR interneto transliacija: be reklamos ir be vedėjų, finansuojama iš licencijos mokesčių. Muzikos teisės priklauso transliuotojui ir teisių turėtojams; programa srautą tik groja ir nieko neišsaugo.</string>
     <string name="licenses_radio_hint">Nustatymuose esantis džiazo radijas groja tik „Radio Swiss Jazz“; jei viena oficiali nuoroda nepasiekiama, programa naudoja kitą.</string>

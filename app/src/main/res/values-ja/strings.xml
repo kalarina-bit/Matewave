@@ -171,6 +171,8 @@
     <string name="licenses_group_data">データ</string>
     <string name="licenses_group_radio">ラジオ</string>
     <string name="licenses_apache_full">Apache License 2.0 の全文</string>
+    <string name="licenses_ofl_full">SIL Open Font License 1.1 の全文</string>
+    <string name="licenses_note_fonts">インターフェースのフォント：見出しは Unbounded、本文は Manrope。</string>
     <string name="licenses_note_puzzles">パズルは Lichess のオープンなパズルデータベースから選んでいます。CC0 ライセンスでは表示義務はありませんが、Lichess チームに感謝します。</string>
     <string name="licenses_note_swissjazz">SRG SSR が公開しているインターネットストリームです。広告もナビゲーターもなく、受信料で運営されています。音楽の権利は放送局と権利者に帰属し、アプリは再生するだけで何も保存しません。</string>
     <string name="licenses_radio_hint">設定のジャズラジオは Radio Swiss Jazz だけを再生します。公式リンクのひとつがつながらないときは、別のリンクに切り替わります。</string>

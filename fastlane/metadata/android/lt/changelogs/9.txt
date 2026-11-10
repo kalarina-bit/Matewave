@@ -2,3 +2,5 @@
 • Naujas pagrindinis ekranas: didelės režimų kortelės, „Tęsti partiją“ šalia jų, pažangos skydelis su reitingu, partijomis, pergalėmis ir serija
 • Naujas profilis: didelis vardas ir avataras, statistikos plytelės ir reitingo grafikas
 • Nauja plaukiojanti apatinė juosta
+• Nauji šriftai: „Unbounded“ antraštėms, „Manrope“ tekstui
+• Žaidėjų kortelės ir laimo spalvos laikrodis partijos ekrane

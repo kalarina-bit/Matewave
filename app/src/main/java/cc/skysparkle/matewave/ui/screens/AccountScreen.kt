@@ -60,6 +60,7 @@ import cc.skysparkle.matewave.ui.components.ButtonIcon
 import cc.skysparkle.matewave.ui.components.GlassButton
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.components.rememberChatImage
+import cc.skysparkle.matewave.ui.components.wavePattern
 import cc.skysparkle.matewave.ui.components.encodeImageForChat
 import cc.skysparkle.matewave.ui.theme.ChessGreen
 import cc.skysparkle.matewave.ui.theme.PanelBorder
@@ -355,7 +356,7 @@ private fun ProfileHero(
                     0.6f to Surface1.copy(alpha = 0.6f),
                     1.0f to Surface1.copy(alpha = 0.95f)
                 )
-            )
+            ).wavePattern(ChessGreen.copy(alpha = 0.12f))
         )
 
         Box(
@@ -411,7 +412,7 @@ private fun ProfileHero(
             Text(
                 profile.name,
                 color = ink,
-                style = MaterialTheme.typography.displaySmall,
+                style = MaterialTheme.typography.headlineLarge,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f, fill = false)

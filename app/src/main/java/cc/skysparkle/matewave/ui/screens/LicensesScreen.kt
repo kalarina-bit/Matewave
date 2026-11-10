@@ -45,6 +45,7 @@ private data class LicenseEntry(
 )
 
 private const val APACHE = "Apache License 2.0"
+private const val OFL = "SIL Open Font License 1.1"
 private const val AOSP = "The Android Open Source Project"
 
 private val LIBRARIES = listOf(
@@ -109,6 +110,14 @@ private val ASSETS = listOf(
     LicenseEntry(
         "Vector Chess Pieces", "RhosGFX", null, "CC0 1.0",
         "https://rhosgfx.itch.io/vector-chess-pieces", R.string.licenses_note_pieces
+    ),
+    LicenseEntry(
+        "Unbounded", "The Unbounded Project Authors", null, OFL,
+        "https://github.com/googlefonts/unbounded", R.string.licenses_note_fonts
+    ),
+    LicenseEntry(
+        "Manrope", "The Manrope Project Authors", null, OFL,
+        "https://github.com/googlefonts/manrope", R.string.licenses_note_fonts
     )
 )
 
@@ -123,6 +132,7 @@ private val RADIO = listOf(
 fun LicensesScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     var showApache by remember { mutableStateOf(false) }
+    var showOfl by remember { mutableStateOf(false) }
 
     GlassScaffold(title = stringResource(R.string.licenses_title), onBack = onBack) {
         Text(
@@ -143,6 +153,10 @@ fun LicensesScreen(onBack: () -> Unit) {
 
         SetupSectionLabel(stringResource(R.string.licenses_group_assets))
         ASSETS.forEach { entry -> LicenseCard(entry) { openUrl(context, entry.url) } }
+        GlassOutlinedButton(onClick = { showOfl = true }, modifier = Modifier.fillMaxWidth()) {
+            ButtonIcon(R.drawable.ic_copyright)
+            Text(stringResource(R.string.licenses_ofl_full), color = ink)
+        }
 
         SetupSectionLabel(stringResource(R.string.licenses_group_radio))
         Text(
@@ -154,7 +168,10 @@ fun LicensesScreen(onBack: () -> Unit) {
     }
 
     if (showApache) {
-        ApacheLicenseDialog(onDismiss = { showApache = false })
+        LicenseTextDialog(APACHE, R.raw.license_apache_2_0, "https://www.apache.org/licenses/LICENSE-2.0") { showApache = false }
+    }
+    if (showOfl) {
+        LicenseTextDialog(OFL, R.raw.license_ofl_1_1, "https://openfontlicense.org") { showOfl = false }
     }
 }
 
@@ -185,20 +202,20 @@ private fun LicenseCard(entry: LicenseEntry, onClick: () -> Unit) {
 }
 
 @Composable
-private fun ApacheLicenseDialog(onDismiss: () -> Unit) {
+private fun LicenseTextDialog(title: String, rawRes: Int, fallbackUrl: String, onDismiss: () -> Unit) {
     val context = LocalContext.current
-    val text = remember {
+    val text = remember(rawRes) {
         runCatching {
-            context.resources.openRawResource(R.raw.license_apache_2_0)
+            context.resources.openRawResource(rawRes)
                 .bufferedReader().use { it.readText() }
-        }.getOrDefault("https://www.apache.org/licenses/LICENSE-2.0")
+        }.getOrDefault(fallbackUrl)
             .trim()
             .split(Regex("\n\\s*\n"))
             .joinToString("\n\n") { paragraph -> paragraph.lines().joinToString(" ") { it.trim() } }
     }
     AppDialog(
         onDismissRequest = onDismiss,
-        title = APACHE,
+        title = title,
         actions = { DialogAction(stringResource(R.string.chat_close), onDismiss) }
     ) {
         Column(modifier = Modifier.fillMaxWidth().heightIn(max = 380.dp).verticalScroll(rememberScrollState())) {

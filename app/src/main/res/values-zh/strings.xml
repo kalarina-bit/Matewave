@@ -171,6 +171,8 @@
     <string name="licenses_group_data">数据</string>
     <string name="licenses_group_radio">电台</string>
     <string name="licenses_apache_full">Apache License 2.0 全文</string>
+    <string name="licenses_ofl_full">SIL Open Font License 1.1 全文</string>
+    <string name="licenses_note_fonts">界面字体：标题使用 Unbounded，正文使用 Manrope。</string>
     <string name="licenses_note_puzzles">题目选自 Lichess 开放的谜题数据库。CC0 许可证无需署名，在此感谢 Lichess 团队。</string>
     <string name="licenses_note_swissjazz">SRG SSR 公开提供的网络电台流：无广告、无主持人，由收视费资助。音乐版权归电台和权利人所有，应用只播放，不保存任何内容。</string>
     <string name="licenses_radio_hint">设置中的爵士电台只播放 Radio Swiss Jazz；其中一个官方地址不可用时，应用会改用另一个。</string>

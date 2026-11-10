@@ -2,3 +2,5 @@
 • Redesigned home screen: big mode cards, Continue game right next to them, progress panel with rating, games, wins and streak
 • Redesigned profile: large name and avatar, stat tiles and rating chart
 • New floating bottom bar
+• New fonts: Unbounded for headings, Manrope for text
+• Player cards and a lime clock on the game screen

@@ -171,6 +171,8 @@
     <string name="licenses_group_data">Daten</string>
     <string name="licenses_group_radio">Radio</string>
     <string name="licenses_apache_full">Vollständiger Text der Apache License 2.0</string>
+    <string name="licenses_ofl_full">Vollständiger Text der SIL Open Font License 1.1</string>
+    <string name="licenses_note_fonts">Schriften der Oberfläche: Unbounded für Überschriften, Manrope für Text.</string>
     <string name="licenses_note_puzzles">Die Aufgaben stammen aus der offenen Lichess-Puzzle-Datenbank. Die CC0-Lizenz verlangt keine Namensnennung – wir danken dem Lichess-Team.</string>
     <string name="licenses_note_swissjazz">Öffentlich zugänglicher Internet-Stream der SRG SSR: ohne Werbung und ohne Moderation, durch Gebühren finanziert. Die Musik gehört dem Sender und den Rechteinhabern; die App spielt den Stream nur ab und speichert nichts.</string>
     <string name="licenses_radio_hint">Das Jazzradio in den Einstellungen spielt nur Radio Swiss Jazz; ist einer der offiziellen Stream-Links nicht erreichbar, nutzt die App einen anderen.</string>
