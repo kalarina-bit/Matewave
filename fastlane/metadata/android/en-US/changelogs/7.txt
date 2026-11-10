@@ -1,0 +1,4 @@
+• New look: dark theme with neon green and lime accents
+• Redesigned home screen: big mode cards, Continue game right next to them, progress panel with rating, games, wins and streak
+• Redesigned profile: large name and avatar, stat tiles and rating chart
+• New floating bottom bar
