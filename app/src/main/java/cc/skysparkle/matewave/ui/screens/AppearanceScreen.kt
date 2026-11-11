@@ -12,6 +12,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.text.style.TextOverflow
+import cc.skysparkle.matewave.ui.theme.AppPalette
+import cc.skysparkle.matewave.ui.theme.AppStyle
+import cc.skysparkle.matewave.ui.theme.AppThemeState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -25,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,6 +58,13 @@ fun AppearanceScreen(onBack: () -> Unit) {
 
     GlassScaffold(title = stringResource(R.string.appearance_title), onBack = onBack) {
         Text(
+            stringResource(R.string.app_style_title),
+            color = ink,
+            style = MaterialTheme.typography.titleMedium
+        )
+        StylePicker()
+
+        Text(
             stringResource(R.string.appearance_board_theme),
             color = ink,
             style = MaterialTheme.typography.titleMedium
@@ -77,7 +90,7 @@ fun AppearanceScreen(onBack: () -> Unit) {
                     )
                     if (candidate == theme) {
                         cc.skysparkle.matewave.ui.components.AppIcon(
-                            R.drawable.ic_check_box, size = 20.dp, tint = Color(0xFF7BE495)
+                            R.drawable.ic_check_box, size = 20.dp, tint = cc.skysparkle.matewave.ui.theme.ChessGreen
                         )
                     }
                 }
@@ -123,6 +136,85 @@ fun AppearanceScreen(onBack: () -> Unit) {
             stringResource(R.string.appearance_restart_hint),
             color = ink.copy(alpha = 0.6f),
             style = MaterialTheme.typography.bodySmall
+        )
+    }
+}
+
+/** App colour styles as swatches, three per row; the device style follows the wallpaper. */
+@Composable
+private fun StylePicker() {
+    val context = LocalContext.current
+    val selected = AppThemeState.style
+    val styles = remember { AppStyle.available }
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        styles.chunked(3).forEach { row ->
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                row.forEach { style ->
+                    StyleSwatch(
+                        style = style,
+                        palette = remember(style) { AppThemeState.paletteFor(context, style) },
+                        selected = style == selected,
+                        modifier = Modifier.weight(1f),
+                        onClick = { AppThemeState.select(context, style) }
+                    )
+                }
+                repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
+            }
+        }
+        if (selected == AppStyle.DEVICE) {
+            Text(
+                stringResource(R.string.app_style_device_hint),
+                color = ink.copy(alpha = 0.6f),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+    }
+}
+
+@Composable
+private fun StyleSwatch(
+    style: AppStyle,
+    palette: AppPalette,
+    selected: Boolean,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    val shape = RoundedCornerShape(18.dp)
+    Column(
+        modifier = modifier
+            .clip(shape)
+            .background(palette.surface1)
+            .border(if (selected) 2.dp else 1.dp, if (selected) palette.accent else PanelBorder, shape)
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp, horizontal = 6.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(contentAlignment = Alignment.BottomEnd) {
+            Box(
+                modifier = Modifier.size(44.dp).clip(CircleShape).background(palette.accent),
+                contentAlignment = Alignment.Center
+            ) {
+                if (selected) {
+                    cc.skysparkle.matewave.ui.components.AppIcon(
+                        R.drawable.ic_check_box, size = 20.dp, tint = palette.onAccent
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .size(20.dp)
+                    .clip(CircleShape)
+                    .background(palette.action)
+                    .border(2.dp, palette.surface1, CircleShape)
+            )
+        }
+        Spacer(Modifier.height(8.dp))
+        Text(
+            stringResource(style.titleRes),
+            color = ink,
+            style = MaterialTheme.typography.labelLarge,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

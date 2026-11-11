@@ -13,8 +13,8 @@ android {
         applicationId = "cc.skysparkle.matewave"
         minSdk = 26
         targetSdk = 36
-        versionCode = 9
-        versionName = "1.0.49"
+        versionCode = 10
+        versionName = "1.0.50"
     }
 
     buildTypes {

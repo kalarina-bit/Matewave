@@ -1,0 +1,3 @@
+• Išvaizda: galima pasirinkti programėlės spalvas — Matewave, pastelines Levandą, Persiką, Mėtą ir Dangų arba įrenginio spalvas iš ekrano fono („Material You“, Android 12+)
+• Reitingas pagrindiniame ekrane nebeatidaro statistikos
+• Lygiųjų ir pasidavimo mygtukų užrašai nebenukerpami

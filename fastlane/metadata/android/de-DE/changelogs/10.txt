@@ -1,0 +1,3 @@
+• Darstellung: App-Farben wählbar — Matewave, die Pastelltöne Lavendel, Pfirsich, Minze und Himmel oder Gerätefarben aus dem Hintergrundbild (Material You, Android 12+)
+• Die Wertung auf dem Startbildschirm öffnet keine Statistik mehr
+• Die Beschriftungen von Remis- und Aufgabe-Schaltfläche werden nicht mehr abgeschnitten

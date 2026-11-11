@@ -50,8 +50,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
-val DialogSurface = cc.skysparkle.matewave.ui.theme.Surface1
-val DialogAccent = cc.skysparkle.matewave.ui.theme.ChessGreen
+val DialogSurface: Color get() = cc.skysparkle.matewave.ui.theme.Surface1
+val DialogAccent: Color get() = cc.skysparkle.matewave.ui.theme.ChessGreen
 val DialogShape = RoundedCornerShape(28.dp)
 
 @Composable

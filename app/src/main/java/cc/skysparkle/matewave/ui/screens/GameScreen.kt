@@ -179,12 +179,14 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
                     Text(
                         if (state.drawOfferSentByMe) stringResource(R.string.draw_offer_waiting) else stringResource(R.string.offer_draw),
                         color = ink,
-                        maxLines = 1
+                        style = MaterialTheme.typography.labelLarge,
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                     )
                 }
                 GlassOutlinedButton(onClick = { confirmResign = true }, modifier = Modifier.weight(1f)) {
                     ButtonIcon(R.drawable.ic_flag)
-                    Text(stringResource(R.string.resign), color = ink, maxLines = 1)
+                    Text(stringResource(R.string.resign), color = ink, style = MaterialTheme.typography.labelLarge, maxLines = 1)
                 }
             }
             ChatButton(

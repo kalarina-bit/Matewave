@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import cc.skysparkle.matewave.R
 import cc.skysparkle.matewave.ui.theme.AppBackground
+import cc.skysparkle.matewave.ui.theme.AppThemeState
 import cc.skysparkle.matewave.ui.theme.ChessGreen
 import cc.skysparkle.matewave.ui.theme.Lime
 import kotlinx.coroutines.Dispatchers
@@ -73,6 +74,9 @@ private val ForestTint = ColorFilter.colorMatrix(
     )
 )
 
+/** For the other styles the forest turns almost grey, so it never fights their colours. */
+private val NeutralForestTint = ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0.12f) })
+
 /**
  * The misty forest artwork, deeply darkened so it reads as texture: the mist stays
  * visible behind the headings at the top and fades into near-black lower down.
@@ -95,7 +99,7 @@ fun AppBackdrop() {
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
-                colorFilter = ForestTint
+                colorFilter = if (AppThemeState.palette.greenBackdrop) ForestTint else NeutralForestTint
             )
         }
         Box(

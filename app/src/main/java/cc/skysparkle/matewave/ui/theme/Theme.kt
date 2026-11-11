@@ -15,34 +15,26 @@ import androidx.compose.ui.text.font.FontWeight
 import cc.skysparkle.matewave.R
 import androidx.compose.ui.unit.sp
 
-/** Neon green: the brand accent for highlights, selected states and progress. */
-val ChessGreen = Color(0xFF35E07E)
-val ChessGreenDark = Color(0xFF123D25)
+// The interface colours follow the selected style (see AppPalette); reading them in
+// composition subscribes the screen, so a new style recolours everything at once.
 
-/** Lime: the one colour for the main action on a screen. */
-val Lime = Color(0xFFE3F84B)
+/** Accent: highlights, selected states and progress. Neon green in the original style. */
+val ChessGreen: Color get() = AppThemeState.palette.accent
+
+/** The one colour for the main action on a screen. Lime in the original style. */
+val Lime: Color get() = AppThemeState.palette.action
 
 /** Text and icons on top of [ChessGreen] or [Lime]. */
-val OnAccent = Color(0xFF0B1610)
+val OnAccent: Color get() = AppThemeState.palette.onAccent
 
-val AppBackground = Color(0xFF0C0F0E)
-val Surface1 = Color(0xFF161B19)
-val Surface2 = Color(0xFF1F2623)
+val AppBackground: Color get() = AppThemeState.palette.background
+val Surface1: Color get() = AppThemeState.palette.surface1
+val Surface2: Color get() = AppThemeState.palette.surface2
 
 val HighlightMove = Color(0x8858A6FF)
 val HighlightCheck = Color(0x88E53935)
 val HighlightLastMove = Color(0x664FC3F7)
 val HighlightHint = Color(0x88FFC107)
-
-private val DarkScheme = darkColorScheme(
-    primary = ChessGreen,
-    onPrimary = OnAccent,
-    secondary = Lime,
-    onSecondary = OnAccent,
-    background = AppBackground,
-    surface = Surface1,
-    surfaceVariant = Surface2
-)
 
 /** Wide display face for the big headings: the brand voice of the app. */
 val DisplayFont = FontFamily(
@@ -95,7 +87,16 @@ val HeroTextStyle = TextStyle(
 /** The app has a single dark theme; system bars are set up in MainActivity. */
 @Composable
 fun MatewaveTheme(content: @Composable () -> Unit) {
-    MaterialTheme(colorScheme = DarkScheme, typography = AppTypography) {
+    val scheme = darkColorScheme(
+        primary = ChessGreen,
+        onPrimary = OnAccent,
+        secondary = Lime,
+        onSecondary = OnAccent,
+        background = AppBackground,
+        surface = Surface1,
+        surfaceVariant = Surface2
+    )
+    MaterialTheme(colorScheme = scheme, typography = AppTypography) {
         // Text and icons without their own colour are light, so nothing turns black on the dark background
         CompositionLocalProvider(LocalContentColor provides Color.White, content = content)
     }

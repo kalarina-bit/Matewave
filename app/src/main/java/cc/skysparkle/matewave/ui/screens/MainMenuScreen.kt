@@ -130,7 +130,6 @@ fun MainMenuScreen(
                     modifier = Modifier
                         .clip(RoundedCornerShape(50))
                         .background(Surface2)
-                        .clickable { showStats = true }
                         .padding(start = 10.dp, end = 14.dp, top = 8.dp, bottom = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {

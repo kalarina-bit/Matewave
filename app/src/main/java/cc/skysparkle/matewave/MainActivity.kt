@@ -73,6 +73,7 @@ class MainActivity : ComponentActivity() {
             runCatching { cc.skysparkle.matewave.puzzles.PuzzleRepository.load(appContext) }
         }
 
+        cc.skysparkle.matewave.ui.theme.AppThemeState.load(this)
         setContent {
             MatewaveTheme {
                 androidx.compose.foundation.layout.Box(

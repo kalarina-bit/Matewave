@@ -156,7 +156,7 @@ fun GlassButton(
                         onClick = onClick
                     ) else Modifier
                 )
-                .padding(horizontal = 22.dp, vertical = 15.dp),
+                .padding(horizontal = 16.dp, vertical = 15.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
             content = content
@@ -186,7 +186,7 @@ fun GlassOutlinedButton(
                     onClick = onClick
                 ) else Modifier
             )
-            .padding(horizontal = 22.dp, vertical = 15.dp),
+            .padding(horizontal = 16.dp, vertical = 15.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         content = content

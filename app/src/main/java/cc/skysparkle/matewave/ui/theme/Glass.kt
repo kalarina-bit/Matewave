@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 
-val PanelFill = Surface1
+val PanelFill: Color get() = Surface1
 val PanelBorder = Color.White.copy(alpha = 0.06f)
 
 val UiCornerRadius = 22.dp
@@ -22,4 +22,4 @@ fun Modifier.glass(): Modifier = this
 
 val DialogScrimColor = Color.Black.copy(alpha = 0.70f)
 
-val FloatingBarFill = Surface2
+val FloatingBarFill: Color get() = Surface2
