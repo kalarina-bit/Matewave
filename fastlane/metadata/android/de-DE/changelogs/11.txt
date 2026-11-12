@@ -1,0 +1,6 @@
+• Bilder des Gegners werden geprüft: zu große Avatare, Hintergründe oder Chatbilder bringen die App nicht mehr zum Absturz
+• Der Gegner kann verbrauchte Zeit nicht verbergen; sein Inkrement zählt nicht mehr doppelt
+• Warnung, wenn nicht der gewählte Spieler in der Nähe antwortet
+• App-Sprache in den Android-Einstellungen wählbar (Android 13+)
+• Schnellerer Start mit vielen Freunden, weniger Akku für Bluetooth
+• WLAN-Präsenz ist nicht mit 1.0.50 kompatibel: beide Handys aktualisieren

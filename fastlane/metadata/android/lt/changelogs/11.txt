@@ -1,0 +1,6 @@
+• Varžovo paveikslėliai tikrinami: per didelis avataras, fonas ar pokalbio paveikslėlis nebeužlaužia programėlės
+• Varžovas negali nuslėpti sunaudoto laiko; jo priedas nebeskaičiuojamas dukart
+• Įspėjimas, jei atsiliepė ne tas netoliese pasirinktas žaidėjas
+• Programėlės kalbą galima pasirinkti Android nustatymuose (13+)
+• Greitesnis paleidimas su daug draugų, mažiau baterijos per Bluetooth
+• Buvimas per Wi-Fi nesuderinamas su 1.0.50: atnaujinkite abu telefonus

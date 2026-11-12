@@ -1,0 +1,6 @@
+• Pictures from the opponent are checked first: an oversized avatar, background or chat image no longer crashes the app
+• The opponent's clock can't hide time spent; their increment is no longer counted twice
+• A warning if someone other than the chosen nearby player answers
+• App language can be set in Android settings (Android 13+)
+• Faster start with many friends, less battery for Bluetooth presence
+• Wi-Fi presence is not compatible with 1.0.50: update both phones
