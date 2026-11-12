@@ -29,6 +29,8 @@ data class LanPeer(
     val fingerprint: String = "",
 
     val signature: String = "",
+    /** When the announcement was signed, in epoch seconds; 0 if the peer sent none. */
+    val signedAtSeconds: Long = 0,
     /** Raw NSD service name, used to remove the peer when the service is lost. */
     val serviceName: String = "",
     /** Tag of the LAN game the peer plays, empty when not in one. */
@@ -59,8 +61,22 @@ class LanTransport(
 
         const val RESOLVE_RETRY_MS = 400L
 
-        fun presencePayload(playerId: String, name: String, elo: Int): String =
-            "presence|$playerId|$name|$elo"
+        /**
+         * Signed presence announcement. The signing time is part of it, so a recorded
+         * announcement stops being accepted after [PRESENCE_MAX_AGE_MS]; older versions, which
+         * signed without it, are no longer accepted at all.
+         */
+        fun presencePayload(playerId: String, name: String, elo: Int, signedAtSeconds: Long): String =
+            "presence2|$playerId|$name|$elo|$signedAtSeconds"
+
+        /** How old (or how far ahead, for a clock set wrong) a signed announcement may be. */
+        const val PRESENCE_MAX_AGE_MS = 15 * 60_000L
+
+        /** The announcement is signed anew this often, well within [PRESENCE_MAX_AGE_MS]. */
+        const val PRESENCE_RESIGN_MS = 5 * 60_000L
+
+        fun isFreshPresence(signedAtSeconds: Long, nowMs: Long): Boolean =
+            signedAtSeconds > 0 && kotlin.math.abs(nowMs - signedAtSeconds * 1000L) <= PRESENCE_MAX_AGE_MS
     }
 
     override val type = TransportType.LAN
@@ -91,6 +107,9 @@ class LanTransport(
     private var registrationListener: NsdManager.RegistrationListener? = null
 
     private var registeredServiceName: String? = null
+
+    // Re-signs the announcement before it gets too old to be accepted.
+    private var resignJob: kotlinx.coroutines.Job? = null
 
     private val ownServiceName: String by lazy {
         val fingerprint = cc.skysparkle.matewave.security.DeviceKeys.publicKeyFingerprint(context)
@@ -212,13 +231,15 @@ class LanTransport(
             val profile = cc.skysparkle.matewave.data.ProfileStore.get()
             runCatching {
                 val shownName = profile.name.take(40)
+                val signedAt = System.currentTimeMillis() / 1000L
                 setAttribute("id", profile.userId)
                 setAttribute("name", shownName)
                 setAttribute("elo", profile.elo.toString())
                 setAttribute("fp", cc.skysparkle.matewave.security.DeviceKeys.publicKeyFingerprint(context) ?: "")
+                setAttribute("ts", signedAt.toString())
 
                 cc.skysparkle.matewave.security.DeviceKeys.sign(
-                    context, presencePayload(profile.userId, shownName, profile.elo)
+                    context, presencePayload(profile.userId, shownName, profile.elo, signedAt)
                 )?.let { setAttribute("sig", it) }
                 cc.skysparkle.matewave.spectate.SpectatorAdvert.attributes().forEach { (key, value) -> setAttribute(key, value) }
             }
@@ -241,9 +262,15 @@ class LanTransport(
             nsd.registerService(info, NsdManager.PROTOCOL_DNS_SD, listener)
         } catch (_: Exception) {
         }
+        resignJob = scope.launch {
+            kotlinx.coroutines.delay(PRESENCE_RESIGN_MS)
+            republishProfile()
+        }
     }
 
     private fun unregisterService() {
+        resignJob?.cancel()
+        resignJob = null
         val nsd = nsdManager ?: return
         registrationListener?.let {
             try { nsd.unregisterService(it) } catch (_: Exception) {}
@@ -363,6 +390,7 @@ class LanTransport(
 
             fingerprint = attr("fp").ifEmpty { fingerprintFromServiceName(info.serviceName ?: "") ?: "" },
             signature = attr("sig"),
+            signedAtSeconds = attr("ts").toLongOrNull() ?: 0,
             serviceName = info.serviceName ?: "",
             gameTag = game.gameTag,
             spectatePort = game.spectatePort

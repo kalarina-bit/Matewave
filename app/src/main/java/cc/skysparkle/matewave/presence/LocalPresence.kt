@@ -141,13 +141,19 @@ class LocalPresence(
 
             val knownKey = knownPeers.publicKeyOf(id)
             if (knownKey != null) {
-                val authentic = peer.signature.isNotEmpty() && DeviceKeys.verify(
-                    knownKey,
-                    cc.skysparkle.matewave.network.LanTransport.presencePayload(peer.playerId, peer.displayName, peer.elo),
-                    peer.signature
-                )
+                // A known friend must send a fresh announcement signed with their key: an old one
+                // recorded and replayed by someone else is not accepted.
+                val authentic = peer.signature.isNotEmpty() &&
+                    cc.skysparkle.matewave.network.LanTransport.isFreshPresence(peer.signedAtSeconds, lastResultAt) &&
+                    DeviceKeys.verify(
+                        knownKey,
+                        cc.skysparkle.matewave.network.LanTransport.presencePayload(
+                            peer.playerId, peer.displayName, peer.elo, peer.signedAtSeconds
+                        ),
+                        peer.signature
+                    )
                 if (!authentic) {
-                    NetworkLog.log("PRESENCE", "Announcement for $id failed signature check, hidden")
+                    NetworkLog.log("PRESENCE", "Announcement for $id is stale or failed signature check, hidden")
                     return@forEach
                 }
                 FriendsStore.updateProfile(
