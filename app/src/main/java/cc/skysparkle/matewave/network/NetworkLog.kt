@@ -1,8 +1,8 @@
 package cc.skysparkle.matewave.network
 
+import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 
 enum class DisconnectReason(val userText: String, val textRes: Int) {
     NONE("—", cc.skysparkle.matewave.R.string.reason_unknown),
@@ -18,23 +18,13 @@ enum class DisconnectReason(val userText: String, val textRes: Int) {
     PORT_BUSY("Could not open port", cc.skysparkle.matewave.R.string.reason_port_busy)
 }
 
-data class NetworkEvent(
-    val at: Long,
-    val transport: String,
-    val text: String
-)
-
 object NetworkLog {
-    private const val CAPACITY = 60
-
-    private val _events = MutableStateFlow<List<NetworkEvent>>(emptyList())
-
     private val _lastReason = MutableStateFlow(DisconnectReason.NONE)
     val lastReason: StateFlow<DisconnectReason> = _lastReason
 
+    /** Debug output only: release builds strip Log.d (see proguard-rules.pro). */
     fun log(transport: String, text: String) {
-        val event = NetworkEvent(System.currentTimeMillis(), transport, text)
-        _events.update { (it + event).takeLast(CAPACITY) }
+        Log.d("Matewave/$transport", text)
     }
 
     fun reason(transport: String, reason: DisconnectReason, detail: String? = null) {

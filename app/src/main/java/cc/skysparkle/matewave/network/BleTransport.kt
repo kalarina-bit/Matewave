@@ -73,6 +73,9 @@ class BleTransport(
 
         private const val INCOMPLETE_TTL_MS = 30_000L
 
+        /** Messages being reassembled at once; each may grow to [MAX_MESSAGE_BYTES]. */
+        private const val MAX_PARTIAL_MESSAGES = 4
+
         private const val CTRL_TOTAL_MARKER = 0
         private const val CTRL_ACK = 1
         private const val CTRL_NACK = 2
@@ -232,6 +235,8 @@ class BleTransport(
         role = Role.PERIPHERAL
         hosting = true
 
+        // Presence may already be advertising in the low-power mode; restart it for hosting.
+        if (advertisingActive || advertiseCallback != null) startAdvertising()
         startPresence()
         _connectionState.value = ConnectionState.CONNECTING
     }
@@ -300,10 +305,14 @@ class BleTransport(
         }
         // One advertisement at a time: a second start would leak the first one.
         if (advertiseCallback != null) stopAdvertising()
+        // A hosted game should be found at once; plain presence can save the battery.
         val settings = AdvertiseSettings.Builder()
-
-            .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
-            .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
+            .setAdvertiseMode(
+                if (hosting) AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY else AdvertiseSettings.ADVERTISE_MODE_BALANCED
+            )
+            .setTxPowerLevel(
+                if (hosting) AdvertiseSettings.ADVERTISE_TX_POWER_HIGH else AdvertiseSettings.ADVERTISE_TX_POWER_MEDIUM
+            )
             .setConnectable(true)
             .build()
 
@@ -790,6 +799,11 @@ class BleTransport(
             val now = System.currentTimeMillis()
             incoming.entries.removeAll { now - it.value.startedAt > INCOMPLETE_TTL_MS }
 
+            if (messageId !in incoming && incoming.size >= MAX_PARTIAL_MESSAGES) {
+                // A peer that starts many messages and never finishes them would fill the memory.
+                incoming.minByOrNull { it.value.startedAt }?.let { incoming.remove(it.key) }
+                NetworkLog.log("BLE", "Too many unfinished messages, oldest dropped")
+            }
             val entry = incoming.getOrPut(messageId) { PartialMessage(total, now) }
             if (entry.total != total) {
                 incoming[messageId] = PartialMessage(total, now).also { it.parts[index] = payload }

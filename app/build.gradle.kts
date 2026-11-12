@@ -1,7 +1,6 @@
 plugins {
-    id("com.android.application")
-
-    id("org.jetbrains.kotlin.plugin.compose")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -86,20 +85,20 @@ androidComponents {
 }
 
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2026.09.00"))
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.activity:activity-compose:1.13.0")
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.activity.compose)
 
-    implementation("androidx.core:core-ktx:1.18.0")
-    implementation("androidx.navigation:navigation-compose:2.9.7")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.navigation.compose)
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
+    implementation(libs.kotlinx.coroutines.android)
 
-    implementation("com.google.zxing:core:3.5.4")
+    implementation(libs.zxing.core)
 
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.json:json:20240303")
+    testImplementation(libs.junit)
+    testImplementation(libs.org.json)
 }

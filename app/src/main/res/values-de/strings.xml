@@ -7,13 +7,11 @@
     <string name="greeting_night">Gute Nacht</string>
     <string name="continue_game_title">Partie fortsetzen</string>
     <string name="quick_game_title">Schnelles Spiel</string>
-    <string name="quick_game_subtitle">Wie beim letzten Mal: %1$s · %2$s</string>
     <string name="mode_ai_title">Gegen die KI</string>
     <string name="mode_ai_subtitle">Schwierigkeit wählen</string>
     <string name="mode_online_title">Mit einem Freund</string>
     <string name="mode_online_subtitle">Per Bluetooth oder WLAN in der Nähe</string>
     <string name="puzzles_title">Schachaufgaben</string>
-    <string name="puzzles_subtitle">Aufgaben passend zu deiner Wertung</string>
     <string name="stats_dialog_title">Statistik</string>
     <string name="stats_dialog_summary">%1$d Siege · %2$d%% · Serie: %3$d</string>
     <string name="stats_min">Min.: %1$d</string>
@@ -136,7 +134,6 @@
     <string name="account_forget_keys_confirm">Du kannst einen bekannten Gegner dann nicht mehr von jemandem unterscheiden, der seinen Namen benutzt, bis ihr euch erneut trefft. Nötig, wenn der Gegner die App neu installiert hat.</string>
     <string name="account_confirm">Vergessen</string>
     <string name="account_cancel">Abbrechen</string>
-    <string name="greeting_ready">Bereit für eine neue Partie?</string>
     <string name="account_trusted_keys_hint">Werden beim ersten Treffen mit einem neuen Spieler automatisch gespeichert</string>
     <string name="account_fingerprint_explain">Eindeutiger Fingerabdruck des Schlüssels dieses Geräts. Dein Gegner kann ihn beim ersten Treffen mit deinem vergleichen.</string>
     <string name="friends_online">Online</string>
@@ -331,7 +328,6 @@
     <string name="settings_section_system">System</string>
     <string name="permissions_card_ok_short">Alles bereit</string>
     <string name="permissions_card_blocked_short">Aktion nötig</string>
-    <string name="account_header_summary">Wertung %1$d · Partien: %2$d</string>
     <string name="account_progress">Fortschritt</string>
     <string name="account_rating_row">Wertung</string>
     <string name="account_device_key">Geräteschlüssel</string>

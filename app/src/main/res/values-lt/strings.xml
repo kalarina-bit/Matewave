@@ -7,13 +7,11 @@
     <string name="greeting_night">Labos nakties</string>
     <string name="continue_game_title">Tęsti partiją</string>
     <string name="quick_game_title">Greitas žaidimas</string>
-    <string name="quick_game_subtitle">Kaip praėjusį kartą: %1$s · %2$s</string>
     <string name="mode_ai_title">Prieš DI</string>
     <string name="mode_ai_subtitle">Pasirinkite sudėtingumą</string>
     <string name="mode_online_title">Su draugu</string>
     <string name="mode_online_subtitle">Per „Bluetooth“ arba „Wi-Fi“ netoliese</string>
     <string name="puzzles_title">Šachmatų galvosūkiai</string>
-    <string name="puzzles_subtitle">Užduotys pagal jūsų reitingą</string>
     <string name="stats_dialog_title">Statistika</string>
     <string name="stats_dialog_summary">%1$d pergalių · %2$d%% · serija: %3$d</string>
     <string name="stats_min">Min.: %1$d</string>
@@ -136,7 +134,6 @@
     <string name="account_forget_keys_confirm">Nebegalėsite atskirti pažįstamo varžovo nuo to, kas naudoja jo vardą, kol vėl nesusitiksite. Reikia, jei varžovas iš naujo įdiegė programą.</string>
     <string name="account_confirm">Pamiršti</string>
     <string name="account_cancel">Atšaukti</string>
-    <string name="greeting_ready">Pasiruošę naujai partijai?</string>
     <string name="account_trusted_keys_hint">Išsaugomi automatiškai pirmą kartą sutikus naują žaidėją</string>
     <string name="account_fingerprint_explain">Unikalus šio įrenginio rakto kontrolinis kodas. Pirmą kartą susitikęs varžovas gali jį palyginti su jūsų.</string>
     <string name="friends_online">Prisijungęs</string>
@@ -333,7 +330,6 @@
     <string name="settings_section_system">Sistema</string>
     <string name="permissions_card_ok_short">Viskas paruošta</string>
     <string name="permissions_card_blocked_short">Reikia veiksmo</string>
-    <string name="account_header_summary">Reitingas %1$d · Partijų: %2$d</string>
     <string name="account_progress">Pažanga</string>
     <string name="account_rating_row">Reitingas</string>
     <string name="account_device_key">Įrenginio raktas</string>

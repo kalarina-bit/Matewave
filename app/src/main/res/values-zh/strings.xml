@@ -7,13 +7,11 @@
     <string name="greeting_night">晚安</string>
     <string name="continue_game_title">继续对局</string>
     <string name="quick_game_title">快速对局</string>
-    <string name="quick_game_subtitle">与上次相同：%1$s · %2$s</string>
     <string name="mode_ai_title">对战 AI</string>
     <string name="mode_ai_subtitle">选择难度</string>
     <string name="mode_online_title">好友对战</string>
     <string name="mode_online_subtitle">通过蓝牙或附近的 Wi-Fi</string>
     <string name="puzzles_title">国际象棋谜题</string>
-    <string name="puzzles_subtitle">按你的等级分挑选的谜题</string>
     <string name="stats_dialog_title">统计</string>
     <string name="stats_dialog_summary">%1$d 胜 · %2$d%% · 连胜：%3$d</string>
     <string name="stats_min">最低：%1$d</string>
@@ -136,7 +134,6 @@
     <string name="account_forget_keys_confirm">在再次见面之前，你将无法区分熟悉的对手和冒用其名字的人。如果对手重装了应用，则需要这样做。</string>
     <string name="account_confirm">忘记</string>
     <string name="account_cancel">取消</string>
-    <string name="greeting_ready">准备好开始新对局了吗？</string>
     <string name="account_trusted_keys_hint">首次遇到新玩家时自动保存</string>
     <string name="account_fingerprint_explain">此设备密钥的唯一指纹。首次见面时，对手可以将其与你的核对。</string>
     <string name="friends_online">在线</string>
@@ -330,7 +327,6 @@
     <string name="settings_section_system">系统</string>
     <string name="permissions_card_ok_short">已就绪</string>
     <string name="permissions_card_blocked_short">需要处理</string>
-    <string name="account_header_summary">等级分 %1$d · 对局：%2$d</string>
     <string name="account_progress">进度</string>
     <string name="account_rating_row">等级分</string>
     <string name="account_device_key">设备密钥</string>

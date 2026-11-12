@@ -9,14 +9,12 @@
 
     <string name="continue_game_title">Продолжить партию</string>
     <string name="quick_game_title">Быстрая игра</string>
-    <string name="quick_game_subtitle">Как в прошлый раз: %1$s · %2$s</string>
     <string name="mode_ai_title">Против ИИ</string>
     <string name="mode_ai_subtitle">Выберите сложность</string>
     <string name="mode_online_title">С другом</string>
     <string name="mode_online_subtitle">По Bluetooth или Wi-Fi рядом</string>
 
     <string name="puzzles_title">Шахматные задачи</string>
-    <string name="puzzles_subtitle">Задачи под ваш рейтинг</string>
     <string name="stats_dialog_title">Статистика</string>
     <string name="stats_dialog_summary">%1$d побед · %2$d%% · серия: %3$d</string>
     <string name="stats_min">Мин: %1$d</string>
@@ -141,7 +139,6 @@
     <string name="account_forget_keys_confirm">Вы перестанете отличать знакомого соперника от того, кто назвался его именем, пока не встретитесь с ним заново. Нужно, если соперник переустановил приложение.</string>
     <string name="account_confirm">Забыть</string>
     <string name="account_cancel">Отмена</string>
-    <string name="greeting_ready">Готовы к новой партии?</string>
     <string name="account_trusted_keys_hint">Запоминаются автоматически при первой встрече с новым игроком</string>
     <string name="account_fingerprint_explain">Уникальный отпечаток ключа этого устройства. Соперник может сверить его с вашим при первой встрече.</string>
     <string name="friends_online">В сети</string>
@@ -339,7 +336,6 @@
     <string name="settings_section_system">Система</string>
     <string name="permissions_card_ok_short">Всё готово</string>
     <string name="permissions_card_blocked_short">Нужно действие</string>
-    <string name="account_header_summary">Рейтинг %1$d · Партий: %2$d</string>
     <string name="account_progress">Прогресс</string>
     <string name="account_rating_row">Рейтинг</string>
     <string name="account_device_key">Ключ устройства</string>

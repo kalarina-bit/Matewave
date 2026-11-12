@@ -72,7 +72,8 @@ class LanTransport(
         context.getSystemService(Context.NSD_SERVICE) as? NsdManager
 
     private var serverSocket: ServerSocket? = null
-    private var socket: Socket? = null
+    // Written by the connect and accept paths, read by the writer coroutine.
+    @Volatile private var socket: Socket? = null
 
     private val socketLock = Any()
 
@@ -82,7 +83,7 @@ class LanTransport(
         socket = candidate
         true
     }
-    private var output: OutputStream? = null
+    @Volatile private var output: OutputStream? = null
     private val dispatcher = MessageDispatcher()
 
     @Volatile private var hosting = false

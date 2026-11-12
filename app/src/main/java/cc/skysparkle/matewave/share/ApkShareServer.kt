@@ -5,10 +5,12 @@ import java.io.File
 import java.io.IOException
 import java.io.OutputStream
 import java.net.Inet4Address
+import java.net.InetSocketAddress
 import java.net.NetworkInterface
 import java.net.ServerSocket
 import java.net.Socket
 import java.util.Locale
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.thread
 
 class ApkShareServer(private val apk: File, private val appName: String) {
@@ -17,8 +19,13 @@ class ApkShareServer(private val apk: File, private val appName: String) {
     @Volatile
     private var server: ServerSocket? = null
 
+    private val activeClients = AtomicInteger()
+
+    /** Listens on the Wi-Fi address only (all interfaces if none is found), so the APK is not served elsewhere. */
     fun start(): Int {
-        val socket = ServerSocket(0)
+        val socket = ServerSocket()
+        socket.reuseAddress = true
+        socket.bind(InetSocketAddress(LocalNetwork.wifiInet4(), 0))
         server = socket
         thread(name = "apk-share-accept", isDaemon = true) {
             while (!socket.isClosed) {
@@ -27,7 +34,19 @@ class ApkShareServer(private val apk: File, private val appName: String) {
                 } catch (e: IOException) {
                     break
                 }
-                thread(name = "apk-share-client", isDaemon = true) { serve(client) }
+                // A handful of downloads at a time is plenty; more connections are refused.
+                if (activeClients.incrementAndGet() > MAX_CLIENTS) {
+                    activeClients.decrementAndGet()
+                    runCatching { client.close() }
+                    continue
+                }
+                thread(name = "apk-share-client", isDaemon = true) {
+                    try {
+                        serve(client)
+                    } finally {
+                        activeClients.decrementAndGet()
+                    }
+                }
             }
         }
         return socket.localPort
@@ -78,6 +97,10 @@ class ApkShareServer(private val apk: File, private val appName: String) {
         }
     }
 
+    private companion object {
+        const val MAX_CLIENTS = 4
+    }
+
     private fun sendText(out: OutputStream, code: Int, reason: String, text: String, withBody: Boolean) {
         val body = text.toByteArray(Charsets.UTF_8)
         writeHeader(out, code, reason, "text/plain; charset=utf-8", body.size.toLong())
@@ -117,12 +140,13 @@ class ApkShareServer(private val apk: File, private val appName: String) {
 object LocalNetwork {
     private val WIFI_PREFIXES = listOf("wlan", "swlan", "ap", "softap", "eth")
 
-    fun wifiIpv4(): String? = runCatching {
+    fun wifiInet4(): Inet4Address? = runCatching {
         NetworkInterface.getNetworkInterfaces()?.toList().orEmpty()
             .filter { nif -> nif.isUp && !nif.isLoopback && WIFI_PREFIXES.any { nif.name.startsWith(it) } }
             .flatMap { nif -> nif.inetAddresses.toList() }
             .filterIsInstance<Inet4Address>()
             .firstOrNull { it.isSiteLocalAddress }
-            ?.hostAddress
     }.getOrNull()
+
+    fun wifiIpv4(): String? = wifiInet4()?.hostAddress
 }
