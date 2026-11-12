@@ -86,20 +86,45 @@ private object DecodedImageCache {
     fun put(key: String, bitmap: Bitmap) { cache.put(key, bitmap) }
 }
 
+/** Larger images (from the opponent) are refused; ours never exceed [MAX_DIMENSION_PX]. */
+const val MAX_INCOMING_IMAGE_PX = 4096
+
+/** Upper bound for the decoded size when the caller does not ask for a smaller one. */
+private const val DEFAULT_DECODE_PX = 1280
+
+/** Width and height of an encoded image, or null if it is not a readable image. */
+private fun imageBounds(bytes: ByteArray): Pair<Int, Int>? {
+    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+    BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
+    return if (bounds.outWidth > 0 && bounds.outHeight > 0) bounds.outWidth to bounds.outHeight else null
+}
+
+/**
+ * Checks an image received from another device before it is shown or stored: it must be a
+ * readable image no larger than [MAX_INCOMING_IMAGE_PX] on either side. A small file can
+ * declare a huge resolution, and decoding it at full size would run out of memory.
+ */
+fun isAcceptableIncomingImage(base64: String): Boolean = try {
+    val size = imageBounds(Base64.decode(base64, Base64.NO_WRAP))
+    size != null && size.first <= MAX_INCOMING_IMAGE_PX && size.second <= MAX_INCOMING_IMAGE_PX
+} catch (e: Exception) {
+    false
+}
+
 fun decodeChatImage(base64: String, maxDimension: Int = 0): Bitmap? {
     return try {
         val bytes = Base64.decode(base64, Base64.NO_WRAP)
-        if (maxDimension <= 0) {
-            BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-        } else {
-            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, bounds)
-            var sample = 1
-            while (maxOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= maxDimension) sample *= 2
-            val options = BitmapFactory.Options().apply { inSampleSize = sample }
-            BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
-        }
+        // The size is always checked first: the image may come from another device.
+        val (width, height) = imageBounds(bytes) ?: return null
+        if (width > MAX_INCOMING_IMAGE_PX || height > MAX_INCOMING_IMAGE_PX) return null
+        val target = if (maxDimension > 0) maxDimension else DEFAULT_DECODE_PX
+        var sample = 1
+        while (maxOf(width, height) / (sample * 2) >= target) sample *= 2
+        val options = BitmapFactory.Options().apply { inSampleSize = sample }
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)
     } catch (e: Exception) {
+        null
+    } catch (e: OutOfMemoryError) {
         null
     }
 }

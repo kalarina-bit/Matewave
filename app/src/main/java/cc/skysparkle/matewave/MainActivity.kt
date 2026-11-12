@@ -333,9 +333,12 @@ private fun AppNavHost() {
                     viewModel.startVsPlayerNetwork(transport, PieceColor.WHITE, timeControl, isHost = true)
                     navController.navigate("game")
                 },
-                onJoin = { type, timeControl, targetId ->
+                onJoin = { type, timeControl, targetId, expectedUserId ->
                     val transport = if (type == TransportType.BLUETOOTH) bleTransport else lanTransport
-                    viewModel.startVsPlayerNetwork(transport, PieceColor.BLACK, timeControl, isHost = false, targetId = targetId)
+                    viewModel.startVsPlayerNetwork(
+                        transport, PieceColor.BLACK, timeControl, isHost = false,
+                        targetId = targetId, expectedUserId = expectedUserId
+                    )
                     navController.navigate("game")
                 },
                 onBack = { navController.popBackStack() }

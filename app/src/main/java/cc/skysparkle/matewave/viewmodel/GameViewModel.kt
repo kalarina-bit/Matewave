@@ -26,6 +26,7 @@ import cc.skysparkle.matewave.network.ConnectionTransport
 import cc.skysparkle.matewave.network.GameMessage
 import cc.skysparkle.matewave.network.NetworkLog
 import cc.skysparkle.matewave.network.NetworkMetrics
+import cc.skysparkle.matewave.network.PeerLimits
 import cc.skysparkle.matewave.network.TransportType
 import cc.skysparkle.matewave.puzzles.Puzzle
 import cc.skysparkle.matewave.security.DeviceKeys
@@ -43,6 +44,7 @@ import cc.skysparkle.matewave.spectate.SpectatorResult
 import cc.skysparkle.matewave.spectate.SpectatorResults
 import cc.skysparkle.matewave.spectate.SpectatorSnapshot
 import cc.skysparkle.matewave.stats.Stats
+import cc.skysparkle.matewave.ui.components.isAcceptableIncomingImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -185,8 +187,10 @@ class GameViewModel : ViewModel() {
     private var sessionGeneration = 0
     private var networkGameId: String = ""
     private var pendingOpponentImages: Pair<String?, String?>? = null
+
+    // The player picked in the nearby list; whoever answers must be that player.
+    private var expectedOpponentUserId: String? = null
     private var currentPly: Int = 0
-    private var lastOpponentRemaining: Long = Long.MAX_VALUE
 
     // Spectating: the host serves spectators, both players announce the game's tag.
     private var spectators: SpectatorBroadcaster? = null
@@ -711,7 +715,8 @@ class GameViewModel : ViewModel() {
         myColor: PieceColor,
         timeControl: TimeControl,
         isHost: Boolean,
-        targetId: String? = null
+        targetId: String? = null,
+        expectedUserId: String? = null
     ) {
         pendingLeave?.let { (job, oldTransport) ->
             job.cancel()
@@ -730,6 +735,7 @@ class GameViewModel : ViewModel() {
         this.transport = transport
         lastNetworkTimeControl = timeControl
         isNetworkHost = isHost
+        expectedOpponentUserId = expectedUserId?.takeIf { it.isNotBlank() }
 
         ephemeralKeys = DeviceKeys.generateEphemeral()
 
@@ -739,7 +745,6 @@ class GameViewModel : ViewModel() {
         opponentFlagJob = null
         networkGameId = if (isHost) java.util.UUID.randomUUID().toString() else ""
         currentPly = 0
-        lastOpponentRemaining = Long.MAX_VALUE
 
         _clockState.value = null
         _uiState.value = GameUiState(
@@ -848,6 +853,13 @@ class GameViewModel : ViewModel() {
         )
     }
 
+    /** The image if it may be shown and stored, otherwise null (and a log line). */
+    private fun acceptedIncomingImage(base64: String): String? {
+        if (base64.length <= MAX_CHAT_IMAGE_CHARS && isAcceptableIncomingImage(base64)) return base64
+        NetworkLog.log("GAME", "Unreadable or oversized profile image rejected")
+        return null
+    }
+
     private fun belongsToCurrentGame(gameId: String): Boolean =
         gameId.isEmpty() || networkGameId.isEmpty() || gameId == networkGameId
 
@@ -901,9 +913,14 @@ class GameViewModel : ViewModel() {
                     NetworkLog.log("GAME", "Oversized chat message rejected")
                     return
                 }
+                if (msg.imageBase64 != null && !isAcceptableIncomingImage(msg.imageBase64)) {
+                    NetworkLog.log("GAME", "Unreadable or oversized chat image rejected")
+                    return
+                }
                 val state = _uiState.value
                 _uiState.value = state.copy(
-                    chatMessages = state.chatMessages + ChatEntry(msg.text, msg.imageBase64, fromMe = false),
+                    chatMessages = (state.chatMessages + ChatEntry(msg.text, msg.imageBase64, fromMe = false))
+                        .takeLast(MAX_CHAT_ENTRIES),
                     unreadChatCount = state.unreadChatCount + 1
                 )
             }
@@ -976,8 +993,8 @@ class GameViewModel : ViewModel() {
             }
             is GameMessage.ProfileImagesMsg -> {
                 if (!belongsToCurrentGame(msg.gameId)) return
-                val avatar = msg.avatarBase64?.takeIf { it.length <= MAX_CHAT_IMAGE_CHARS }
-                val background = msg.backgroundBase64?.takeIf { it.length <= MAX_CHAT_IMAGE_CHARS }
+                val avatar = msg.avatarBase64?.let(::acceptedIncomingImage)
+                val background = msg.backgroundBase64?.let(::acceptedIncomingImage)
                 if (avatar == null && background == null) return
                 val current = _uiState.value.opponentProfile
                 if (current == null) {
@@ -1051,17 +1068,17 @@ class GameViewModel : ViewModel() {
 
         val limit = lastNetworkTimeControl?.let { it.initialSeconds * 1000L + 60_000L }
         val increment = lastNetworkTimeControl?.let { it.incrementSeconds * 1000L } ?: 0L
-        val allowedMax = if (lastOpponentRemaining == Long.MAX_VALUE) {
-            limit ?: Long.MAX_VALUE
-        } else {
-            lastOpponentRemaining + increment + CLOCK_TOLERANCE_MS
-        }
+        // Our own clock has been running the opponent's time while they thought, so their claim
+        // may not exceed it by more than the increment and network slack.
+        val allowedMax = clock?.remainingMillis(opponentColor)
+            ?.let { PeerLimits.maxOpponentClockAfterMove(it, increment, CLOCK_TOLERANCE_MS) }
+            ?: limit ?: Long.MAX_VALUE
         if (msg.remainingMillisSelf >= 0 &&
             (limit == null || msg.remainingMillisSelf <= limit) &&
             msg.remainingMillisSelf <= allowedMax
         ) {
-            lastOpponentRemaining = msg.remainingMillisSelf
-            clock?.applyRemoteTime(opponentColor, msg.remainingMillisSelf)
+            // The reported time already includes the increment; makeMove below adds it again.
+            clock?.applyRemoteTime(opponentColor, (msg.remainingMillisSelf - increment).coerceAtLeast(0))
         } else if (msg.remainingMillisSelf > 0) {
             NetworkLog.log("GAME", "Invalid clock value from opponent rejected: ${msg.remainingMillisSelf}")
         }
@@ -1075,6 +1092,12 @@ class GameViewModel : ViewModel() {
         val myGeneration = sessionGeneration
         if (sessionAuth != null) {
             NetworkLog.log("GAME", "Repeated profile in current session ignored")
+            return
+        }
+        if (!PeerLimits.isPlausibleProfile(msg)) {
+            // Nothing of it is stored: no key, no friend entry. The connection is closed.
+            NetworkLog.log("GAME", "Profile with out-of-range fields rejected, disconnecting")
+            transport?.disconnect()
             return
         }
         val peers = knownPeers
@@ -1125,7 +1148,11 @@ class GameViewModel : ViewModel() {
         }
         markReadyIfPossible()
 
-        _uiState.value = _uiState.value.copy(opponentUnverified = trust == TrustResult.UNSIGNED)
+        val unexpected = expectedOpponentUserId?.let { it != msg.userId } == true
+        if (unexpected) {
+            NetworkLog.log("GAME", "Opponent is not the player picked in the nearby list")
+        }
+        _uiState.value = _uiState.value.copy(opponentUnverified = trust == TrustResult.UNSIGNED || unexpected)
 
         val pending = pendingOpponentImages
         pendingOpponentImages = null
@@ -1133,8 +1160,8 @@ class GameViewModel : ViewModel() {
             userId = msg.userId,
             name = msg.name,
             elo = msg.elo,
-            avatarBase64 = msg.avatarBase64 ?: pending?.first,
-            backgroundBase64 = msg.backgroundBase64 ?: pending?.second
+            avatarBase64 = msg.avatarBase64?.let(::acceptedIncomingImage) ?: pending?.first,
+            backgroundBase64 = msg.backgroundBase64?.let(::acceptedIncomingImage) ?: pending?.second
         )
         _uiState.value = _uiState.value.copy(
             opponentProfile = Profile(
@@ -1240,7 +1267,6 @@ class GameViewModel : ViewModel() {
         opponentFlagJob?.cancel()
         opponentFlagJob = null
         currentPly = 0
-        lastOpponentRemaining = Long.MAX_VALUE
         val start = Board.startPosition()
         resetHistory(start)
 
@@ -1349,7 +1375,8 @@ class GameViewModel : ViewModel() {
         val trimmed = text.trim().take(MAX_CHAT_TEXT_CHARS)
         if (!sendGameMessage(GameMessage.ChatMsg(text = trimmed, gameId = networkGameId))) return
         _uiState.value = _uiState.value.copy(
-            chatMessages = _uiState.value.chatMessages + ChatEntry(trimmed, null, fromMe = true)
+            chatMessages = (_uiState.value.chatMessages + ChatEntry(trimmed, null, fromMe = true))
+                .takeLast(MAX_CHAT_ENTRIES)
         )
     }
 
@@ -1362,7 +1389,8 @@ class GameViewModel : ViewModel() {
         }
         if (!sendGameMessage(GameMessage.ChatMsg(imageBase64 = base64, gameId = networkGameId))) return
         _uiState.value = _uiState.value.copy(
-            chatMessages = _uiState.value.chatMessages + ChatEntry(null, base64, fromMe = true)
+            chatMessages = (_uiState.value.chatMessages + ChatEntry(null, base64, fromMe = true))
+                .takeLast(MAX_CHAT_ENTRIES)
         )
     }
 
@@ -1400,7 +1428,10 @@ class GameViewModel : ViewModel() {
         viewModelScope.launch {
             var serving = false
             try {
-                val port = withContext(Dispatchers.IO) { runCatching { hub.start() }.getOrNull() }
+                // Spectators come over Wi-Fi; other interfaces (mobile data) are not listened on.
+                val port = withContext(Dispatchers.IO) {
+                    runCatching { hub.start(cc.skysparkle.matewave.share.LocalNetwork.wifiInet4()) }.getOrNull()
+                }
                 if (port == null) NetworkLog.log("SPECTATE", "Could not open the spectator port")
                 // The game may have ended while the port was opening.
                 if (port == null || generation != sessionGeneration || !spectatingDecided || spectateTag.isEmpty()) return@launch
@@ -1589,6 +1620,7 @@ class GameViewModel : ViewModel() {
         const val MAX_CHAT_TEXT_CHARS = 8_000
         const val MAX_CHAT_IMAGE_CHARS = 400_000
         const val CLOCK_TOLERANCE_MS = 2_000L
+        const val MAX_CHAT_ENTRIES = 200
         const val HANDSHAKE_TIMEOUT_MS = 20_000L
         const val OPPONENT_FLAG_GRACE_MS = 4_000L
         const val LEAVE_FLUSH_MS = 700L

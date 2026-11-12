@@ -77,14 +77,16 @@ private data class NearbyEntry(
     val elo: Int?,
     val type: TransportType,
     val address: String,
-    val avatar: String?
+    val avatar: String?,
+    /** Player id from the signed Wi-Fi announcement; checked against the profile after connecting. */
+    val playerId: String? = null
 )
 
 @Composable
 fun ConnectionScreen(
     presence: LocalPresence,
     onStartHost: (TimeControl) -> Unit,
-    onJoin: (TransportType, TimeControl, targetId: String) -> Unit,
+    onJoin: (TransportType, TimeControl, targetId: String, expectedUserId: String?) -> Unit,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -146,7 +148,8 @@ fun ConnectionScreen(
                 elo = peer.elo,
                 type = TransportType.LAN,
                 address = peer.address,
-                avatar = friends.firstOrNull { it.userId == peer.playerId }?.avatarBase64
+                avatar = friends.firstOrNull { it.userId == peer.playerId }?.avatarBase64,
+                playerId = peer.playerId
             )
         }
         val lanFingerprints = peers.values.map { it.fingerprint }.filter { it.isNotEmpty() }
@@ -263,7 +266,7 @@ fun ConnectionScreen(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(50))
                                     .background(Lime)
-                                    .clickable { onJoin(entry.type, timeControl, entry.address) }
+                                    .clickable { onJoin(entry.type, timeControl, entry.address, entry.playerId) }
                                     .padding(horizontal = 14.dp, vertical = 6.dp)
                             )
                         }

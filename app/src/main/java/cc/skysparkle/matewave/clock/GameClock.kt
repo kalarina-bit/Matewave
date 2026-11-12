@@ -98,6 +98,12 @@ class GameClock(private val timeControl: TimeControl, private val scope: Corouti
         publish()
     }
 
+    /** Time left for [side] right now, including the part of the current second already used. */
+    fun remainingMillis(side: PieceColor): Long {
+        account()
+        return if (side == PieceColor.WHITE) whiteLeft else blackLeft
+    }
+
     fun restore(whiteMillis: Long, blackMillis: Long) {
         if (unlimited) return
         account()

@@ -2,8 +2,12 @@ package cc.skysparkle.matewave.data
 
 import cc.skysparkle.matewave.ai.AiDifficulty
 import android.content.Context
+import cc.skysparkle.matewave.network.PeerLimits
+import cc.skysparkle.matewave.security.toHex
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File
+import java.security.MessageDigest
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -111,6 +115,7 @@ object FriendsStore {
     private const val PREFS = "chess_friends_prefs"
     private const val KEY_LIST = "friends_json"
     private const val MAX_FRIENDS = 30
+    private const val IMAGE_DIR = "friend_images"
 
     private var appContext: Context? = null
 
@@ -125,6 +130,36 @@ object FriendsStore {
 
     private fun prefs() = appContext?.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
 
+    // Avatars and backgrounds live in files, one per image: in the settings XML they made a file
+    // of up to tens of megabytes that was read at start and rewritten on every change.
+    private fun imageDir(): File? = appContext?.let { File(it.filesDir, IMAGE_DIR) }
+
+    private fun imageFile(userId: String, kind: String): File? {
+        val dir = imageDir() ?: return null
+        val digest = MessageDigest.getInstance("SHA-256").digest(userId.toByteArray(Charsets.UTF_8))
+        return File(dir, "${digest.toHex(16)}_$kind")
+    }
+
+    private fun readImage(userId: String, kind: String): String? =
+        imageFile(userId, kind)?.takeIf { it.isFile }?.let { runCatching { it.readText() }.getOrNull() }
+
+    private fun writeImage(userId: String, kind: String, base64: String?) {
+        val file = imageFile(userId, kind) ?: return
+        if (base64 == null) {
+            file.delete()
+            return
+        }
+        runCatching {
+            file.parentFile?.mkdirs()
+            val tmp = File(file.parentFile, file.name + ".tmp")
+            tmp.writeText(base64)
+            if (!tmp.renameTo(file)) {
+                file.delete()
+                tmp.renameTo(file)
+            }
+        }
+    }
+
     fun list(): List<FriendEntry> = synchronized(lock) { readAll() }
 
     private fun readAll(): List<FriendEntry> {
@@ -136,15 +171,21 @@ object FriendsStore {
             return emptyList()
         }
         val result = ArrayList<FriendEntry>()
+        var hasInlineImages = false
         for (i in 0 until arr.length()) {
             try {
                 val o = arr.getJSONObject(i)
+                val userId = o.optString("uid", "").ifBlank { o.getString("name") }
+                // Older versions kept the images inline; they move to files on the next write.
+                val inlineAvatar = if (o.has("avatar")) o.getString("avatar") else null
+                val inlineBackground = if (o.has("background")) o.getString("background") else null
+                if (inlineAvatar != null || inlineBackground != null) hasInlineImages = true
                 result.add(
                     FriendEntry(
-                        userId = o.optString("uid", "").ifBlank { o.getString("name") },
+                        userId = userId,
                         name = o.getString("name"),
-                        avatarBase64 = if (o.has("avatar")) o.getString("avatar") else null,
-                        backgroundBase64 = if (o.has("background")) o.getString("background") else null,
+                        avatarBase64 = inlineAvatar ?: if (o.optBoolean("a")) readImage(userId, "a") else null,
+                        backgroundBase64 = inlineBackground ?: if (o.optBoolean("b")) readImage(userId, "b") else null,
                         elo = o.optInt("elo", 1200),
                         lastPlayedMs = o.optLong("t", 0),
                         favorite = o.optBoolean("fav", false),
@@ -156,23 +197,34 @@ object FriendsStore {
         }
         val sorted = result.sortedByDescending { it.lastPlayedMs }
         cached = sorted
+        if (hasInlineImages) writeAll(sorted, previous = emptyList())
         return sorted
     }
 
-    private fun writeAll(entries: List<FriendEntry>) {
+    private fun writeAll(entries: List<FriendEntry>, previous: List<FriendEntry> = readAll()) {
         val p = prefs() ?: return
+        val before = previous.associateBy { it.userId }
         val arr = JSONArray()
         entries.forEach { f ->
+            val old = before[f.userId]
+            // Image files are touched only when the image itself changed.
+            if (old == null || old.avatarBase64 != f.avatarBase64) writeImage(f.userId, "a", f.avatarBase64)
+            if (old == null || old.backgroundBase64 != f.backgroundBase64) writeImage(f.userId, "b", f.backgroundBase64)
             val o = JSONObject()
             o.put("uid", f.userId)
             o.put("name", f.name)
-            if (f.avatarBase64 != null) o.put("avatar", f.avatarBase64)
-            if (f.backgroundBase64 != null) o.put("background", f.backgroundBase64)
+            if (f.avatarBase64 != null) o.put("a", true)
+            if (f.backgroundBase64 != null) o.put("b", true)
             o.put("elo", f.elo)
             o.put("t", f.lastPlayedMs)
             if (f.favorite) o.put("fav", true)
             if (f.lastSeenMs > 0) o.put("s", f.lastSeenMs)
             arr.put(o)
+        }
+        val kept = entries.mapTo(HashSet()) { it.userId }
+        previous.filter { it.userId !in kept }.forEach { gone ->
+            writeImage(gone.userId, "a", null)
+            writeImage(gone.userId, "b", null)
         }
         p.edit().putString(KEY_LIST, arr.toString()).apply()
         cached = entries.sortedByDescending { it.lastPlayedMs }
@@ -181,6 +233,11 @@ object FriendsStore {
     fun preload() {
         synchronized(lock) { readAll() }
     }
+
+    // Names and ratings also arrive from presence announcements, so they are bounded here too.
+    private fun cleanName(name: String): String = name.filterNot { it.isISOControl() }.take(PeerLimits.MAX_NAME_CHARS)
+
+    private fun cleanElo(elo: Int): Int = elo.coerceIn(PeerLimits.MIN_ELO, PeerLimits.MAX_ELO)
 
     fun updateProfile(
         userId: String,
@@ -192,8 +249,8 @@ object FriendsStore {
         synchronized(lock) {
             val existing = readAll().firstOrNull { it.userId == userId } ?: return
             val updated = existing.copy(
-                name = name.ifBlank { existing.name },
-                elo = if (elo > 0) elo else existing.elo,
+                name = cleanName(name).ifBlank { existing.name },
+                elo = if (elo > 0) cleanElo(elo) else existing.elo,
                 avatarBase64 = avatarBase64 ?: existing.avatarBase64,
                 backgroundBase64 = backgroundBase64 ?: existing.backgroundBase64
             )
@@ -217,12 +274,13 @@ object FriendsStore {
         backgroundBase64: String? = null
     ): FriendEntry = synchronized(lock) {
         val existing = readAll().firstOrNull { it.userId == userId }
+        val clean = cleanName(name)
         val merged = FriendEntry(
             userId = userId,
-            name = name.ifBlank { existing?.name ?: name },
+            name = clean.ifBlank { existing?.name ?: clean },
             avatarBase64 = avatarBase64 ?: existing?.avatarBase64,
             backgroundBase64 = backgroundBase64 ?: existing?.backgroundBase64,
-            elo = if (elo > 0) elo else (existing?.elo ?: 1200),
+            elo = if (elo > 0) cleanElo(elo) else (existing?.elo ?: 1200),
             lastPlayedMs = System.currentTimeMillis(),
             favorite = existing?.favorite ?: false,
             lastSeenMs = existing?.lastSeenMs ?: 0
