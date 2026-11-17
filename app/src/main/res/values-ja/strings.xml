@@ -374,4 +374,7 @@
     <string name="spectate_unreachable">対局をホストしている端末に接続できません。同じWi-Fiネットワークに接続しているか確認してください。</string>
     <string name="spectate_left_win">%1$sが対局から退出しました。%2$sの勝ち</string>
     <string name="spectate_interrupted">対局が中断されました。プレイヤー間の接続が切れました。</string>
+    <string name="support_title">Matewave を応援する</string>
+    <string name="support_text">無料・オープンソースで広告なし。少額の寄付が開発の継続を支えます。</string>
+    <string name="support_button">Ko-fi で寄付する</string>
 </resources>

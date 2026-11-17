@@ -383,4 +383,7 @@
     <string name="spectate_unreachable">Устройство, на котором идёт партия, недоступно. Убедитесь, что вы подключены к той же сети Wi-Fi.</string>
     <string name="spectate_left_win">%1$s покинули партию. Победили %2$s.</string>
     <string name="spectate_interrupted">Партия прервана: игроки потеряли связь.</string>
+    <string name="support_title">Поддержать Matewave</string>
+    <string name="support_text">Бесплатно, с открытым кодом и без рекламы. Небольшое пожертвование помогает проекту развиваться.</string>
+    <string name="support_button">Пожертвовать через Ko-fi</string>
 </resources>

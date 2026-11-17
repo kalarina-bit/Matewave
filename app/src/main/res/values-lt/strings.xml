@@ -377,4 +377,7 @@
     <string name="spectate_unreachable">Nepavyksta pasiekti įrenginio, kuriame vyksta partija. Įsitikinkite, kad esate prisijungę prie to paties „Wi-Fi“ tinklo.</string>
     <string name="spectate_left_win">%1$s paliko partiją. Laimėjo %2$s.</string>
     <string name="spectate_interrupted">Partija nutraukta: žaidėjų ryšys nutrūko.</string>
+    <string name="support_title">Paremti Matewave</string>
+    <string name="support_text">Nemokama, atvirojo kodo ir be reklamų. Nedidelė auka padeda projektui gyvuoti.</string>
+    <string name="support_button">Paaukoti per Ko-fi</string>
 </resources>

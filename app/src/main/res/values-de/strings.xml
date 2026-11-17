@@ -375,4 +375,7 @@
     <string name="spectate_unreachable">Das Gerät, auf dem die Partie läuft, ist nicht erreichbar. Achte darauf, dass du im selben WLAN bist.</string>
     <string name="spectate_left_win">%1$s hat die Partie verlassen. %2$s gewinnt.</string>
     <string name="spectate_interrupted">Partie unterbrochen: Die Spieler haben die Verbindung verloren.</string>
+    <string name="support_title">Matewave unterstützen</string>
+    <string name="support_text">Kostenlos, quelloffen und werbefrei. Eine kleine Spende hilft, das Projekt weiterzuführen.</string>
+    <string name="support_button">Auf Ko-fi spenden</string>
 </resources>

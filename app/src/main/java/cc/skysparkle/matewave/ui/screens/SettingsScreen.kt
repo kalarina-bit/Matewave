@@ -178,6 +178,23 @@ fun SettingsScreen(
                 onClick = { showAbout = true }
             )
         }
+
+        // Donation plaque with the app icon, last on the screen so it never gets in the way
+        ListGroup {
+            ListRow(
+                title = stringResource(R.string.support_title),
+                subtitle = stringResource(R.string.support_text),
+                leading = {
+                    Image(
+                        painter = painterResource(R.drawable.ic_launcher_card),
+                        contentDescription = null,
+                        modifier = Modifier.size(36.dp).clip(RoundedCornerShape(10.dp))
+                    )
+                },
+                trailing = { cc.skysparkle.matewave.ui.components.AppIcon(R.drawable.ic_heart, size = 22.dp, tint = DonateRed) },
+                onClick = { cc.skysparkle.matewave.settings.AppLinks.open(context, cc.skysparkle.matewave.settings.AppLinks.DONATE) }
+            )
+        }
     }
 
     if (showAbout) {
@@ -233,6 +250,12 @@ fun SettingsScreen(
                 }
             )
             AboutRow(
+                iconRes = R.drawable.ic_heart,
+                title = stringResource(R.string.support_button),
+                subtitle = cc.skysparkle.matewave.settings.AppLinks.DONATE_LABEL,
+                onClick = { cc.skysparkle.matewave.settings.AppLinks.open(context, cc.skysparkle.matewave.settings.AppLinks.DONATE) }
+            )
+            AboutRow(
                 iconRes = R.drawable.ic_repo,
                 title = stringResource(R.string.settings_repo_title),
                 subtitle = cc.skysparkle.matewave.settings.AppLinks.REPOSITORY_LABEL,
@@ -241,6 +264,8 @@ fun SettingsScreen(
         }
     }
 }
+
+private val DonateRed = Color(0xFFFF6B8A)
 
 @Composable
 private fun AboutRow(iconRes: Int, title: String, subtitle: String, onClick: () -> Unit) {

@@ -9,8 +9,12 @@
   Play against the AI, solve puzzles, learn openings, or play friends nearby over Bluetooth and Wi-Fi/LAN.
 </p>
 
+<p align="center">
+  <a href="https://ko-fi.com/skysparkle"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi"></a>
+</p>
+
 > [!IMPORTANT]
-> **Matewave is coming to Google Play!** The app is now in closed testing there ahead of the public release. Ideas, wishes and suggestions for improvement are very welcome — send them wherever is easiest for you: an issue on [Gitea](https://git.skysparkle.cc/kalarina/Matewave/issues) or [GitHub](https://github.com/kalarina-bit/Matewave/issues), or an email to [cuken107@proton.me](mailto:cuken107@proton.me).
+> **Matewave is coming to Google Play!** The app is now in closed testing there ahead of the public release. Ideas, wishes and suggestions for improvement are very welcome — send them wherever is easiest for you: an [issue on GitHub](https://github.com/kalarina-bit/Matewave/issues), or an email to [cuken107@proton.me](mailto:cuken107@proton.me).
 
 > [!NOTE]
 > **Looking for designers!** Matewave is looking for volunteer designers to help with icons, logos, animations, cover art (store graphics) and UI design. This is unpaid help for an open-source project. If you're interested, write to [cuken107@proton.me](mailto:cuken107@proton.me).
@@ -23,7 +27,6 @@
   <a href="https://f-droid.org/packages/cc.skysparkle.matewave/"><img src="assets/get-it-on%20(1).png" height="56" alt="Get it on F-Droid"></a>
   <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/kalarina-bit/Matewave"><img src="assets/badge_obtainium.png" height="56" alt="Get it on Obtainium"></a>
   <a href="https://github.com/kalarina-bit/Matewave/releases/latest"><img src="assets/get-it-on-github.png" height="56" alt="Get it on GitHub"></a>
-  <a href="https://git.skysparkle.cc/kalarina/Matewave/releases"><img src="assets/get-it-on-gitea.png" height="56" alt="Get it on Gitea"></a>
 </p>
 
 <p align="center">
@@ -51,7 +54,7 @@
 
 - **[F-Droid](https://f-droid.org/packages/cc.skysparkle.matewave/)** — install and update through the F-Droid client.
 - **[Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/kalarina-bit/Matewave)** — installs the APK straight from GitHub releases and keeps it up to date.
-- **Manually** — download the latest APK from [GitHub](https://github.com/kalarina-bit/Matewave/releases/latest) or [Gitea](https://git.skysparkle.cc/kalarina/Matewave/releases), allow installs from unknown sources for the app you open it with (Settings → Apps → Special access → Install unknown apps), then open the `.apk` and confirm.
+- **Manually** — download the latest APK from [GitHub Releases](https://github.com/kalarina-bit/Matewave/releases/latest), allow installs from unknown sources for the app you open it with (Settings → Apps → Special access → Install unknown apps), then open the `.apk` and confirm.
 
 ## <img src="assets/icon-verify.png" width="32" alt=""> Verifying a download
 
@@ -82,7 +85,13 @@ Nearby multiplayer needs two physical devices — the emulator has no real Bluet
 
 ## 🤝 Contributing
 
-Bug reports, puzzle and opening fixes, translation fixes and pull requests are welcome in the [issue tracker](https://git.skysparkle.cc/kalarina/Matewave/issues). Please read [CONTRIBUTING.md](CONTRIBUTING.md) first — it explains what fits the project and how to send changes. To open an issue or a pull request, [create an account](https://git.skysparkle.cc/user/sign_up) on this Gitea.
+Bug reports, puzzle and opening fixes, translation fixes and pull requests are welcome in the [issue tracker](https://github.com/kalarina-bit/Matewave/issues). Please read [CONTRIBUTING.md](CONTRIBUTING.md) first — it explains what fits the project and how to send changes.
+
+## ☕ Support
+
+Matewave is free, open source and has no ads. If it is useful to you, you can support the project on [Ko-fi](https://ko-fi.com/skysparkle) — donations pay for the Skysparkle server and the time spent on the apps.
+
+<a href="https://ko-fi.com/skysparkle"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi"></a>
 
 ## 📄 License
 

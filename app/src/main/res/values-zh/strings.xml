@@ -374,4 +374,7 @@
     <string name="spectate_unreachable">无法连接到主持对局的设备。请确认你们连接的是同一个 Wi-Fi 网络。</string>
     <string name="spectate_left_win">%1$s离开了对局，%2$s获胜。</string>
     <string name="spectate_interrupted">对局中断：玩家之间的连接已断开。</string>
+    <string name="support_title">支持 Matewave</string>
+    <string name="support_text">免费、开源、无广告。一笔小小的捐助能让项目持续下去。</string>
+    <string name="support_button">通过 Ko-fi 捐助</string>
 </resources>
