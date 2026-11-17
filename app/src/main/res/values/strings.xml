@@ -378,4 +378,21 @@
     <string name="support_title">Support Matewave</string>
     <string name="support_text">Free, open source and no ads. A small donation helps keep it going.</string>
     <string name="support_button">Donate on Ko-fi</string>
+
+    <!-- first-launch guide -->
+    <string name="guide_skip">Skip</string>
+    <string name="guide_next">Next</string>
+    <string name="guide_start">Start playing</string>
+    <string name="guide_page_of">Page %1$d of %2$d</string>
+    <string name="guide_welcome_title">Welcome to Matewave</string>
+    <string name="guide_welcome_text">Chess with no account, no ads and no internet needed. Everything stays on your phone.</string>
+    <string name="guide_play_title">Play and learn</string>
+    <string name="guide_play_text">Play the computer at four levels, solve puzzles that match your rating and learn openings, with reminders when it\'s time to review them.</string>
+    <string name="guide_nearby_title">Play friends nearby</string>
+    <string name="guide_nearby_text">Play face to face over Bluetooth or the same Wi-Fi, no internet needed. Your friend needs Matewave too: send it from Settings → Share the app. Friends can also watch your games.</string>
+    <string name="guide_you_title">A bit about you</string>
+    <string name="guide_you_text">Players nearby see your name. Your level sets the starting rating and the puzzles you get.</string>
+    <string name="guide_level_hint">You can change your name later in your profile.</string>
+    <string name="guide_show">Show the guide</string>
+    <string name="guide_show_subtitle">A quick tour of the app</string>
 </resources>

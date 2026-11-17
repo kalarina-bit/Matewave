@@ -1,2 +1,3 @@
-• Unterstützungskarte mit Ko-fi-Button unten in den Einstellungen und unter „Über“
+• Unterstützungskarte mit Ko-fi-Button unten in den Einstellungen und unter „Über die App“
 • Links zum Quellcode führen jetzt zu GitHub
+• Eine kurze Anleitung beim ersten Start mit Name und Spielstärke; erneut aufrufbar in den Einstellungen

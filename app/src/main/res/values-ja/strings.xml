@@ -377,4 +377,21 @@
     <string name="support_title">Matewave を応援する</string>
     <string name="support_text">無料・オープンソースで広告なし。少額の寄付が開発の継続を支えます。</string>
     <string name="support_button">Ko-fi で寄付する</string>
+
+    <!-- first-launch guide -->
+    <string name="guide_skip">スキップ</string>
+    <string name="guide_next">次へ</string>
+    <string name="guide_start">プレイを始める</string>
+    <string name="guide_page_of">%2$dページ中%1$dページ</string>
+    <string name="guide_welcome_title">Matewaveへようこそ</string>
+    <string name="guide_welcome_text">アカウント不要、広告なし、インターネットも不要のチェス。データはすべてスマホの中に残ります。</string>
+    <string name="guide_play_title">対局して学ぶ</string>
+    <string name="guide_play_text">4段階のコンピューターと対局し、レーティングに合ったパズルを解き、定跡を学べます。復習のタイミングはアプリがお知らせします。</string>
+    <string name="guide_nearby_title">近くの友だちと対局</string>
+    <string name="guide_nearby_text">Bluetoothまたは同じWi-Fiで、インターネットなしで対面対局できます。相手にもMatewaveが必要です。「設定」→「アプリを共有」から送れます。友だちはあなたの対局を観戦することもできます。</string>
+    <string name="guide_you_title">あなたについて</string>
+    <string name="guide_you_text">近くのプレイヤーにはあなたの名前が表示されます。レベルによって初期レーティングと出題されるパズルが決まります。</string>
+    <string name="guide_level_hint">名前はあとでプロフィールから変更できます。</string>
+    <string name="guide_show">ガイドを表示</string>
+    <string name="guide_show_subtitle">アプリのかんたんな紹介</string>
 </resources>

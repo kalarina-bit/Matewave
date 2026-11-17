@@ -1,2 +1,3 @@
 • Support card with a Ko-fi button at the bottom of Settings and in About
 • Source code links now lead to GitHub
+• A short guide on first launch, with your name and level; open it again from Settings

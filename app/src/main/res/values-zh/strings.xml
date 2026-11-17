@@ -377,4 +377,21 @@
     <string name="support_title">支持 Matewave</string>
     <string name="support_text">免费、开源、无广告。一笔小小的捐助能让项目持续下去。</string>
     <string name="support_button">通过 Ko-fi 捐助</string>
+
+    <!-- first-launch guide -->
+    <string name="guide_skip">跳过</string>
+    <string name="guide_next">下一步</string>
+    <string name="guide_start">开始下棋</string>
+    <string name="guide_page_of">第 %1$d 页，共 %2$d 页</string>
+    <string name="guide_welcome_title">欢迎使用 Matewave</string>
+    <string name="guide_welcome_text">无需账号、无广告、无需联网的国际象棋。所有数据都留在你的手机上。</string>
+    <string name="guide_play_title">对弈与学习</string>
+    <string name="guide_play_text">与四个难度的电脑对弈，解答符合你等级分的谜题，学习开局，应用会提醒你何时复习。</string>
+    <string name="guide_nearby_title">与附近的朋友对弈</string>
+    <string name="guide_nearby_text">通过蓝牙或同一 Wi-Fi 面对面对弈，无需联网。朋友也需要安装 Matewave：可在“设置”→“分享应用”中发送。朋友还可以观看你的对局。</string>
+    <string name="guide_you_title">介绍一下你自己</string>
+    <string name="guide_you_text">附近的玩家会看到你的名字。你的水平决定初始等级分和推送给你的谜题。</string>
+    <string name="guide_level_hint">名字之后可以在个人资料中修改。</string>
+    <string name="guide_show">显示使用指南</string>
+    <string name="guide_show_subtitle">快速了解本应用</string>
 </resources>

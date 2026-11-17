@@ -378,4 +378,21 @@
     <string name="support_title">Matewave unterstützen</string>
     <string name="support_text">Kostenlos, quelloffen und werbefrei. Eine kleine Spende hilft, das Projekt weiterzuführen.</string>
     <string name="support_button">Auf Ko-fi spenden</string>
+
+    <!-- first-launch guide -->
+    <string name="guide_skip">Überspringen</string>
+    <string name="guide_next">Weiter</string>
+    <string name="guide_start">Los geht\'s</string>
+    <string name="guide_page_of">Seite %1$d von %2$d</string>
+    <string name="guide_welcome_title">Willkommen bei Matewave</string>
+    <string name="guide_welcome_text">Schach ohne Konto, ohne Werbung und ohne Internet. Alles bleibt auf deinem Handy.</string>
+    <string name="guide_play_title">Spielen und lernen</string>
+    <string name="guide_play_text">Spiele gegen den Computer in vier Stufen, löse Aufgaben passend zu deiner Wertung und lerne Eröffnungen – die App erinnert dich ans Wiederholen.</string>
+    <string name="guide_nearby_title">Mit Freunden in der Nähe</string>
+    <string name="guide_nearby_text">Spielt euch gegenüber über Bluetooth oder dasselbe WLAN, ganz ohne Internet. Dein Freund braucht Matewave ebenfalls: schick es über Einstellungen → App teilen. Freunde können deine Partien auch zuschauen.</string>
+    <string name="guide_you_title">Ein bisschen über dich</string>
+    <string name="guide_you_text">Spieler in der Nähe sehen deinen Namen. Deine Stufe bestimmt die Startwertung und die Aufgaben, die du bekommst.</string>
+    <string name="guide_level_hint">Deinen Namen kannst du später im Profil ändern.</string>
+    <string name="guide_show">Anleitung anzeigen</string>
+    <string name="guide_show_subtitle">Ein kurzer Rundgang durch die App</string>
 </resources>

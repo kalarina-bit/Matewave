@@ -57,7 +57,8 @@ fun SettingsScreen(
     onOpenPermissions: () -> Unit,
     onOpenAppearance: () -> Unit,
     onOpenLicenses: () -> Unit,
-    onOpenShare: () -> Unit
+    onOpenShare: () -> Unit,
+    onOpenGuide: () -> Unit
 ) {
     var musicOn by remember { mutableStateOf(SoundManager.musicEnabled) }
     var sfxOn by remember { mutableStateOf(SoundManager.sfxEnabled) }
@@ -168,6 +169,14 @@ fun SettingsScreen(
                 icon = R.drawable.ic_policy,
                 chevron = true,
                 onClick = { cc.skysparkle.matewave.settings.AppLinks.open(context, cc.skysparkle.matewave.settings.AppLinks.PRIVACY_POLICY) }
+            )
+            ListDivider()
+            ListRow(
+                title = stringResource(R.string.guide_show),
+                subtitle = stringResource(R.string.guide_show_subtitle),
+                icon = R.drawable.ic_hint,
+                chevron = true,
+                onClick = onOpenGuide
             )
             ListDivider()
             ListRow(

@@ -386,4 +386,21 @@
     <string name="support_title">Поддержать Matewave</string>
     <string name="support_text">Бесплатно, с открытым кодом и без рекламы. Небольшое пожертвование помогает проекту развиваться.</string>
     <string name="support_button">Пожертвовать через Ko-fi</string>
+
+    <!-- first-launch guide -->
+    <string name="guide_skip">Пропустить</string>
+    <string name="guide_next">Далее</string>
+    <string name="guide_start">Начать играть</string>
+    <string name="guide_page_of">Страница %1$d из %2$d</string>
+    <string name="guide_welcome_title">Добро пожаловать в Matewave</string>
+    <string name="guide_welcome_text">Шахматы без аккаунта, рекламы и интернета. Всё остаётся на вашем телефоне.</string>
+    <string name="guide_play_title">Играйте и учитесь</string>
+    <string name="guide_play_text">Играйте с компьютером на четырёх уровнях, решайте задачи под ваш рейтинг и учите дебюты: приложение напомнит, когда пора повторить.</string>
+    <string name="guide_nearby_title">Играйте с друзьями рядом</string>
+    <string name="guide_nearby_text">Играйте лицом к лицу через Bluetooth или общий Wi-Fi, интернет не нужен. У друга тоже должен быть Matewave: отправьте его через Настройки → Поделиться приложением. Друзья могут смотреть ваши партии.</string>
+    <string name="guide_you_title">Немного о вас</string>
+    <string name="guide_you_text">Игроки рядом видят ваше имя. От уровня зависят начальный рейтинг и задачи, которые вам попадутся.</string>
+    <string name="guide_level_hint">Имя можно поменять позже в профиле.</string>
+    <string name="guide_show">Показать гид</string>
+    <string name="guide_show_subtitle">Короткий обзор приложения</string>
 </resources>

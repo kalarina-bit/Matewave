@@ -121,9 +121,12 @@ private fun AppNavHost() {
         onDispose { PresenceHub.release(context) }
     }
 
+    // New players start with the guide; everyone else goes straight to the menu
+    val startRoute = remember { if (cc.skysparkle.matewave.ui.screens.Onboarding.needed(context)) "onboarding" else "menu" }
+
     NavHost(
         navController = navController,
-        startDestination = "menu",
+        startDestination = startRoute,
         enterTransition = {
             if (isTabSwitch(initialState.destination.route, targetState.destination.route)) fadeThroughIn()
             else sharedAxisIn(forward = true)
@@ -141,6 +144,22 @@ private fun AppNavHost() {
             else sharedAxisOut(forward = false)
         }
     ) {
+        composable("onboarding") {
+            cc.skysparkle.matewave.ui.screens.OnboardingScreen(
+                replay = false,
+                onDone = {
+                    navController.navigate("menu") { popUpTo("onboarding") { inclusive = true } }
+                }
+            )
+        }
+
+        composable("guide") {
+            cc.skysparkle.matewave.ui.screens.OnboardingScreen(
+                replay = true,
+                onDone = { navController.popBackStack() }
+            )
+        }
+
         composable("menu") {
             MainMenuScreen(
                 viewModel = viewModel,
@@ -194,7 +213,8 @@ private fun AppNavHost() {
                 onOpenPermissions = { navController.navigate("permissions") },
                 onOpenAppearance = { navController.navigate("appearance") },
                 onOpenLicenses = { navController.navigate("licenses") },
-                onOpenShare = { navController.navigate("shareApk") }
+                onOpenShare = { navController.navigate("shareApk") },
+                onOpenGuide = { navController.navigate("guide") }
             )
         }
 
