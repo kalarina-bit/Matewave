@@ -15,6 +15,8 @@ val UiCornerRadius = 22.dp
 val GlassShape: Shape = RoundedCornerShape(UiCornerRadius)
 
 val TabletMaxContentWidth = 600.dp
+/** Landscape board screens: board and side panel together. */
+val LandscapeMaxContentWidth = 1200.dp
 
 fun Modifier.glass(): Modifier = this
     .clip(GlassShape)

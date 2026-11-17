@@ -43,45 +43,52 @@ fun OpeningTrainerScreen(viewModel: OpeningStudyViewModel, onBack: () -> Unit) {
     val sans = state.sans
     val opening = remember(sans) { OpeningBook.openingName(sans) }
 
-    GlassScaffold(title = course.name, onBack = onBack) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                stringResource(
-                    when (state.mode) {
-                        SessionMode.LEARN -> R.string.study_mode_learn
-                        SessionMode.REVIEW -> R.string.study_mode_review
-                        SessionMode.PRACTICE -> R.string.study_mode_practice
-                    }
-                ),
-                color = ChessGreen,
-                style = MaterialTheme.typography.labelLarge
-            )
-            Spacer(Modifier.weight(1f))
-            val asked = state.asked.size
-            if (asked > 0 && state.phase != TrainerPhase.COMPLETE) {
+    // Landscape: the board on the left, progress, moves and the task on the right
+    cc.skysparkle.matewave.ui.components.BoardScaffold(
+        title = course.name,
+        onBack = onBack,
+        above = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    stringResource(R.string.study_progress, minOf(state.answered + 1, asked), asked),
-                    color = ink.copy(alpha = 0.7f),
-                    style = MaterialTheme.typography.bodySmall
+                    stringResource(
+                        when (state.mode) {
+                            SessionMode.LEARN -> R.string.study_mode_learn
+                            SessionMode.REVIEW -> R.string.study_mode_review
+                            SessionMode.PRACTICE -> R.string.study_mode_practice
+                        }
+                    ),
+                    color = ChessGreen,
+                    style = MaterialTheme.typography.labelLarge
                 )
+                Spacer(Modifier.weight(1f))
+                val asked = state.asked.size
+                if (asked > 0 && state.phase != TrainerPhase.COMPLETE) {
+                    Text(
+                        stringResource(R.string.study_progress, minOf(state.answered + 1, asked), asked),
+                        color = ink.copy(alpha = 0.7f),
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
+            ProgressBar(state.answered.toFloat() / state.asked.size.coerceAtLeast(1))
+
+            MovesBar(sans = sans, startBoard = startBoard, opening = opening)
+        },
+        board = { boardModifier ->
+            ChessBoardView(
+                modifier = boardModifier,
+                board = state.board,
+                selectedSquare = state.selectedSquare,
+                legalTargets = state.legalTargets,
+                kingInCheckSquare = null,
+                flipped = course.side == PieceColor.BLACK,
+                onSquareClick = { viewModel.onSquareClick(it) },
+                lastMove = state.lastMove,
+                hintSquare = state.hintSquare,
+                interactionEnabled = state.phase == TrainerPhase.YOUR_MOVE || state.phase == TrainerPhase.WRONG
+            )
         }
-        ProgressBar(state.answered.toFloat() / state.asked.size.coerceAtLeast(1))
-
-        MovesBar(sans = sans, startBoard = startBoard, opening = opening)
-
-        ChessBoardView(
-            board = state.board,
-            selectedSquare = state.selectedSquare,
-            legalTargets = state.legalTargets,
-            kingInCheckSquare = null,
-            flipped = course.side == PieceColor.BLACK,
-            onSquareClick = { viewModel.onSquareClick(it) },
-            lastMove = state.lastMove,
-            hintSquare = state.hintSquare,
-            interactionEnabled = state.phase == TrainerPhase.YOUR_MOVE || state.phase == TrainerPhase.WRONG
-        )
-
+    ) {
         when (state.phase) {
             TrainerPhase.YOUR_MOVE -> Text(
                 stringResource(if (state.mode == SessionMode.LEARN) R.string.study_learn_prompt else R.string.study_recall_prompt),

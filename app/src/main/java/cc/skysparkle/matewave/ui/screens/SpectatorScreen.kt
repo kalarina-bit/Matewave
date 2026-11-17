@@ -88,35 +88,40 @@ fun SpectatorScreen(target: SpectateTarget, onBackToFriends: () -> Unit) {
     val view = state.view
     var resultHidden by remember(view?.gameId, state.phase) { mutableStateOf(false) }
 
-    GlassScaffold(
+    val bottom = if (state.flipped) PieceColor.BLACK else PieceColor.WHITE
+    val material = remember(view?.board) { view?.let { Material.balance(it.board) } }
+    val checkSquare = remember(view?.board) { view?.let { ChessEngine.checkedKingSquare(it.board) } }
+
+    // Landscape: the board on the left, players, moves and buttons on the right
+    cc.skysparkle.matewave.ui.components.BoardScaffold(
         title = stringResource(R.string.spectate_title),
         onBack = backToFriends,
-        actions = { if (view != null) SpectatorBadge(state.spectators, state.max) }
-    ) {
-        if (state.phase == SpectatePhase.CONNECTING) {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                CircularProgressIndicator(color = ink, strokeWidth = 2.dp, modifier = Modifier.size(16.dp))
-                Text(stringResource(R.string.spectate_joining), color = ink, style = MaterialTheme.typography.bodyMedium)
+        actions = { if (view != null) SpectatorBadge(state.spectators, state.max) },
+        above = {
+            if (state.phase == SpectatePhase.CONNECTING) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    CircularProgressIndicator(color = ink, strokeWidth = 2.dp, modifier = Modifier.size(16.dp))
+                    Text(stringResource(R.string.spectate_joining), color = ink, style = MaterialTheme.typography.bodyMedium)
+                }
             }
+            if (view != null && material != null) SpectatorPlayerRow(view, bottom.opposite(), state, material)
+        },
+        board = { boardModifier ->
+            if (view != null) ChessBoardView(
+                modifier = boardModifier,
+                board = view.board,
+                selectedSquare = null,
+                legalTargets = emptyList(),
+                kingInCheckSquare = checkSquare,
+                flipped = state.flipped,
+                onSquareClick = {},
+                lastMove = view.lastMove,
+                interactionEnabled = false,
+                highlightLastMove = true
+            )
         }
-        if (view == null) return@GlassScaffold
-
-        val bottom = if (state.flipped) PieceColor.BLACK else PieceColor.WHITE
-        val material = remember(view.board) { Material.balance(view.board) }
-        val checkSquare = remember(view.board) { ChessEngine.checkedKingSquare(view.board) }
-
-        SpectatorPlayerRow(view, bottom.opposite(), state, material)
-        ChessBoardView(
-            board = view.board,
-            selectedSquare = null,
-            legalTargets = emptyList(),
-            kingInCheckSquare = checkSquare,
-            flipped = state.flipped,
-            onSquareClick = {},
-            lastMove = view.lastMove,
-            interactionEnabled = false,
-            highlightLastMove = true
-        )
+    ) {
+        if (view == null || material == null) return@BoardScaffold
         SpectatorPlayerRow(view, bottom, state, material)
 
         val bookPlies = remember(view.moveSans) { OpeningBook.bookDepth(view.moveSans) }

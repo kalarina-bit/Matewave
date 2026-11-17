@@ -59,6 +59,7 @@ import cc.skysparkle.matewave.data.ProfileStore
 import cc.skysparkle.matewave.network.Transports
 import cc.skysparkle.matewave.ui.components.AppIcon
 import cc.skysparkle.matewave.ui.components.GlassButton
+import cc.skysparkle.matewave.ui.components.horizontalSafePadding
 import cc.skysparkle.matewave.ui.theme.ChessGreen
 import cc.skysparkle.matewave.ui.theme.PanelBorder
 import cc.skysparkle.matewave.ui.theme.Surface2
@@ -165,6 +166,7 @@ fun OnboardingScreen(replay: Boolean, onDone: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .horizontalSafePadding()
             .testTag("onboarding"),
         contentAlignment = Alignment.TopCenter
     ) {

@@ -53,6 +53,72 @@ import cc.skysparkle.matewave.ui.theme.GlassShape
 import cc.skysparkle.matewave.ui.theme.PanelBorder
 import cc.skysparkle.matewave.ui.theme.TabletMaxContentWidth
 import cc.skysparkle.matewave.ui.theme.glass
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.min
+import cc.skysparkle.matewave.ui.theme.LandscapeMaxContentWidth
+
+/** Landscape: a phone on its side or a tablet held wide. Board screens then put the board on the left. */
+@Composable
+@ReadOnlyComposable
+fun isLandscape(): Boolean {
+    val config = LocalConfiguration.current
+    return config.screenWidthDp > config.screenHeightDp
+}
+
+/** Side insets in landscape: the camera cutout and a 3-button navigation bar sit on the left or right. */
+@Composable
+fun Modifier.horizontalSafePadding(): Modifier =
+    windowInsetsPadding(WindowInsets.displayCutout.union(WindowInsets.navigationBars).only(WindowInsetsSides.Horizontal))
+
+@Composable
+private fun ScaffoldTopBar(
+    title: String,
+    onBack: (() -> Unit)?,
+    actions: @Composable RowScope.() -> Unit,
+    titleContent: (@Composable RowScope.() -> Unit)?
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (onBack != null) {
+            IconButton(onClick = onBack) {
+                AppIcon(
+                    R.drawable.ic_arrow_back,
+                    size = 24.dp,
+                    tint = ChessGreen,
+                    contentDescription = stringResource(R.string.back)
+                )
+            }
+        } else {
+            Spacer(Modifier.width(16.dp))
+        }
+        if (titleContent != null) {
+            Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, content = titleContent)
+        } else {
+            Text(
+                title,
+                color = ink,
+                style = MaterialTheme.typography.headlineSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        actions()
+    }
+}
 
 @Composable
 fun GlassScaffold(
@@ -64,38 +130,9 @@ fun GlassScaffold(
     titleContent: (@Composable RowScope.() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+    Box(modifier = Modifier.fillMaxSize().horizontalSafePadding(), contentAlignment = Alignment.TopCenter) {
         Column(modifier = Modifier.fillMaxSize().widthIn(max = TabletMaxContentWidth)) {
-            Row(
-                modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (onBack != null) {
-                    IconButton(onClick = onBack) {
-                        AppIcon(
-                            R.drawable.ic_arrow_back,
-                            size = 24.dp,
-                            tint = ChessGreen,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                } else {
-                    Spacer(Modifier.width(16.dp))
-                }
-                if (titleContent != null) {
-                    Row(modifier = Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically, content = titleContent)
-                } else {
-                    Text(
-                        title,
-                        color = ink,
-                        style = MaterialTheme.typography.headlineSmall,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                actions()
-            }
+            ScaffoldTopBar(title, onBack, actions, titleContent)
 
             val scrollState = rememberScrollState()
 
@@ -115,6 +152,65 @@ fun GlassScaffold(
 
             if (bottomBar != null) {
                 Box(modifier = Modifier.navigationBarsPadding()) { bottomBar() }
+            }
+        }
+    }
+}
+
+/**
+ * A screen with a chess board. Portrait: [above], the board and [below] in one scrolling column,
+ * as before. Landscape: the board on the left as large as the height allows, [above] and [below]
+ * in a scrolling column on the right. [board] gets the modifier that sizes it.
+ */
+@Composable
+fun BoardScaffold(
+    title: String,
+    onBack: (() -> Unit)? = null,
+    actions: @Composable RowScope.() -> Unit = {},
+    titleContent: (@Composable RowScope.() -> Unit)? = null,
+    above: @Composable ColumnScope.() -> Unit = {},
+    board: (@Composable (Modifier) -> Unit)?,
+    below: @Composable ColumnScope.() -> Unit = {}
+) {
+    if (!isLandscape()) {
+        GlassScaffold(title = title, onBack = onBack, actions = actions, titleContent = titleContent) {
+            above()
+            if (board != null) {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) { board(Modifier) }
+            }
+            below()
+        }
+        return
+    }
+    Box(modifier = Modifier.fillMaxSize().horizontalSafePadding(), contentAlignment = Alignment.TopCenter) {
+        Column(modifier = Modifier.fillMaxSize().widthIn(max = LandscapeMaxContentWidth)) {
+            ScaffoldTopBar(title, onBack, actions, titleContent)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .navigationBarsPadding()
+                    .padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                if (board != null) {
+                    BoxWithConstraints(
+                        modifier = Modifier.weight(1f).fillMaxHeight(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        board(Modifier.size(min(maxWidth, maxHeight)))
+                    }
+                }
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
+                    above()
+                    below()
+                }
             }
         }
     }

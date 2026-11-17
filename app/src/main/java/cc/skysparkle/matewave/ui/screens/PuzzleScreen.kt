@@ -71,7 +71,8 @@ fun PuzzleSolveScreen(viewModel: GameViewModel, onBack: () -> Unit, onNextPuzzle
     }
     val redSquare = if (state.puzzleFailedAttempt && state.puzzleAutoMoving) state.lastMove?.to else null
 
-    GlassScaffold(
+    // Landscape: the board on the left, the task and buttons on the right
+    cc.skysparkle.matewave.ui.components.BoardScaffold(
         title = puzzle?.let { stringResource(R.string.puzzle_title_rating, it.rating) } ?: stringResource(R.string.puzzle_title_fallback),
         onBack = onBack,
         actions = {
@@ -88,24 +89,25 @@ fun PuzzleSolveScreen(viewModel: GameViewModel, onBack: () -> Unit, onNextPuzzle
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                 )
             }
+        },
+        board = { boardModifier ->
+            // On tablets the board is capped and centred, so the task and buttons fit without scrolling.
+            ChessBoardView(
+                board = state.board,
+                selectedSquare = state.selectedSquare,
+                legalTargets = state.legalTargetsFromSelected,
+                kingInCheckSquare = remember(state.board) { ChessEngine.checkedKingSquare(state.board) },
+                flipped = state.myColor == PieceColor.BLACK,
+                onSquareClick = viewModel::onSquareClicked,
+                modifier = boardModifier.widthIn(max = 560.dp),
+                lastMove = state.lastMove,
+                hintSquare = state.puzzleHintFrom,
+                interactionEnabled = state.puzzleStarted && !state.puzzleAutoMoving && !state.puzzleSolved && state.pendingPromotion == null,
+                flashSquare = redSquare ?: greenFlash,
+                flashColor = if (redSquare != null) WrongRed.copy(alpha = 0.55f) else ChessGreen.copy(alpha = 0.55f)
+            )
         }
     ) {
-        // On tablets the board is capped and centred, so the task and buttons fit without scrolling.
-        ChessBoardView(
-            board = state.board,
-            selectedSquare = state.selectedSquare,
-            legalTargets = state.legalTargetsFromSelected,
-            kingInCheckSquare = remember(state.board) { ChessEngine.checkedKingSquare(state.board) },
-            flipped = state.myColor == PieceColor.BLACK,
-            onSquareClick = viewModel::onSquareClicked,
-            modifier = Modifier.align(Alignment.CenterHorizontally).widthIn(max = 560.dp),
-            lastMove = state.lastMove,
-            hintSquare = state.puzzleHintFrom,
-            interactionEnabled = state.puzzleStarted && !state.puzzleAutoMoving && !state.puzzleSolved && state.pendingPromotion == null,
-            flashSquare = redSquare ?: greenFlash,
-            flashColor = if (redSquare != null) WrongRed.copy(alpha = 0.55f) else ChessGreen.copy(alpha = 0.55f)
-        )
-
         // The task, in the same format as the status in a game: a dot in the side's colour.
         val (text, color) = when {
             state.puzzleSolved -> stringResource(R.string.puzzle_solved) to ChessGreen

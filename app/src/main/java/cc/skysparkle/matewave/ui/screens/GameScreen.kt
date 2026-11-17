@@ -102,7 +102,14 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
         else -> null
     }
 
-    GlassScaffold(
+    val material = remember(state.board) { cc.skysparkle.matewave.engine.Material.balance(state.board) }
+    val bottomColor = state.myColor
+    val topColor = if (bottomColor == PieceColor.WHITE) PieceColor.BLACK else PieceColor.WHITE
+    val kingInCheckSquare = remember(state.board) { ChessEngine.checkedKingSquare(state.board) }
+
+    // Portrait: opponent, board, you and the controls one under another.
+    // Landscape: the board on the left, players and controls on the right.
+    cc.skysparkle.matewave.ui.components.BoardScaffold(
         title = "",
         onBack = requestExit,
         actions = {
@@ -112,32 +119,29 @@ fun GameScreen(viewModel: GameViewModel, onExit: () -> Unit) {
         },
         titleContent = if (showOpening && opening != null) {
             { OpeningTitle("${opening.eco} · ${opening.name}", bookStatus, inBook) }
-        } else null
+        } else null,
+        above = {
+            if (state.mode == GameMode.VS_PLAYER_NETWORK) ConnectionBanner(state)
+            TrustBanners(state)
+            PlayerRow(state, topColor, isMe = false, material = material, clock = viewModel.clockState)
+        },
+        board = { boardModifier ->
+            ChessBoardView(
+                modifier = boardModifier,
+                board = state.board,
+                selectedSquare = state.selectedSquare,
+                legalTargets = state.legalTargetsFromSelected,
+                kingInCheckSquare = kingInCheckSquare,
+                flipped = state.myColor == PieceColor.BLACK,
+                onSquareClick = viewModel::onSquareClicked,
+                lastMove = state.lastMove,
+                interactionEnabled = state.status == GameStatus.ONGOING && state.pendingPromotion == null &&
+                    (state.mode != GameMode.VS_PLAYER_NETWORK ||
+                        (state.connectionState == ConnectionState.CONNECTED &&
+                            state.handshake == cc.skysparkle.matewave.viewmodel.HandshakeState.PLAYING))
+            )
+        }
     ) {
-        if (state.mode == GameMode.VS_PLAYER_NETWORK) ConnectionBanner(state)
-        TrustBanners(state)
-
-        val material = remember(state.board) { cc.skysparkle.matewave.engine.Material.balance(state.board) }
-        val bottomColor = state.myColor
-        val topColor = if (bottomColor == PieceColor.WHITE) PieceColor.BLACK else PieceColor.WHITE
-        val kingInCheckSquare = remember(state.board) { ChessEngine.checkedKingSquare(state.board) }
-
-        PlayerRow(state, topColor, isMe = false, material = material, clock = viewModel.clockState)
-
-        ChessBoardView(
-            board = state.board,
-            selectedSquare = state.selectedSquare,
-            legalTargets = state.legalTargetsFromSelected,
-            kingInCheckSquare = kingInCheckSquare,
-            flipped = state.myColor == PieceColor.BLACK,
-            onSquareClick = viewModel::onSquareClicked,
-            lastMove = state.lastMove,
-            interactionEnabled = state.status == GameStatus.ONGOING && state.pendingPromotion == null &&
-                (state.mode != GameMode.VS_PLAYER_NETWORK ||
-                    (state.connectionState == ConnectionState.CONNECTED &&
-                        state.handshake == cc.skysparkle.matewave.viewmodel.HandshakeState.PLAYING))
-        )
-
         PlayerRow(state, bottomColor, isMe = true, material = material, clock = viewModel.clockState)
 
         // The move ribbon: only moves here, the opening name lives in the top bar.

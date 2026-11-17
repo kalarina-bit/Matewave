@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import cc.skysparkle.matewave.ui.components.horizontalSafePadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -98,7 +99,7 @@ fun MainMenuScreen(
     var showRatingGate by remember { mutableStateOf(false) }
     var showStats by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+    Box(modifier = Modifier.fillMaxSize().horizontalSafePadding(), contentAlignment = Alignment.TopCenter) {
         Column(modifier = Modifier.fillMaxSize().widthIn(max = TabletMaxContentWidth)) {
             Row(
                 modifier = Modifier
