@@ -1,0 +1,2 @@
+• Unterstützungskarte mit Ko-fi-Button unten in den Einstellungen und unter „Über“
+• Links zum Quellcode führen jetzt zu GitHub

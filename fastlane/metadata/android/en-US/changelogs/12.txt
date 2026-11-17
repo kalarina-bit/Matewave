@@ -1,0 +1,2 @@
+• Support card with a Ko-fi button at the bottom of Settings and in About
+• Source code links now lead to GitHub

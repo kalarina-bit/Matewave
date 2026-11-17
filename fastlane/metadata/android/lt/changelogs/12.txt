@@ -1,0 +1,2 @@
+• Paramos kortelė su Ko-fi mygtuku nustatymų apačioje ir lange „Apie“
+• Nuorodos į išeitinį kodą dabar veda į GitHub
