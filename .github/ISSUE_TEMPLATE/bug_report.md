@@ -19,7 +19,7 @@ title: "[Bug] "
 **Environment**
 
 - App version:
-- Installed from: Gitea / GitHub / F-Droid / Google Play
+- Installed from: GitHub / F-Droid / Google Play
 - Device and Android version:
 - Mode: vs AI / puzzles / openings / Bluetooth / LAN
 
