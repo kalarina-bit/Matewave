@@ -1,4 +1,4 @@
-• Unterstützungskarte mit Ko-fi-Button unten in den Einstellungen und unter „Über die App“
+• Unterstützungskarte mit Ko-fi-Button unten in den Einstellungen
 • Links zum Quellcode führen jetzt zu GitHub
 • Eine kurze Anleitung beim ersten Start mit Name und Spielstärke; erneut aufrufbar in den Einstellungen
 • Querformat und Tablets: Brett links, Spieler und Züge rechts

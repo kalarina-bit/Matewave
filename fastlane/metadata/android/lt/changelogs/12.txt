@@ -1,4 +1,4 @@
-• Paramos kortelė su Ko-fi mygtuku nustatymų apačioje ir lange „Apie programą“
+• Paramos kortelė su Ko-fi mygtuku nustatymų apačioje
 • Nuorodos į išeitinį kodą dabar veda į GitHub
 • Trumpas gidas pirmą kartą paleidus, su vardu ir lygiu; jį vėl rasite nustatymuose
 • Gulsčias ekranas ir planšetės: lenta kairėje, žaidėjai ir ėjimai dešinėje
