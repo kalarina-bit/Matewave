@@ -188,19 +188,15 @@ fun SettingsScreen(
             )
         }
 
-        // Donation plaque with the app icon, last on the screen so it never gets in the way
+        // Donation plaque, last on the screen so it never gets in the way. A heart rather than the
+        // app icon: the logo already appears in the About dialog
         ListGroup {
             ListRow(
                 title = stringResource(R.string.support_title),
                 subtitle = stringResource(R.string.support_text),
-                leading = {
-                    Image(
-                        painter = painterResource(R.drawable.ic_launcher_card),
-                        contentDescription = null,
-                        modifier = Modifier.size(36.dp).clip(RoundedCornerShape(10.dp))
-                    )
-                },
-                trailing = { cc.skysparkle.matewave.ui.components.AppIcon(R.drawable.ic_heart, size = 22.dp, tint = DonateRed) },
+                icon = R.drawable.ic_heart,
+                iconTint = DonateRed,
+                chevron = true,
                 onClick = { cc.skysparkle.matewave.settings.AppLinks.open(context, cc.skysparkle.matewave.settings.AppLinks.DONATE) }
             )
         }
