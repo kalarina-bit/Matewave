@@ -376,7 +376,6 @@
     <string name="spectate_interrupted">対局が中断されました。プレイヤー間の接続が切れました。</string>
     <string name="support_title">Matewave を応援する</string>
     <string name="support_text">無料・オープンソースで広告なし。少額の寄付が開発の継続を支えます。</string>
-    <string name="support_button">Ko-fi で寄付する</string>
 
     <!-- first-launch guide -->
     <string name="guide_skip">スキップ</string>

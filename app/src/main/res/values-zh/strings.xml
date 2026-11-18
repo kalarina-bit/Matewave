@@ -376,7 +376,6 @@
     <string name="spectate_interrupted">对局中断：玩家之间的连接已断开。</string>
     <string name="support_title">支持 Matewave</string>
     <string name="support_text">免费、开源、无广告。一笔小小的捐助能让项目持续下去。</string>
-    <string name="support_button">通过 Ko-fi 捐助</string>
 
     <!-- first-launch guide -->
     <string name="guide_skip">跳过</string>

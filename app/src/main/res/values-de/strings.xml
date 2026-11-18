@@ -377,7 +377,6 @@
     <string name="spectate_interrupted">Partie unterbrochen: Die Spieler haben die Verbindung verloren.</string>
     <string name="support_title">Matewave unterstützen</string>
     <string name="support_text">Kostenlos, quelloffen und werbefrei. Eine kleine Spende hilft, das Projekt weiterzuführen.</string>
-    <string name="support_button">Auf Ko-fi spenden</string>
 
     <!-- first-launch guide -->
     <string name="guide_skip">Überspringen</string>

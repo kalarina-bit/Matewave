@@ -9,7 +9,6 @@ object AppLinks {
     const val REPOSITORY = "https://github.com/kalarina-bit/Matewave"
     const val REPOSITORY_LABEL = "github.com/kalarina-bit/Matewave"
     const val DONATE = "https://ko-fi.com/skysparkle"
-    const val DONATE_LABEL = "ko-fi.com/skysparkle"
     const val PRIVACY_POLICY = "https://skysparkle.cc/privacy?lang=en"
 
     /** Opens a link in the browser; does nothing if no app can open it. */

@@ -255,12 +255,6 @@ fun SettingsScreen(
                 }
             )
             AboutRow(
-                iconRes = R.drawable.ic_heart,
-                title = stringResource(R.string.support_button),
-                subtitle = cc.skysparkle.matewave.settings.AppLinks.DONATE_LABEL,
-                onClick = { cc.skysparkle.matewave.settings.AppLinks.open(context, cc.skysparkle.matewave.settings.AppLinks.DONATE) }
-            )
-            AboutRow(
                 iconRes = R.drawable.ic_repo,
                 title = stringResource(R.string.settings_repo_title),
                 subtitle = cc.skysparkle.matewave.settings.AppLinks.REPOSITORY_LABEL,

@@ -377,7 +377,6 @@
     <string name="spectate_interrupted">Game interrupted: the players lost their connection.</string>
     <string name="support_title">Support Matewave</string>
     <string name="support_text">Free, open source and no ads. A small donation helps keep it going.</string>
-    <string name="support_button">Donate on Ko-fi</string>
 
     <!-- first-launch guide -->
     <string name="guide_skip">Skip</string>

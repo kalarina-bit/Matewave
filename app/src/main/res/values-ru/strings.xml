@@ -385,7 +385,6 @@
     <string name="spectate_interrupted">Партия прервана: игроки потеряли связь.</string>
     <string name="support_title">Поддержать Matewave</string>
     <string name="support_text">Бесплатно, с открытым кодом и без рекламы. Небольшое пожертвование помогает проекту развиваться.</string>
-    <string name="support_button">Пожертвовать через Ko-fi</string>
 
     <!-- first-launch guide -->
     <string name="guide_skip">Пропустить</string>
