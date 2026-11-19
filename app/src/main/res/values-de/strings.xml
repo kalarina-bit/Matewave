@@ -122,10 +122,14 @@
     <string name="app_style_device">Gerät</string>
     <string name="app_style_device_hint">Die Farben kommen aus deinem Hintergrundbild (Material You) und ändern sich mit ihm.</string>
     <string name="appearance_board_theme">Brettfarben</string>
+    <string name="appearance_pieces">Figuren</string>
+    <string name="piece_set_classic">Klassisch</string>
+    <string name="piece_set_outline">Kontur</string>
+    <string name="piece_set_pastel">Pastell</string>
+    <string name="piece_set_wood">Holz</string>
+    <string name="piece_set_flat">Flach</string>
     <string name="appearance_coordinates">Buchstaben und Zahlen auf dem Brett</string>
     <string name="appearance_coordinates_hint">Feldbeschriftung an den Rändern: a–h und 1–8</string>
-    <string name="appearance_image_pieces">Figuren als Bilder</string>
-    <string name="appearance_image_pieces_hint">Überall dasselbe Aussehen. Ohne das werden Figuren mit Schriftsymbolen gezeichnet und sehen auf manchen Geräten anders aus.</string>
     <string name="appearance_restart_hint">Änderungen gelten beim nächsten Öffnen des Bretts.</string>
     <string name="trust_first_meeting">Neuer Gegner. Fingerabdruck: %1$s – vergleiche ihn mit dem Gegner, wenn du sichergehen willst, dass er es ist</string>
     <string name="account_fingerprint">Fingerabdruck deines Schlüssels</string>

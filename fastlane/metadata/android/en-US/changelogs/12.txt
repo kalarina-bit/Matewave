@@ -1,3 +1,4 @@
+• Four new piece sets in Appearance: outline, pastel, wooden and flat; the chosen set is used everywhere, including the home screen. The font-symbol pieces option is gone
 • Support card with a Ko-fi button at the bottom of Settings
 • Source code links now lead to GitHub
 • A short guide on first launch, with your name and level; open it again from Settings

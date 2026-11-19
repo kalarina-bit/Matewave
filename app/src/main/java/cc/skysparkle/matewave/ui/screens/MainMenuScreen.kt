@@ -51,6 +51,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cc.skysparkle.matewave.R
+import cc.skysparkle.matewave.engine.PieceColor
+import cc.skysparkle.matewave.engine.PieceType
+import cc.skysparkle.matewave.settings.PieceSetState
 import cc.skysparkle.matewave.stats.Stats
 import cc.skysparkle.matewave.ui.components.AppBottomBar
 import cc.skysparkle.matewave.ui.components.AppDialog
@@ -259,7 +262,7 @@ private fun Hero() {
             )
         }
         Image(
-            painter = painterResource(R.drawable.piece_white_knight),
+            painter = painterResource(PieceSetState.current.res(PieceType.KNIGHT, PieceColor.WHITE)),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterEnd)
@@ -280,7 +283,7 @@ private fun AiCard(subtitle: String, modifier: Modifier = Modifier, onClick: () 
             .clickable(onClick = onClick)
     ) {
         Image(
-            painter = painterResource(R.drawable.piece_black_king),
+            painter = painterResource(PieceSetState.current.res(PieceType.KING, PieceColor.BLACK)),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.TopEnd)

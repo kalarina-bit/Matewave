@@ -122,10 +122,14 @@
     <string name="app_style_device">设备</string>
     <string name="app_style_device_hint">颜色取自壁纸（Material You），并随壁纸变化。</string>
     <string name="appearance_board_theme">棋盘颜色</string>
+    <string name="appearance_pieces">棋子</string>
+    <string name="piece_set_classic">经典</string>
+    <string name="piece_set_outline">描边</string>
+    <string name="piece_set_pastel">粉彩</string>
+    <string name="piece_set_wood">木质</string>
+    <string name="piece_set_flat">扁平</string>
     <string name="appearance_coordinates">棋盘上的字母和数字</string>
     <string name="appearance_coordinates_hint">边缘的格子标注：a–h 和 1–8</string>
-    <string name="appearance_image_pieces">用图片显示棋子</string>
-    <string name="appearance_image_pieces_hint">所有手机外观一致。关闭后棋子将用字体符号绘制，在部分设备上会显示不同。</string>
     <string name="appearance_restart_hint">更改将在下次打开棋盘时生效。</string>
     <string name="trust_first_meeting">新对手。指纹：%1$s — 如需确认是对方本人，请与其核对</string>
     <string name="account_fingerprint">你的密钥指纹</string>

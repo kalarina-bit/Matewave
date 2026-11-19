@@ -1,3 +1,4 @@
+• Vier neue Figurensätze unter Darstellung: Kontur, Pastell, Holz und Flach; der gewählte Satz gilt überall, auch auf dem Startbildschirm. Figuren als Schriftsymbole entfallen
 • Unterstützungskarte mit Ko-fi-Button unten in den Einstellungen
 • Links zum Quellcode führen jetzt zu GitHub
 • Eine kurze Anleitung beim ersten Start mit Name und Spielstärke; erneut aufrufbar in den Einstellungen

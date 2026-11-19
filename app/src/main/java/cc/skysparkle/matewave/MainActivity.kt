@@ -66,6 +66,7 @@ class MainActivity : ComponentActivity() {
         SoundManager.init(this)
 
         val appContext = applicationContext
+        cc.skysparkle.matewave.settings.PieceSetState.load(this)
         kotlin.concurrent.thread(name = "warmup", isDaemon = true) {
             runCatching { cc.skysparkle.matewave.data.FriendsStore.preload() }
             // Decoded here, the pieces are ready before the first board is shown.

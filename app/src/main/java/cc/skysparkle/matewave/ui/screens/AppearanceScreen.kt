@@ -40,6 +40,10 @@ import androidx.compose.foundation.Image
 import cc.skysparkle.matewave.R
 import cc.skysparkle.matewave.settings.BoardAppearance
 import cc.skysparkle.matewave.settings.BoardTheme
+import cc.skysparkle.matewave.settings.PieceSet
+import cc.skysparkle.matewave.settings.PieceSetState
+import cc.skysparkle.matewave.engine.PieceColor
+import cc.skysparkle.matewave.engine.PieceType
 import cc.skysparkle.matewave.ui.components.GlassCard
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 import cc.skysparkle.matewave.ui.theme.PanelBorder
@@ -51,7 +55,6 @@ fun AppearanceScreen(onBack: () -> Unit) {
 
     var theme by remember { mutableStateOf(appearance.theme) }
     var coords by remember { mutableStateOf(appearance.showCoordinates) }
-    var images by remember { mutableStateOf(appearance.useImagePieces) }
     var lastMove by remember { mutableStateOf(appearance.showLastMove) }
     var checkGlow by remember { mutableStateOf(appearance.showCheckHighlight) }
     var openingBar by remember { mutableStateOf(appearance.showOpening) }
@@ -81,7 +84,7 @@ fun AppearanceScreen(onBack: () -> Unit) {
                     }
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    ThemePreview(candidate, showPieces = images)
+                    ThemePreview(candidate)
                     Text(
                         stringResource(candidate.titleRes),
                         color = ink,
@@ -97,19 +100,49 @@ fun AppearanceScreen(onBack: () -> Unit) {
             }
         }
 
+        Text(
+            stringResource(R.string.appearance_pieces),
+            color = ink,
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        PieceSet.entries.forEach { candidate ->
+            GlassCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
+                    .clickable {
+                        PieceSetState.select(context, candidate)
+                        // Decode the pictures now, so the next board opens without a pause.
+                        val appContext = context.applicationContext
+                        kotlin.concurrent.thread(isDaemon = true) {
+                            runCatching { cc.skysparkle.matewave.ui.components.PieceImages.get(appContext, candidate) }
+                        }
+                    }
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    PieceSetPreview(candidate, theme)
+                    Text(
+                        stringResource(candidate.titleRes),
+                        color = ink,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.weight(1f)
+                    )
+                    if (candidate == PieceSetState.current) {
+                        cc.skysparkle.matewave.ui.components.AppIcon(
+                            R.drawable.ic_check_box, size = 20.dp, tint = cc.skysparkle.matewave.ui.theme.ChessGreen
+                        )
+                    }
+                }
+            }
+        }
+
         AppearanceToggle(
             icon = R.drawable.ic_coordinates,
             title = stringResource(R.string.appearance_coordinates),
             subtitle = stringResource(R.string.appearance_coordinates_hint),
             checked = coords
         ) { coords = it; appearance.showCoordinates = it }
-
-        AppearanceToggle(
-            icon = R.drawable.ic_image_pieces,
-            title = stringResource(R.string.appearance_image_pieces),
-            subtitle = stringResource(R.string.appearance_image_pieces_hint),
-            checked = images
-        ) { images = it; appearance.useImagePieces = it }
 
         AppearanceToggle(
             icon = R.drawable.ic_last_move,
@@ -220,7 +253,8 @@ private fun StyleSwatch(
 }
 
 @Composable
-private fun ThemePreview(theme: BoardTheme, showPieces: Boolean) {
+private fun ThemePreview(theme: BoardTheme) {
+    val set = PieceSetState.current
     val shape = RoundedCornerShape(6.dp)
     Column(modifier = Modifier.size(56.dp).clip(shape).border(1.dp, PanelBorder, shape)) {
         repeat(2) { row ->
@@ -234,22 +268,50 @@ private fun ThemePreview(theme: BoardTheme, showPieces: Boolean) {
                             .background(if (light) theme.light else theme.dark),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (showPieces && row == 0 && col == 0) {
+                        if (row == 0 && col == 0) {
                             Image(
-                                painter = painterResource(R.drawable.piece_white_king),
+                                painter = painterResource(set.res(PieceType.KING, PieceColor.WHITE)),
                                 contentDescription = null,
                                 modifier = Modifier.size(22.dp)
                             )
                         }
-                        if (showPieces && row == 1 && col == 1) {
+                        if (row == 1 && col == 1) {
                             Image(
-                                painter = painterResource(R.drawable.piece_black_knight),
+                                painter = painterResource(set.res(PieceType.KNIGHT, PieceColor.BLACK)),
                                 contentDescription = null,
                                 modifier = Modifier.size(22.dp)
                             )
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+/** Four pieces of the set on squares of the chosen board. */
+@Composable
+private fun PieceSetPreview(set: PieceSet, theme: BoardTheme) {
+    val shape = RoundedCornerShape(6.dp)
+    val pieces = listOf(
+        PieceType.KING to PieceColor.WHITE,
+        PieceType.QUEEN to PieceColor.BLACK,
+        PieceType.KNIGHT to PieceColor.WHITE,
+        PieceType.PAWN to PieceColor.BLACK
+    )
+    Row(modifier = Modifier.clip(shape).border(1.dp, PanelBorder, shape)) {
+        pieces.forEachIndexed { i, (type, color) ->
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .background(if (i % 2 == 0) theme.light else theme.dark),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(set.res(type, color)),
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp)
+                )
             }
         }
     }

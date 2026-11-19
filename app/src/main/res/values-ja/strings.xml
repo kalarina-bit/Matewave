@@ -122,10 +122,14 @@
     <string name="app_style_device">端末</string>
     <string name="app_style_device_hint">色は壁紙から取得され（Material You）、壁紙に合わせて変わります。</string>
     <string name="appearance_board_theme">盤の色</string>
+    <string name="appearance_pieces">駒</string>
+    <string name="piece_set_classic">クラシック</string>
+    <string name="piece_set_outline">アウトライン</string>
+    <string name="piece_set_pastel">パステル</string>
+    <string name="piece_set_wood">木製</string>
+    <string name="piece_set_flat">フラット</string>
     <string name="appearance_coordinates">盤上の文字と数字</string>
     <string name="appearance_coordinates_hint">盤の端のマス目ラベル: a〜h と 1〜8</string>
-    <string name="appearance_image_pieces">駒を画像で表示</string>
-    <string name="appearance_image_pieces_hint">どのスマホでも同じ見た目になります。オフの場合、駒はフォントの記号で描かれ、端末によって見た目が異なります。</string>
     <string name="appearance_restart_hint">変更は次に盤を開いたときに反映されます。</string>
     <string name="trust_first_meeting">新しい相手です。フィンガープリント: %1$s — 本人か確かめたい場合は、相手と照合してください</string>
     <string name="account_fingerprint">あなたの鍵のフィンガープリント</string>

@@ -127,10 +127,14 @@
     <string name="app_style_device">Устройство</string>
     <string name="app_style_device_hint">Цвета берутся из обоев (Material You) и меняются вместе с ними.</string>
     <string name="appearance_board_theme">Цвета доски</string>
+    <string name="appearance_pieces">Фигуры</string>
+    <string name="piece_set_classic">Классические</string>
+    <string name="piece_set_outline">Контурные</string>
+    <string name="piece_set_pastel">Пастельные</string>
+    <string name="piece_set_wood">Деревянные</string>
+    <string name="piece_set_flat">Плоские</string>
     <string name="appearance_coordinates">Буквы и цифры на доске</string>
     <string name="appearance_coordinates_hint">Подписи полей по краям: a–h и 1–8</string>
-    <string name="appearance_image_pieces">Фигуры картинками</string>
-    <string name="appearance_image_pieces_hint">Единый вид на всех телефонах. Без этого фигуры рисуются символами шрифта и на части устройств выглядят иначе.</string>
     <string name="appearance_restart_hint">Изменения применяются при следующем открытии доски.</string>
     <string name="trust_first_meeting">Новый соперник. Отпечаток: %1$s — сверьте с ним, если хотите убедиться, что это он</string>
     <string name="account_fingerprint">Отпечаток вашего ключа</string>

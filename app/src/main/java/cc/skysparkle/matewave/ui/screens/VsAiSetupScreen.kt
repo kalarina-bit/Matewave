@@ -44,6 +44,10 @@ import cc.skysparkle.matewave.R
 import cc.skysparkle.matewave.ai.AiDifficulty
 import cc.skysparkle.matewave.clock.TimeControl
 import cc.skysparkle.matewave.engine.PieceColor
+import cc.skysparkle.matewave.engine.PieceType
+import cc.skysparkle.matewave.settings.PieceSetState
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.drawscope.clipRect
 import cc.skysparkle.matewave.ui.components.GlassButton
 import cc.skysparkle.matewave.ui.components.GlassScaffold
 
@@ -126,9 +130,9 @@ fun VsAiSetupScreen(
 
         SectionCaption(stringResource(R.string.your_color))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            ColorChip(R.drawable.piece_white_king, stringResource(R.string.color_white), color == PieceColor.WHITE) { color = PieceColor.WHITE }
-            ColorChip(R.drawable.piece_black_king, stringResource(R.string.color_black), color == PieceColor.BLACK) { color = PieceColor.BLACK }
-            ColorChip(R.drawable.ic_random_colour, stringResource(R.string.color_random), color == null) { color = null }
+            ColorChip(listOf(PieceColor.WHITE), stringResource(R.string.color_white), color == PieceColor.WHITE) { color = PieceColor.WHITE }
+            ColorChip(listOf(PieceColor.BLACK), stringResource(R.string.color_black), color == PieceColor.BLACK) { color = PieceColor.BLACK }
+            ColorChip(listOf(PieceColor.WHITE, PieceColor.BLACK), stringResource(R.string.color_random), color == null) { color = null }
         }
 
         SectionCaption(stringResource(R.string.time_control_label))
@@ -144,7 +148,7 @@ private fun aiDescription(d: AiDifficulty): Int = when (d) {
 }
 
 @Composable
-private fun ColorChip(iconRes: Int, text: String, selected: Boolean, onClick: () -> Unit) {
+private fun ColorChip(kings: List<PieceColor>, text: String, selected: Boolean, onClick: () -> Unit) {
     val shape = RoundedCornerShape(50)
     Row(
         modifier = Modifier
@@ -164,12 +168,26 @@ private fun ColorChip(iconRes: Int, text: String, selected: Boolean, onClick: ()
                 .background(Color(0xFF9AA0A8)),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(iconRes),
-                contentDescription = null,
-                modifier = Modifier.size(20.dp)
-            )
+            val set = PieceSetState.current
+            kings.forEachIndexed { i, king ->
+                Image(
+                    painter = painterResource(set.res(PieceType.KING, king)),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(20.dp)
+                        .then(if (kings.size > 1) Modifier.halfOf(left = i == 0) else Modifier)
+                )
+            }
         }
         Text(text, color = ink, style = MaterialTheme.typography.bodySmall)
     }
 }
+
+/** Draws only the left or the right half, for the half-white, half-black king. */
+private fun Modifier.halfOf(left: Boolean): Modifier = drawWithContent {
+    val mid = size.width / 2f
+    clipRect(left = if (left) 0f else mid, right = if (left) mid else size.width) {
+        this@drawWithContent.drawContent()
+    }
+}
+

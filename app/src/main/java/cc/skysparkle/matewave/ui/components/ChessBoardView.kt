@@ -33,10 +33,11 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import cc.skysparkle.matewave.engine.Board
 import cc.skysparkle.matewave.engine.Move
-import cc.skysparkle.matewave.engine.Piece
 import cc.skysparkle.matewave.engine.PieceColor
 import cc.skysparkle.matewave.engine.PieceType
 import cc.skysparkle.matewave.settings.BoardAppearance
+import cc.skysparkle.matewave.settings.PieceSet
+import cc.skysparkle.matewave.settings.PieceSetState
 import cc.skysparkle.matewave.ui.theme.HighlightCheck
 import cc.skysparkle.matewave.ui.theme.HighlightHint
 import cc.skysparkle.matewave.ui.theme.HighlightLastMove
@@ -44,21 +45,22 @@ import cc.skysparkle.matewave.ui.theme.HighlightMove
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
-/** The twelve piece pictures, decoded once and shared by the board and the other piece views. */
+/** The twelve pictures of the chosen piece set, decoded once and shared by the board and the other piece views. */
 internal object PieceImages {
-    @Volatile private var cache: Array<ImageBitmap>? = null
+    @Volatile private var cache: Pair<PieceSet, Array<ImageBitmap>>? = null
 
-    fun get(context: Context): Array<ImageBitmap> {
-        cache?.let { return it }
+    fun get(context: Context, set: PieceSet = PieceSetState.current): Array<ImageBitmap> {
+        cache?.let { if (it.first == set) return it.second }
         synchronized(this) {
-            cache?.let { return it }
+            cache?.let { if (it.first == set) return it.second }
             val options = BitmapFactory.Options().apply { inScaled = false }
             val types = PieceType.entries
             val loaded = Array(PieceColor.entries.size * types.size) { i ->
-                val piece = Piece(types[i % types.size], PieceColor.entries[i / types.size])
-                BitmapFactory.decodeResource(context.resources, piece.drawableRes(), options).asImageBitmap()
+                val res = set.res(types[i % types.size], PieceColor.entries[i / types.size])
+                BitmapFactory.decodeResource(context.resources, res, options).asImageBitmap()
             }
-            cache = loaded
+            // Only the set in use stays in memory.
+            cache = set to loaded
             return loaded
         }
     }
@@ -91,12 +93,12 @@ fun ChessBoardView(
     val appearance = remember { BoardAppearance(context) }
     val theme = remember { appearance.theme }
     val showCoords = remember { appearance.showCoordinates }
-    val imagePieces = remember { appearance.useImagePieces }
     val lastMoveSetting = remember { appearance.showLastMove }
     val showLastMove = highlightLastMove ?: lastMoveSetting
     val showCheck = remember { appearance.showCheckHighlight }
 
-    val pieceImages = if (imagePieces) remember(context) { PieceImages.get(context) } else null
+    val pieceSet = PieceSetState.current
+    val pieceImages = remember(pieceSet) { PieceImages.get(context, pieceSet) }
 
     val targetMask = remember(legalTargets) {
         var mask = 0L
@@ -106,9 +108,6 @@ fun ChessBoardView(
 
     val coordPaint = remember {
         Paint().apply { isAntiAlias = true; typeface = Typeface.DEFAULT_BOLD }
-    }
-    val glyphPaint = remember {
-        Paint().apply { isAntiAlias = true; textAlign = Paint.Align.CENTER }
     }
 
     val currentOnSquareClick by rememberUpdatedState(onSquareClick)
@@ -184,13 +183,6 @@ fun ChessBoardView(
                 val liftedSize = pieceSize * LIFT_SCALE
                 val liftedDst = IntSize(liftedSize.roundToInt(), liftedSize.roundToInt())
                 val hoverStroke = Stroke(width = cell * 0.07f)
-                val glyphSize = cell * 0.62f
-                glyphPaint.textSize = glyphSize
-                val glyphMetrics = glyphPaint.fontMetrics
-                val glyphShift = (glyphMetrics.ascent + glyphMetrics.descent) / 2f
-                glyphPaint.textSize = glyphSize * LIFT_SCALE
-                val liftedMetrics = glyphPaint.fontMetrics
-                val liftedGlyphShift = (liftedMetrics.ascent + liftedMetrics.descent) / 2f
                 onDrawBehind {
                     val lastFrom = if (showLastMove) (lastMove?.from ?: -1) else -1
                     val lastTo = if (showLastMove) (lastMove?.to ?: -1) else -1
@@ -251,10 +243,6 @@ fun ChessBoardView(
                         }
                     }
 
-                    if (pieceImages == null) {
-                        glyphPaint.textSize = glyphSize
-                        glyphPaint.color = GLYPH_COLOR
-                    }
                     for (row in 0 until 8) {
                         for (col in 0 until 8) {
                             val displayRank = if (flipped) row else 7 - row
@@ -262,24 +250,15 @@ fun ChessBoardView(
                             val pieceSq = displayRank * 8 + displayFile
                             if (pieceSq == liftedSq) continue
                             val piece = board.pieceAt(pieceSq) ?: continue
-                            if (pieceImages != null) {
-                                drawImage(
-                                    image = pieceImages[PieceImages.indexOf(piece.type, piece.color)],
-                                    dstOffset = IntOffset(
-                                        (col * cell + inset).roundToInt(),
-                                        (row * cell + inset).roundToInt()
-                                    ),
-                                    dstSize = pieceDst,
-                                    filterQuality = FilterQuality.Medium
-                                )
-                            } else {
-                                drawContext.canvas.nativeCanvas.drawText(
-                                    piece.unicode(),
-                                    col * cell + cell / 2f,
-                                    row * cell + cell / 2f - glyphShift,
-                                    glyphPaint
-                                )
-                            }
+                            drawImage(
+                                image = pieceImages[PieceImages.indexOf(piece.type, piece.color)],
+                                dstOffset = IntOffset(
+                                    (col * cell + inset).roundToInt(),
+                                    (row * cell + inset).roundToInt()
+                                ),
+                                dstSize = pieceDst,
+                                filterQuality = FilterQuality.Medium
+                            )
                         }
                     }
 
@@ -306,25 +285,15 @@ fun ChessBoardView(
                                 topLeft = Offset(liftedAt.x - liftedSize * 0.36f, liftedAt.y + cell * 0.05f),
                                 size = Size(liftedSize * 0.72f, liftedSize * 0.28f)
                             )
-                            if (pieceImages != null) {
-                                drawImage(
-                                    image = pieceImages[PieceImages.indexOf(liftedPiece.type, liftedPiece.color)],
-                                    dstOffset = IntOffset(
-                                        (cx - liftedSize / 2f).roundToInt(),
-                                        (cy - liftedSize / 2f).roundToInt()
-                                    ),
-                                    dstSize = liftedDst,
-                                    filterQuality = FilterQuality.Medium
-                                )
-                            } else {
-                                glyphPaint.textSize = glyphSize * LIFT_SCALE
-                                drawContext.canvas.nativeCanvas.drawText(
-                                    liftedPiece.unicode(),
-                                    cx,
-                                    cy - liftedGlyphShift,
-                                    glyphPaint
-                                )
-                            }
+                            drawImage(
+                                image = pieceImages[PieceImages.indexOf(liftedPiece.type, liftedPiece.color)],
+                                dstOffset = IntOffset(
+                                    (cx - liftedSize / 2f).roundToInt(),
+                                    (cy - liftedSize / 2f).roundToInt()
+                                ),
+                                dstSize = liftedDst,
+                                filterQuality = FilterQuality.Medium
+                            )
                         }
                     }
                 }
@@ -343,8 +312,6 @@ private fun squareAt(x: Float, y: Float, boardPx: Float, flipped: Boolean): Int 
     val displayFile = if (flipped) 7 - col else col
     return displayRank * 8 + displayFile
 }
-
-private val GLYPH_COLOR = Color(0xFF1B1B1B).toArgb()
 
 private val FILE_LABELS = Array(8) { ('a' + it).toString() }
 private val RANK_LABELS = Array(8) { (it + 1).toString() }

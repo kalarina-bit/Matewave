@@ -1,3 +1,4 @@
+• Keturi nauji figūrų rinkiniai skiltyje „Išvaizda“: kontūrinės, pastelinės, medinės ir plokščios; pasirinktas rinkinys matomas visur, ir pradžios ekrane. Figūrų šrifto simboliais nebėra
 • Paramos kortelė su Ko-fi mygtuku nustatymų apačioje
 • Nuorodos į išeitinį kodą dabar veda į GitHub
 • Trumpas gidas pirmą kartą paleidus, su vardu ir lygiu; jį vėl rasite nustatymuose

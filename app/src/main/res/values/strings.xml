@@ -122,10 +122,14 @@
     <string name="app_style_device">Device</string>
     <string name="app_style_device_hint">Colors are taken from your wallpaper (Material You) and change with it.</string>
     <string name="appearance_board_theme">Board colors</string>
+    <string name="appearance_pieces">Pieces</string>
+    <string name="piece_set_classic">Classic</string>
+    <string name="piece_set_outline">Outline</string>
+    <string name="piece_set_pastel">Pastel</string>
+    <string name="piece_set_wood">Wooden</string>
+    <string name="piece_set_flat">Flat</string>
     <string name="appearance_coordinates">Letters and numbers on the board</string>
     <string name="appearance_coordinates_hint">Square labels along the edges: a–h and 1–8</string>
-    <string name="appearance_image_pieces">Pieces as images</string>
-    <string name="appearance_image_pieces_hint">The same look on every phone. Without this, pieces are drawn with font symbols and look different on some devices.</string>
     <string name="appearance_restart_hint">Changes apply the next time the board is opened.</string>
     <string name="trust_first_meeting">New opponent. Fingerprint: %1$s — check it with them if you want to be sure it\'s really them</string>
     <string name="account_fingerprint">Your key fingerprint</string>

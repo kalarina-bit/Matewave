@@ -22,10 +22,6 @@ class BoardAppearance(context: Context) {
         get() = prefs.getBoolean(KEY_COORDS, true)
         set(value) { prefs.edit().putBoolean(KEY_COORDS, value).apply() }
 
-    var useImagePieces: Boolean
-        get() = prefs.getBoolean(KEY_IMAGES, true)
-        set(value) { prefs.edit().putBoolean(KEY_IMAGES, value).apply() }
-
     var showLastMove: Boolean
         get() = prefs.getBoolean(KEY_LAST_MOVE, true)
         set(value) { prefs.edit().putBoolean(KEY_LAST_MOVE, value).apply() }
@@ -45,6 +41,5 @@ class BoardAppearance(context: Context) {
         const val PREFS = "board_appearance"
         const val KEY_THEME = "theme"
         const val KEY_COORDS = "coords"
-        const val KEY_IMAGES = "images"
     }
 }

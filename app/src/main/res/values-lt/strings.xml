@@ -122,10 +122,14 @@
     <string name="app_style_device">Įrenginys</string>
     <string name="app_style_device_hint">Spalvos paimamos iš ekrano fono („Material You“) ir keičiasi kartu su juo.</string>
     <string name="appearance_board_theme">Lentos spalvos</string>
+    <string name="appearance_pieces">Figūros</string>
+    <string name="piece_set_classic">Klasikinės</string>
+    <string name="piece_set_outline">Kontūrinės</string>
+    <string name="piece_set_pastel">Pastelinės</string>
+    <string name="piece_set_wood">Medinės</string>
+    <string name="piece_set_flat">Plokščios</string>
     <string name="appearance_coordinates">Raidės ir skaičiai ant lentos</string>
     <string name="appearance_coordinates_hint">Langelių žymos pakraščiuose: a–h ir 1–8</string>
-    <string name="appearance_image_pieces">Figūros paveikslėliais</string>
-    <string name="appearance_image_pieces_hint">Vienoda išvaizda visuose telefonuose. Be šito figūros piešiamos šrifto simboliais ir kai kuriuose įrenginiuose atrodo kitaip.</string>
     <string name="appearance_restart_hint">Pakeitimai pritaikomi kitą kartą atidarius lentą.</string>
     <string name="trust_first_meeting">Naujas varžovas. Kontrolinis kodas: %1$s — palyginkite su juo, jei norite įsitikinti, kad tai jis</string>
     <string name="account_fingerprint">Jūsų rakto kontrolinis kodas</string>
