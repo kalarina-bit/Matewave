@@ -63,6 +63,8 @@ class BleTransport(
 
         private const val SAFE_CHUNK = 18
         private const val REQUESTED_MTU = 512
+        /** GATT max attribute value length; the stack rejects longer notifications. */
+        private const val MAX_GATT_VALUE_BYTES = 512
 
         private const val MTU_TIMEOUT_MS = 2_000L
 
@@ -484,7 +486,7 @@ class BleTransport(
         }
 
         override fun onMtuChanged(device: BluetoothDevice, mtu: Int) {
-            chunkSize = (mtu - 3).coerceAtLeast(SAFE_CHUNK)
+            chunkSize = (mtu - 3).coerceAtMost(MAX_GATT_VALUE_BYTES).coerceAtLeast(SAFE_CHUNK)
         }
     }
 
@@ -680,7 +682,7 @@ class BleTransport(
             mtuSettled = true
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                chunkSize = (mtu - 3).coerceAtLeast(SAFE_CHUNK)
+                chunkSize = (mtu - 3).coerceAtMost(MAX_GATT_VALUE_BYTES).coerceAtLeast(SAFE_CHUNK)
             }
             gatt.discoverServices()
         }
