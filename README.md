@@ -48,7 +48,7 @@
 - 📲 **Share the app** with a nearby friend via QR code over the local network
 - 🎷 **Optional jazz radio**
 - 🌙 **Dark theme**
-- 🌍 **Six languages** — English, Russian, German, Japanese, Lithuanian and Chinese
+- 🌍 **Seven languages** — English, Russian, German, Japanese, Lithuanian, Chinese and Spanish (in progress)
 
 ## <img src="assets/icon-install.png" width="32" alt=""> Installation
 

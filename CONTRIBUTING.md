@@ -40,7 +40,7 @@ These will not be accepted:
 
 ## Translations
 
-Matewave is available in exactly six languages: English, Russian, German, Japanese, Lithuanian and Chinese. Fixes to these are welcome; new languages are not accepted.
+Matewave supports seven languages: English, Russian, German, Japanese, Lithuanian, Chinese and Spanish (in progress, see [#6](https://github.com/kalarina-bit/Matewave/issues/6)). Fixes to these are welcome; other new languages are not accepted.
 
 - App strings: `app/src/main/res/values-<lang>/strings.xml` (English is `values/`).
 - Store listing: `fastlane/metadata/android/<locale>/`.
