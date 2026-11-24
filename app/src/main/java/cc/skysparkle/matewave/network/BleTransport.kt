@@ -585,7 +585,8 @@ class BleTransport(
                         fingerprint = player.fingerprint ?: previous.fingerprint
                     )
                 }
-                val changed = previous == null || previous.name != merged.name
+                val changed = previous == null || previous.name != merged.name ||
+                    previous.address != merged.address
 
                 found[key] = merged
                 lastSeen[key] = now
