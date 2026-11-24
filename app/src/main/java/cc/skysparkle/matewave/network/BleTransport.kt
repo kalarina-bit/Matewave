@@ -569,12 +569,29 @@ class BleTransport(
                     fingerprint = fingerprint
                 )
                 val now = System.currentTimeMillis()
-                val previous = found.put(player.address, player)
-                lastSeen[player.address] = now
 
+                // Android 12+ randomizes the advertising MAC and it changes whenever the peer
+                // (re)advertises, so the same phone can show up under several addresses. Dedupe
+                // by the stable fingerprint and keep the freshest address: that is what the
+                // play button connects to.
+                val key = player.fingerprint?.ifEmpty { null } ?: player.address
+                val previous = found[key]
+                val merged = if (previous == null) {
+                    player
+                } else {
+                    NearbyPlayer(
+                        name = player.name.ifBlank { previous.name },
+                        address = player.address,
+                        fingerprint = player.fingerprint ?: previous.fingerprint
+                    )
+                }
+                val changed = previous == null || previous.name != merged.name
+
+                found[key] = merged
+                lastSeen[key] = now
                 val expired = dropExpired(now)
 
-                if (previous == null || previous.name != player.name || expired) {
+                if (changed || expired) {
                     val snapshot = found.values.toList()
                     scope.launch(Dispatchers.Main) { onFound(snapshot) }
                 }
