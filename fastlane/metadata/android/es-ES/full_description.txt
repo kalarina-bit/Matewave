@@ -1,0 +1,13 @@
+<p>Haz que cada partida de ajedrez cuente. Juega a tu ritmo, afina tu táctica y gana confianza en las aperturas, tanto si practicas en solitario como si te sientas a jugar con un amigo.</p>
+
+<ul>
+<li>Desafía a un rival controlado por la IA y elige la dificultad que mejor se adapte a ti.</li>
+<li>Resuelve problemas de ajedrez para poner en práctica tu táctica.</li>
+<li>Aprende y practica aperturas, variantes y secuencias de jugadas.</li>
+<li>Juega partidas multijugador locales con amigos por Wi-Fi, red local o Bluetooth.</li>
+<li>Disfruta de una aplicación de ajedrez limpia, de código abierto, con tema oscuro y disponible en siete idiomas.</li>
+</ul>
+
+<p>Elige un modo y empieza a jugar: practica contra la IA, resuelve problemas, estudia líneas de apertura o conéctate con un jugador cercano en tu red local. Matewave está pensada tanto para quienes están aprendiendo a jugar como para jugadores con experiencia que quieren practicar de forma concentrada y sin emparejamientos en línea.</p>
+
+<p>Descarga Matewave y haz tu próxima jugada.</p>

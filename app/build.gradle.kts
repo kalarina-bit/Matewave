@@ -37,7 +37,7 @@ android {
         // The app's languages, plus the regional variants libraries ship for them.
         localeFilters += listOf(
             "en", "en-rAU", "en-rCA", "en-rGB", "en-rIN",
-            "ru", "de", "ja", "lt",
+            "ru", "de", "es", "ja", "lt",
             "zh", "zh-rCN", "zh-rHK", "zh-rTW"
         )
     }
