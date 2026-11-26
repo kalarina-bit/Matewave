@@ -5,25 +5,16 @@
 <h1 align="center">Matewave</h1>
 
 <p align="center">
-  <b>A beautiful, open-source chess app for Android.</b><br>
-  Play against the AI, solve puzzles, learn openings, or play friends nearby over Bluetooth and Wi-Fi/LAN.
+  <b>A friendly, open-source chess app for Android.</b><br>
+  Play the AI, solve puzzles, learn openings, or challenge friends nearby over Bluetooth and Wi-Fi.
 </p>
-
-<p align="center">
-  <a href="https://ko-fi.com/skysparkle"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi"></a>
-</p>
-
-> [!IMPORTANT]
-> **Matewave is coming to Google Play!** The app is now in closed testing there ahead of the public release. Ideas, wishes and suggestions for improvement are very welcome — send them wherever is easiest for you: an [issue on GitHub](https://github.com/kalarina-bit/Matewave/issues), or an email to [cuken107@proton.me](mailto:cuken107@proton.me).
-
-> [!NOTE]
-> **Looking for designers!** Matewave is looking for volunteer designers to help with icons, logos, animations, cover art (store graphics) and UI design. This is unpaid help for an open-source project. If you're interested, write to [cuken107@proton.me](mailto:cuken107@proton.me).
 
 <p align="center">
   <a href="https://github.com/kalarina-bit/Matewave/releases/latest"><img src="https://img.shields.io/github/v/release/kalarina-bit/Matewave?style=for-the-badge&label=release&labelColor=1b1b1b&color=2e7d32" alt="Latest release"></a>
 </p>
 
 <p align="center">
+  <a href="https://play.google.com/store/apps/details?id=cc.skysparkle.matewave"><img src="assets/get-it-on-google-play.png" height="56" alt="Get it on Google Play"></a>
   <a href="https://f-droid.org/packages/cc.skysparkle.matewave/"><img src="assets/get-it-on%20(1).png" height="56" alt="Get it on F-Droid"></a>
   <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/kalarina-bit/Matewave"><img src="assets/badge_obtainium.png" height="56" alt="Get it on Obtainium"></a>
   <a href="https://github.com/kalarina-bit/Matewave/releases/latest"><img src="assets/get-it-on-github.png" height="56" alt="Get it on GitHub"></a>
@@ -35,64 +26,56 @@
   <img src="assets/screenshots/4-puzzles.png" width="160" alt="Puzzles for your rating">
 </p>
 
-> [!TIP]
-> If you find Matewave useful, please consider giving it a ⭐ — it helps others discover the project.
-
-## ✨ Features
+## ✨ What's inside
 
 - 🤖 **AI opponent** with adjustable difficulty
-- 🧩 **Puzzles** and tactical training
-- 📖 **Opening trainer** — learn and practice opening lines and their variations
-- 📶 **Local multiplayer** over Bluetooth or Wi-Fi/LAN, with nearby player discovery
-- 👀 **Watch friends play** — up to 20 spectators on the same Wi-Fi can follow a live LAN game
-- 📲 **Share the app** with a nearby friend via QR code over the local network
-- 🎷 **Optional jazz radio**
-- 🌙 **Dark theme**
+- 🧩 **Puzzles** picked for your rating
+- 📖 **Opening trainer** — learn lines and their variations step by step
+- 📶 **Play nearby** over Bluetooth or Wi-Fi/LAN, with up to 20 spectators
+- 📲 **Share the app** with a friend via QR code
+- 🎷 **Optional jazz radio**, 🌙 dark theme, no ads
 - 🌍 **Seven languages** — English, Russian, German, Japanese, Lithuanian, Chinese and Spanish (in progress)
 
-## <img src="assets/icon-install.png" width="32" alt=""> Installation
+## <img src="assets/icon-install.png" width="32" alt=""> Install
 
-- **[F-Droid](https://f-droid.org/packages/cc.skysparkle.matewave/)** — install and update through the F-Droid client.
-- **[Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/kalarina-bit/Matewave)** — installs the APK straight from GitHub releases and keeps it up to date.
-- **Manually** — download the latest APK from [GitHub Releases](https://github.com/kalarina-bit/Matewave/releases/latest), allow installs from unknown sources for the app you open it with (Settings → Apps → Special access → Install unknown apps), then open the `.apk` and confirm.
+Get it from **Google Play**, **F-Droid** or **Obtainium** using the buttons above — they keep the app up to date for you. You can also grab the APK from [GitHub Releases](https://github.com/kalarina-bit/Matewave/releases/latest) and install it by hand.
 
-## <img src="assets/icon-verify.png" width="32" alt=""> Verifying a download
+<details>
+<summary><img src="assets/icon-verify.png" width="20" alt=""> Verifying an APK</summary>
 
-Every official APK is signed with the same key. Check it before installing:
+Every official APK is signed with the same key:
 
 ```sh
 apksigner verify --print-certs Matewave-v<version>.apk
 ```
 
-The SHA-256 fingerprint of the signing certificate must be:
+The SHA-256 certificate fingerprint must be:
 
 ```
 1C:3E:54:54:9D:09:9A:9D:3D:5B:BE:ED:C5:63:F5:7F:60:12:56:3C:88:85:99:B1:88:B4:FB:17:E3:46:46:A9
 ```
 
-`apksigner` prints the same value in lowercase without colons. On Android you can check it with [AppVerifier](https://github.com/soupslurpr/AppVerifier) (app ID `cc.skysparkle.matewave`).
+`apksigner` prints it in lowercase without colons. On Android you can use [AppVerifier](https://github.com/soupslurpr/AppVerifier) (app ID `cc.skysparkle.matewave`).
 
-## <img src="assets/icon-structure.png" width="32" alt=""> Building from source
+</details>
 
-Requires JDK 17+ and Android Studio with AGP 9.2 support.
+## <img src="assets/icon-structure.png" width="32" alt=""> Building
+
+Needs JDK 17+ and Android Studio with AGP 9.2 support.
 
 ```sh
 ./gradlew assembleDebug
-./gradlew testDebugUnitTest   # JVM unit tests
+./gradlew testDebugUnitTest
 ```
 
-Nearby multiplayer needs two physical devices — the emulator has no real Bluetooth, and mDNS discovery is often blocked on emulator networks.
+Nearby play needs two real devices — emulators have no Bluetooth and often block mDNS.
 
-## 🤝 Contributing
+## 🤝 Say hi
 
-Bug reports, puzzle and opening fixes, translation fixes and pull requests are welcome in the [issue tracker](https://github.com/kalarina-bit/Matewave/issues). Please read [CONTRIBUTING.md](CONTRIBUTING.md) first — it explains what fits the project and how to send changes.
+Ideas, bug reports, translation fixes and pull requests are all welcome — open an [issue](https://github.com/kalarina-bit/Matewave/issues) or write to [cuken107@proton.me](mailto:cuken107@proton.me). Please glance at [CONTRIBUTING.md](CONTRIBUTING.md) before sending code.
 
-## ☕ Support
-
-Matewave is free, open source and has no ads. If it is useful to you, you can support the project on [Ko-fi](https://ko-fi.com/skysparkle) — donations pay for the Skysparkle server and the time spent on the apps.
-
-<a href="https://ko-fi.com/skysparkle"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi"></a>
+If you enjoy Matewave, a ⭐ helps others find it. And if you'd like to, you can also [buy me a coffee](https://ko-fi.com/skysparkle) ☕
 
 ## 📄 License
 
-[GNU General Public License v3.0 or later](LICENSE).
+[GPL-3.0-or-later](LICENSE)
