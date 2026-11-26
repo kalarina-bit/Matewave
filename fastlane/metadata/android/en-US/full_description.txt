@@ -1,13 +1,39 @@
-<p>Make every chess session count. Play at your own pace, sharpen your tactics, and build opening confidence — whether you're practicing solo or sitting down with a friend.</p>
+<p>Matewave is a free chess app that works fully offline. Play the computer, solve puzzles at your level, learn openings step by step, or play a friend sitting next to you. No account, no ads, no online matchmaking — just chess.</p>
 
+<p><b>♟️ Play against the AI</b></p>
 <ul>
-<li>Challenge an AI opponent and choose a difficulty that suits you.</li>
-<li>Solve chess puzzles to put your tactics to work.</li>
-<li>Learn and practice openings, variations, and move sequences.</li>
-<li>Play local multiplayer with friends over Wi-Fi, LAN, or Bluetooth.</li>
-<li>Enjoy a clean, open-source chess app with a dark theme and support for six languages.</li>
+<li>Four levels: Easy, Medium, Hard and Expert.</li>
+<li>Good for learning the game or a quick match on the go.</li>
 </ul>
 
-<p>Choose a mode and start playing: practice against the AI, work through puzzles, study opening lines, or connect with a nearby player on your local network. Matewave is made for beginners learning the game and experienced players who want focused practice without online matchmaking.</p>
+<p><b>🧩 Puzzles for your rating</b></p>
+<ul>
+<li>1,200+ puzzles from about 400 to 2800, picked to match your level.</li>
+<li>Mate in 1, 2 and 3, forks, pins, skewers, discovered attacks, deflection, sacrifices, hanging pieces and zugzwang.</li>
+<li>Endgame practice: rook, pawn, bishop and knight endings.</li>
+</ul>
 
-<p>Download Matewave and make your next move.</p>
+<p><b>📖 Opening trainer</b></p>
+<ul>
+<li>24 courses: 10 for White and 14 for Black.</li>
+<li>White: Italian, Ruy Lopez, Scotch, Vienna Gambit, King's Gambit, Queen's Gambit (Declined and Accepted), London System, English and Catalan.</li>
+<li>Black: Sicilian Najdorf and Dragon, French, Caro-Kann, Scandinavian, Pirc, Petrov, Slav, King's Indian, Nimzo-Indian, Grünfeld, Dutch Leningrad and Tarrasch.</li>
+<li>One new opening at a time, and spaced repetition brings each line back until it sticks. Earn up to three stars per opening.</li>
+</ul>
+
+<p><b>📶 Play with friends nearby</b></p>
+<ul>
+<li>Bluetooth or the same Wi-Fi, with automatic discovery of nearby players.</li>
+<li>Up to 20 friends on the same Wi-Fi can watch a live game.</li>
+<li>Share the app with a friend by QR code.</li>
+</ul>
+
+<p><b>🎷 And a little more</b></p>
+<ul>
+<li>Optional jazz radio while you play.</li>
+<li>Dark design with five piece sets to choose from.</li>
+<li>English, Lithuanian, Russian, German, Japanese and Chinese.</li>
+<li>Free and open source (GPL-3.0-or-later).</li>
+</ul>
+
+<p>Got an idea or found a bug? Write to cuken107@proton.me — every message is read.</p>
