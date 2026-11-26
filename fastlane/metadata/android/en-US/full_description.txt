@@ -32,7 +32,7 @@
 <ul>
 <li>Optional jazz radio while you play.</li>
 <li>Dark design with five piece sets to choose from.</li>
-<li>English, Lithuanian, Russian, German, Japanese and Chinese.</li>
+<li>English, Spanish, Lithuanian, Russian, German, Japanese and Chinese.</li>
 <li>Free and open source (GPL-3.0-or-later).</li>
 </ul>
 

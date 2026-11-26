@@ -2,10 +2,10 @@
   <img src="assets/icon-rounded.png" width="112" alt="Matewave icon">
 </p>
 
-<h1 align="center">Matewave</h1>
+<h1 align="center">Matewave: Offline Chess &amp; AI</h1>
 
 <p align="center">
-  <b>A friendly, open-source chess app for Android.</b><br>
+  <b>A friendly, open-source chess app for Android — no account, no ads.</b><br>
   Play the AI, solve puzzles, learn openings, or challenge friends nearby over Bluetooth and Wi-Fi.
 </p>
 
@@ -34,7 +34,7 @@
 - 📶 **Play nearby** over Bluetooth or Wi-Fi/LAN, with up to 20 spectators
 - 📲 **Share the app** with a friend via QR code
 - 🎷 **Optional jazz radio**, 🌙 dark theme, no ads
-- 🌍 **Seven languages** — English, Russian, German, Japanese, Lithuanian, Chinese and Spanish (in progress)
+- 🌍 **Seven languages** — English, Russian, German, Japanese, Lithuanian, Chinese and Spanish
 
 ## <img src="assets/icon-install.png" width="32" alt=""> Install
 

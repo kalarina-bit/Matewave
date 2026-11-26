@@ -1,1 +1,1 @@
-Matewave
+Matewave: Offline Chess & AI
