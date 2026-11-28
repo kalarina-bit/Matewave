@@ -74,7 +74,7 @@ Nearby play needs two real devices — emulators have no Bluetooth and often blo
 
 Ideas, bug reports, translation fixes and pull requests are all welcome — open an [issue](https://github.com/kalarina-bit/Matewave/issues) or write to [cuken107@proton.me](mailto:cuken107@proton.me). Please glance at [CONTRIBUTING.md](CONTRIBUTING.md) before sending code.
 
-If you enjoy Matewave, a ⭐ helps others find it. And if you'd like to, you can also [buy me a coffee](https://ko-fi.com/skysparkle) ☕
+If you enjoy Matewave, a ⭐ helps others find it. And if you'd like to, you can also [support the project](https://buy.stripe.com/00wcN48ak8ZHgdIghof7i00) ☕
 
 ## 📄 License
 
